@@ -1,4 +1,4 @@
-package com.akcay.justwatch.data.model
+package com.akcay.justwatch.data.model.listresponse
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName

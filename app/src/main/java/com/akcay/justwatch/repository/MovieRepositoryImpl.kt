@@ -1,12 +1,14 @@
 package com.akcay.justwatch.repository
 
-import com.akcay.justwatch.data.model.MovieResponse
+import com.akcay.justwatch.data.model.detailresponse.MovieDetailResponse
+import com.akcay.justwatch.data.model.detailresponse.creditsresponse.MovieDetailCreditsResponse
+import com.akcay.justwatch.data.model.detailresponse.videoresponse.MovieVideoResponse
+import com.akcay.justwatch.data.model.listresponse.MovieResponse
 import com.akcay.justwatch.di.IoDispatcher
 import com.akcay.justwatch.network.MovieService
 import com.akcay.justwatch.util.NetworkResult
 import com.akcay.justwatch.util.safeApiCall
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 class MovieRepositoryImpl @Inject constructor(
@@ -19,4 +21,23 @@ class MovieRepositoryImpl @Inject constructor(
             service.getAllPopularMovies()
         }
     }
+
+    override suspend fun getMovieById(movieId: Int): NetworkResult<MovieDetailResponse> {
+        return safeApiCall(defaultDispatcher = dispatcher) {
+            service.getMovieById(movieId)
+        }
+    }
+
+    override suspend fun getMovieCastById(movieId: Int): NetworkResult<MovieDetailCreditsResponse> {
+        return safeApiCall(defaultDispatcher = dispatcher) {
+            service.getMovieCredits(movieId = movieId)
+        }
+    }
+
+    override suspend fun getMovieVideoById(movieId: Int): NetworkResult<MovieVideoResponse> {
+        return safeApiCall(defaultDispatcher = dispatcher) {
+            service.getMovieVideo(movieId = movieId)
+        }
+    }
+
 }

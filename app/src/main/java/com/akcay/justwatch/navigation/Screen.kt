@@ -19,7 +19,7 @@ sealed class Screen(
     object MovieDetail : Screen(
         route = "${AllScreens.MOVIE_DETAIL.name}/{movieId}",
         navArgument = listOf(navArgument("movieId") {
-            type = NavType.StringType
+            type = NavType.IntType
         })
     ) {
 

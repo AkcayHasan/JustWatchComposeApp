@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.akcay.justwatch.data.model.MovieResponse
+import com.akcay.justwatch.data.model.listresponse.MovieResponse
 import com.akcay.justwatch.repository.MovieRepository
 import com.akcay.justwatch.util.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
