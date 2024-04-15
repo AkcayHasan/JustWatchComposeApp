@@ -5,6 +5,7 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 
 enum class AllScreens {
+    ON_BOARDING,
     MOVIE_DETAIL,
     POPULAR_MOVIES,
     UPCOMING_MOVIES,
@@ -26,22 +27,28 @@ sealed class Screen(
         fun createRoute(movieId: Int) = "${AllScreens.MOVIE_DETAIL.name}/$movieId"
     }
 
+    object OnBoarding : Screen(
+        route = AllScreens.ON_BOARDING.name
+    ) {
+        fun createRoute() = AllScreens.ON_BOARDING.name
+    }
+
     object PopularMovies : Screen(
         route = AllScreens.POPULAR_MOVIES.name
     ) {
-        fun createRoute() = "popularMovies"
+        fun createRoute() = AllScreens.POPULAR_MOVIES.name
     }
 
     object UpcomingMovies : Screen(
         route = AllScreens.UPCOMING_MOVIES.name
     ) {
-        fun createRoute() = "upcomingMovies"
+        fun createRoute() = AllScreens.UPCOMING_MOVIES.name
     }
 
     object Settings : Screen(
         route = AllScreens.SETTINGS.name
     ) {
-        fun createRoute() = "settings"
+        fun createRoute() = AllScreens.SETTINGS.name
     }
 
 }

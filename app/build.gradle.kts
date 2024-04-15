@@ -104,4 +104,13 @@ dependencies {
     // Exoplayer
     implementation("androidx.media3:media3-exoplayer:1.2.1")
     implementation("androidx.media3:media3-ui:1.2.1")
+
+    // Splash Screen
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
+    // Lottie
+    implementation("com.airbnb.android:lottie-compose:6.4.0")
+
+    // DataStore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 }
