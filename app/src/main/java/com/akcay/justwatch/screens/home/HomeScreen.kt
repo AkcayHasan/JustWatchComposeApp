@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -38,18 +39,18 @@ fun NavGraphBuilder.addHomeGraph(
     modifier: Modifier = Modifier,
     onMovieSelected: (Long) -> Unit
 ) {
-    composable(HomeSections.POPULAR_MOVIES.route) {
-        PopularMoviesScreen()
+    composable(BottomNavSections.POPULAR_MOVIES.route) {
+        PopularMoviesScreen(onCardClick = onMovieSelected)
     }
-    composable(HomeSections.UPCOMING_MOVIES.route) {
+    composable(BottomNavSections.UPCOMING_MOVIES.route) {
         UpcomingMoviesScreen()
     }
-    composable(HomeSections.SETTINGS.route) {
+    composable(BottomNavSections.SETTINGS.route) {
         SettingsScreen()
     }
 }
 
-enum class HomeSections(
+enum class BottomNavSections(
     @StringRes val titleResId: Int,
     val drawableResId: ImageVector,
     val route: String
@@ -70,13 +71,13 @@ enum class HomeSections(
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val navController = rememberNavController()
     val screens = listOf(
-        HomeSections.POPULAR_MOVIES,
-        HomeSections.UPCOMING_MOVIES,
-        HomeSections.SETTINGS
+        BottomNavSections.POPULAR_MOVIES,
+        BottomNavSections.UPCOMING_MOVIES,
+        BottomNavSections.SETTINGS
     )
 
     val showBottomBar =
@@ -104,12 +105,11 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(bottom = it.calculateBottomPadding())
         ) {
-            JustWatchNavHost(navController, viewModel.storeManager)
+            //JustWatchNavHost(navController, viewModel.storeManager)
         }
     }
 
 }
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)

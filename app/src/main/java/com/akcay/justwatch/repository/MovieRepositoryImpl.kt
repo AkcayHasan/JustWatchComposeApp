@@ -9,32 +9,36 @@ import com.akcay.justwatch.network.MovieService
 import com.akcay.justwatch.util.NetworkResult
 import com.akcay.justwatch.util.safeApiCall
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class MovieRepositoryImpl @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
     private val service: MovieService
-): MovieRepository {
+) : MovieRepository {
 
-    override suspend fun getAllPopularMovies(): NetworkResult<MovieResponse> {
-        return safeApiCall(defaultDispatcher = dispatcher) {
-            service.getAllPopularMovies()
-        }
+    override fun getAllPopularMovies(): Flow<NetworkResult<MovieResponse>> = flow {
+        emit(
+            safeApiCall(defaultDispatcher = dispatcher) {
+                service.getAllPopularMovies()
+            }
+        )
     }
 
-    override suspend fun getMovieById(movieId: Int): NetworkResult<MovieDetailResponse> {
+    override suspend fun getMovieById(movieId: Long): NetworkResult<MovieDetailResponse> {
         return safeApiCall(defaultDispatcher = dispatcher) {
             service.getMovieById(movieId)
         }
     }
 
-    override suspend fun getMovieCastById(movieId: Int): NetworkResult<MovieDetailCreditsResponse> {
+    override suspend fun getMovieCastById(movieId: Long): NetworkResult<MovieDetailCreditsResponse> {
         return safeApiCall(defaultDispatcher = dispatcher) {
             service.getMovieCredits(movieId = movieId)
         }
     }
 
-    override suspend fun getMovieVideoById(movieId: Int): NetworkResult<MovieVideoResponse> {
+    override suspend fun getMovieVideoById(movieId: Long): NetworkResult<MovieVideoResponse> {
         return safeApiCall(defaultDispatcher = dispatcher) {
             service.getMovieVideo(movieId = movieId)
         }

@@ -9,14 +9,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.akcay.justwatch.screens.home.HomeSections
+import com.akcay.justwatch.screens.home.BottomNavSections
 
 @Composable
 fun JWBottomNavBar(
     modifier: Modifier,
     navController: NavHostController,
-    selectedItem: (HomeSections) -> Unit,
-    items: List<HomeSections>
+    selectedItem: (BottomNavSections) -> Unit,
+    items: List<BottomNavSections>
 ) {
     val backStackEntry = navController.currentBackStackEntryAsState()
     NavigationBar(modifier = modifier) {

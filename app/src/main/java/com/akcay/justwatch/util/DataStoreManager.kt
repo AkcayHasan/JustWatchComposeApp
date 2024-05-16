@@ -22,7 +22,7 @@ class DataStoreManager @Inject constructor(
     }
 
     suspend fun shouldOnBoardingVisible() = context.dataStore.data.map { preferences ->
-        preferences[onBoardingVisibility] ?: false
+        preferences[onBoardingVisibility] ?: true
     }.first()
 
     suspend fun saveOnBoardingVisibility(isShown: Boolean) {

@@ -45,18 +45,20 @@ fun ListMovieItem(
             .fillMaxWidth()
             .height(72.dp)
             .padding(5.dp)
-            .clickable {
-                onCardClicked.invoke(itemId)
-            }
     ) {
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 10.dp),
+                .padding(horizontal = 10.dp)
+                .clickable {
+                    onCardClicked.invoke(itemId)
+                },
             verticalAlignment = Alignment.CenterVertically
         ) {
             SubcomposeAsyncImage(
-                modifier = Modifier.clip(CircleShape).size(50.dp),
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .size(50.dp),
                 model = if (imageUrl != null) "${Constants.BASE_IMAGE_URL}$imageUrl" else painterResource(
                     id = R.drawable.ic_launcher_background
                 ), contentDescription = null,

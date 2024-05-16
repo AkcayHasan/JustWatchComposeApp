@@ -15,16 +15,16 @@ interface MovieService {
 
     @GET("movie/{movie_id}")
     suspend fun getMovieById(
-        @Path("movie_id") movieId: Int
+        @Path("movie_id") movieId: Long
     ): Response<MovieDetailResponse>
 
     @GET("movie/{movie_id}/credits")
     suspend fun getMovieCredits(
-        @Path("movie_id") movieId: Int
+        @Path("movie_id") movieId: Long
     ): Response<MovieDetailCreditsResponse>
 
     @GET("movie/{movie_id}/videos")
     suspend fun getMovieVideo(
-        @Path("movie_id") movieId: Int
+        @Path("movie_id") movieId: Long
     ): Response<MovieVideoResponse>
 }

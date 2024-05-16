@@ -5,10 +5,11 @@ import com.akcay.justwatch.data.model.detailresponse.creditsresponse.MovieDetail
 import com.akcay.justwatch.data.model.detailresponse.videoresponse.MovieVideoResponse
 import com.akcay.justwatch.data.model.listresponse.MovieResponse
 import com.akcay.justwatch.util.NetworkResult
+import kotlinx.coroutines.flow.Flow
 
 interface MovieRepository {
 
-    suspend fun getAllPopularMovies(): NetworkResult<MovieResponse>
+    fun getAllPopularMovies(): Flow<NetworkResult<MovieResponse>>
 
     suspend fun getMovieById(movieId: Long): NetworkResult<MovieDetailResponse>
 

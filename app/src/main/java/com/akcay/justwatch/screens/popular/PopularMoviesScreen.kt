@@ -13,6 +13,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -31,11 +32,16 @@ import com.akcay.justwatch.util.Constants
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PopularMoviesScreen(
-    viewModel: PopularMoviesViewModel = hiltViewModel()
+    viewModel: PopularMoviesViewModel = hiltViewModel(),
+    onCardClick: (Long) -> Unit
 ) {
 
     val list by viewModel.popularMovieList.collectAsState()
     val loadingState by viewModel.loadingState.collectAsState()
+
+    LaunchedEffect(key1 = Unit) {
+        viewModel.getAllPopularMovies()
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -49,7 +55,9 @@ fun PopularMoviesScreen(
         },
     ) {
         Column(
-            modifier = Modifier.fillMaxSize().padding(top = it.calculateTopPadding())
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = it.calculateTopPadding())
         ) {
             if (loadingState) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -64,7 +72,7 @@ fun PopularMoviesScreen(
                                 itemId = itemsList[index].id ?: Constants.ZERO,
                                 movieName = itemsList[index].originalTitle ?: "",
                                 onCardClicked = {
-                                    navController.navigate(Screen.MovieDetail.createRoute(itemsList[index].id ?: Constants.ZERO))
+                                    onCardClick.invoke(itemsList[index].id ?: Constants.ZERO)
                                 },
                                 onAddIconClicked = {}
                             )

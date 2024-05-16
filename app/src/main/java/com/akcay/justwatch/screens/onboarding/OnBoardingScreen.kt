@@ -25,6 +25,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.akcay.justwatch.R
 import com.akcay.justwatch.data.model.LoaderIntro
 import com.akcay.justwatch.data.model.OnBoardingData
@@ -46,9 +48,14 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnBoardingScreen(
-    buttonClicked: (ClickActions, Bundle?) -> Unit
+    buttonClicked: (ClickActions, Bundle?) -> Unit,
+    viewModel: OnBoardingViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(key1 = Unit) {
+        viewModel.changeVisibilityOfOnBoarding()
+    }
 
     val pages = listOf(
         OnBoardingData(
@@ -215,7 +222,7 @@ fun BottomSection(
     ) {
         if (pages.lastIndex == pagerState.currentPage) {
             OutlinedButton(onClick = {
-                clickActions.invoke(ClickActions.SKIP_ONBOARDING)
+                clickActions.invoke(ClickActions.GET_STARTED_ONBOARDING)
             }, shape = RoundedCornerShape(size = 50.dp)) {
                 Text(
                     text = "Get Started",
