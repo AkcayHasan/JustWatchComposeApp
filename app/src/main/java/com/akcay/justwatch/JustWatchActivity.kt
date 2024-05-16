@@ -7,19 +7,10 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
-import com.akcay.justwatch.data.model.OnBoardingData
-import com.akcay.justwatch.screens.onboarding.OnBoardingScreen
-import com.akcay.justwatch.screens.onboarding.OnBoardingTextActions
 import com.akcay.justwatch.screens.splash.SplashScreenViewModel
-import com.akcay.justwatch.ui.theme.JustWatchTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.runBlocking
 
 @AndroidEntryPoint
 class JustWatchActivity : ComponentActivity() {
@@ -47,9 +38,7 @@ class JustWatchActivity : ComponentActivity() {
         )
 
         setContent {
-            JustWatchTheme(darkTheme = false) {
-                JustWatchNavigation()
-            }
+            JustWatchApp()
         }
     }
 }

@@ -21,11 +21,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -35,13 +33,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.media3.ui.PlayerView
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.akcay.justwatch.R
 import com.akcay.justwatch.component.CastItemView
 import com.akcay.justwatch.component.JWTopAppBar
-import com.akcay.justwatch.component.JustWatchVideoPlayer
 import com.akcay.justwatch.util.Constants
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -49,18 +44,27 @@ import com.akcay.justwatch.util.Constants
 @Composable
 fun MovieDetailScreen(
     viewModel: MovieDetailViewModel = hiltViewModel(),
-    navController: NavController
+    upPress: () -> Unit,
+    movieId: Long
 ) {
+
+    LaunchedEffect(key1 = Unit) {
+        with(viewModel) {
+            getMovieDetailById(movieId)
+            getMovieCastById(movieId)
+            getMovieVideoById(movieId)
+        }
+    }
 
     val movieDetail by viewModel.movieById.collectAsState()
     val castList by viewModel.castById.collectAsState()
-    val videoList by viewModel.videoById.collectAsState()
+    //val videoList by viewModel.videoById.collectAsState()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             JWTopAppBar(
-                navController = navController,
+                upPress = upPress,
                 barScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
                 isNavigationIconVisible = true,
                 isActionIconVisible = true

@@ -10,9 +10,9 @@ interface MovieRepository {
 
     suspend fun getAllPopularMovies(): NetworkResult<MovieResponse>
 
-    suspend fun getMovieById(movieId: Int): NetworkResult<MovieDetailResponse>
+    suspend fun getMovieById(movieId: Long): NetworkResult<MovieDetailResponse>
 
-    suspend fun getMovieCastById(movieId: Int): NetworkResult<MovieDetailCreditsResponse>
+    suspend fun getMovieCastById(movieId: Long): NetworkResult<MovieDetailCreditsResponse>
 
-    suspend fun getMovieVideoById(movieId: Int): NetworkResult<MovieVideoResponse>
+    suspend fun getMovieVideoById(movieId: Long): NetworkResult<MovieVideoResponse>
 }

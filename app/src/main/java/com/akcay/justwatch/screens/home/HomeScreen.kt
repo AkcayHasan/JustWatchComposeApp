@@ -1,15 +1,11 @@
 package com.akcay.justwatch.screens.home
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -20,23 +16,56 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.akcay.justwatch.JustWatchNavHost
 import com.akcay.justwatch.R
 import com.akcay.justwatch.component.JWBottomNavBar
 import com.akcay.justwatch.navigation.Screen
+import com.akcay.justwatch.screens.popular.PopularMoviesScreen
+import com.akcay.justwatch.screens.settings.SettingsScreen
+import com.akcay.justwatch.screens.upcoming.UpcomingMoviesScreen
+
+fun NavGraphBuilder.addHomeGraph(
+    modifier: Modifier = Modifier,
+    onMovieSelected: (Long) -> Unit
+) {
+    composable(HomeSections.POPULAR_MOVIES.route) {
+        PopularMoviesScreen()
+    }
+    composable(HomeSections.UPCOMING_MOVIES.route) {
+        UpcomingMoviesScreen()
+    }
+    composable(HomeSections.SETTINGS.route) {
+        SettingsScreen()
+    }
+}
+
+enum class HomeSections(
+    @StringRes val titleResId: Int,
+    val drawableResId: ImageVector,
+    val route: String
+) {
+    POPULAR_MOVIES(
+        R.string.popular_movies_title,
+        Icons.Default.Settings,
+        Screen.PopularMovies.route
+    ),
+    UPCOMING_MOVIES(
+        R.string.upcoming_movies_title,
+        Icons.Default.Settings,
+        Screen.UpcomingMovies.route
+    ),
+    SETTINGS(R.string.settings_title, Icons.Default.Settings, Screen.Settings.route)
+}
 
 @Composable
 fun HomeScreen(
@@ -45,9 +74,9 @@ fun HomeScreen(
 ) {
     val navController = rememberNavController()
     val screens = listOf(
-        JustWatchBottomNavBarItems.POPULAR_MOVIES,
-        JustWatchBottomNavBarItems.UPCOMING_MOVIES,
-        JustWatchBottomNavBarItems.SETTINGS
+        HomeSections.POPULAR_MOVIES,
+        HomeSections.UPCOMING_MOVIES,
+        HomeSections.SETTINGS
     )
 
     val showBottomBar =
@@ -81,23 +110,7 @@ fun HomeScreen(
 
 }
 
-enum class JustWatchBottomNavBarItems(
-    @StringRes val titleResId: Int,
-    val drawableResId: ImageVector,
-    val route: String
-) {
-    POPULAR_MOVIES(
-        R.string.popular_movies_title,
-        Icons.Default.Settings,
-        Screen.PopularMovies.route
-    ),
-    UPCOMING_MOVIES(
-        R.string.upcoming_movies_title,
-        Icons.Default.Settings,
-        Screen.UpcomingMovies.route
-    ),
-    SETTINGS(R.string.settings_title, Icons.Default.Settings, Screen.Settings.route)
-}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview

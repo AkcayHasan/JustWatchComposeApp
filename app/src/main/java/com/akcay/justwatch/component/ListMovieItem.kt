@@ -35,10 +35,10 @@ import com.akcay.justwatch.util.Constants
 @Composable
 fun ListMovieItem(
     imageUrl: String?,
-    itemId: Int,
+    itemId: Long,
     movieName: String?,
-    onCardClicked: (id: Int) -> Unit,
-    onAddIconClicked: (id: Int) -> Unit
+    onCardClicked: (id: Long) -> Unit,
+    onAddIconClicked: (id: Long) -> Unit
 ) {
     Card(
         modifier = Modifier

@@ -20,11 +20,11 @@ sealed class Screen(
     object MovieDetail : Screen(
         route = "${AllScreens.MOVIE_DETAIL.name}/{movieId}",
         navArgument = listOf(navArgument("movieId") {
-            type = NavType.IntType
+            type = NavType.LongType
         })
     ) {
 
-        fun createRoute(movieId: Int) = "${AllScreens.MOVIE_DETAIL.name}/$movieId"
+        fun createRoute(movieId: Long) = "${AllScreens.MOVIE_DETAIL.name}/$movieId"
     }
 
     object OnBoarding : Screen(

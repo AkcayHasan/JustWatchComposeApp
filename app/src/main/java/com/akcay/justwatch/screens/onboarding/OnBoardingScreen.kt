@@ -1,5 +1,6 @@
 package com.akcay.justwatch.screens.onboarding
 
+import android.os.Bundle
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -38,13 +39,14 @@ import androidx.compose.ui.zIndex
 import com.akcay.justwatch.R
 import com.akcay.justwatch.data.model.LoaderIntro
 import com.akcay.justwatch.data.model.OnBoardingData
+import com.akcay.justwatch.util.ClickActions
 import com.akcay.justwatch.util.Constants
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnBoardingScreen(
-    buttonClicked: (OnBoardingTextActions) -> Unit
+    buttonClicked: (ClickActions, Bundle?) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -83,7 +85,7 @@ fun OnBoardingScreen(
                 OnBoardingTextButtons(
                     text = "Skip",
                     modifier = Modifier.clickable {
-                        buttonClicked.invoke(OnBoardingTextActions.SKIP)
+                        buttonClicked.invoke(ClickActions.SKIP_ONBOARDING, null)
                     }
                 )
             }
@@ -140,18 +142,18 @@ fun OnBoardingScreen(
         Box(modifier = Modifier.align(Alignment.BottomCenter)) {
             BottomSection(pages, pagerState) { actions ->
                 when(actions) {
-                    OnBoardingTextActions.NEXT -> {
+                    ClickActions.NEXT_ONBOARDING -> {
                         coroutineScope.launch {
                             pagerState.animateScrollToPage(pagerState.currentPage.plus(1))
                         }
                     }
-                    OnBoardingTextActions.PREVIOUS -> {
+                    ClickActions.PREVIOUS_ONBOARDING -> {
                         coroutineScope.launch {
                             pagerState.animateScrollToPage(pagerState.currentPage.minus(1))
                         }
                     }
-                    OnBoardingTextActions.GET_STARTED -> {
-                        buttonClicked.invoke(OnBoardingTextActions.GET_STARTED)
+                    ClickActions.GET_STARTED_ONBOARDING -> {
+                        buttonClicked.invoke(ClickActions.GET_STARTED_ONBOARDING, null)
                     }
                     else -> Unit
                 }
@@ -197,7 +199,7 @@ fun IndicatorView(isSelected: Boolean) {
 fun BottomSection(
     pages: List<OnBoardingData>,
     pagerState: PagerState,
-    clickActions: (OnBoardingTextActions) -> Unit
+    clickActions: (ClickActions) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -205,7 +207,7 @@ fun BottomSection(
             .padding(bottom = 50.dp),
         horizontalArrangement = if (pages.lastIndex == pagerState.currentPage) {
             Arrangement.Center
-        } else if (pagerState.currentPage != Constants.ZERO){
+        } else if (pagerState.currentPage.toLong() != Constants.ZERO){
             Arrangement.SpaceBetween
         } else {
             Arrangement.End
@@ -213,7 +215,7 @@ fun BottomSection(
     ) {
         if (pages.lastIndex == pagerState.currentPage) {
             OutlinedButton(onClick = {
-                clickActions.invoke(OnBoardingTextActions.GET_STARTED)
+                clickActions.invoke(ClickActions.SKIP_ONBOARDING)
             }, shape = RoundedCornerShape(size = 50.dp)) {
                 Text(
                     text = "Get Started",
@@ -223,13 +225,13 @@ fun BottomSection(
                 )
             }
         } else {
-            if (pagerState.currentPage != Constants.ZERO) {
+            if (pagerState.currentPage.toLong() != Constants.ZERO) {
                 OnBoardingTextButtons(
                     text = "Previous",
                     modifier = Modifier
                         .padding(start = 20.dp)
                         .clickable {
-                            clickActions.invoke(OnBoardingTextActions.PREVIOUS)
+                            clickActions.invoke(ClickActions.PREVIOUS_ONBOARDING)
                         })
             }
             OnBoardingTextButtons(
@@ -237,18 +239,11 @@ fun BottomSection(
                 modifier = Modifier
                     .padding(end = 20.dp)
                     .clickable {
-                        clickActions.invoke(OnBoardingTextActions.NEXT)
+                        clickActions.invoke(ClickActions.NEXT_ONBOARDING)
                     },
             )
         }
     }
-}
-
-enum class OnBoardingTextActions {
-    SKIP,
-    NEXT,
-    PREVIOUS,
-    GET_STARTED
 }
 
 @Composable

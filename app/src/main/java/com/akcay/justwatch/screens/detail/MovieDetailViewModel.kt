@@ -18,11 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MovieDetailViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
     private val repo: MovieRepository
 ) : ViewModel() {
-
-    private val movieId: Int = savedStateHandle.get<Int>(MOVIE_ID_SAVED_STATE_KEY) ?: Constants.ZERO
 
     private val _loadingState = MutableStateFlow(value = false)
     val loadingState: StateFlow<Boolean> = _loadingState
@@ -36,13 +33,7 @@ class MovieDetailViewModel @Inject constructor(
     private val _videoById = MutableStateFlow<MovieVideoResponse?>(value = null)
     val videoById: StateFlow<MovieVideoResponse?> = _videoById
 
-    init {
-        getMovieDetailById(movieId)
-        getMovieCastById(movieId)
-        getMovieVideoById(movieId)
-    }
-
-    private fun getMovieDetailById(movieId: Int) {
+    fun getMovieDetailById(movieId: Long) {
         viewModelScope.launch {
             showLoading()
             try {
@@ -66,7 +57,7 @@ class MovieDetailViewModel @Inject constructor(
         }
     }
 
-    private fun getMovieCastById(movieId: Int) {
+    fun getMovieCastById(movieId: Long) {
         viewModelScope.launch {
             showLoading()
             when (val response = repo.getMovieCastById(movieId = movieId)) {
@@ -89,7 +80,7 @@ class MovieDetailViewModel @Inject constructor(
         }
     }
 
-    private fun getMovieVideoById(movieId: Int) {
+    fun getMovieVideoById(movieId: Long) {
         viewModelScope.launch {
             when (val response = repo.getMovieVideoById(movieId = movieId)) {
                 is NetworkResult.Success -> {

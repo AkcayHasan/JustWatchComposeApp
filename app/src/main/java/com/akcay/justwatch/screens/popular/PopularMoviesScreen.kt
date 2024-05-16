@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.akcay.justwatch.component.JWTopAppBar
 import com.akcay.justwatch.component.ListMovieItem
 import com.akcay.justwatch.data.model.listresponse.MovieResponse
@@ -32,8 +31,7 @@ import com.akcay.justwatch.util.Constants
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PopularMoviesScreen(
-    viewModel: PopularMoviesViewModel = hiltViewModel(),
-    navController: NavController
+    viewModel: PopularMoviesViewModel = hiltViewModel()
 ) {
 
     val list by viewModel.popularMovieList.collectAsState()
@@ -43,7 +41,7 @@ fun PopularMoviesScreen(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             JWTopAppBar(
-                navController = navController,
+                upPress = null,
                 toolbarTitle = "List",
                 barScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
                 isNavigationIconVisible = false

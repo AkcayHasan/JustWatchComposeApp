@@ -12,12 +12,11 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JWTopAppBar(
-    navController: NavController,
+    upPress: (() -> Unit)? = null,
     toolbarTitle: String? = null,
     barScrollBehavior: TopAppBarScrollBehavior,
     isNavigationIconVisible: Boolean = true,
@@ -32,7 +31,9 @@ fun JWTopAppBar(
         },
         navigationIcon = {
             IconButton(onClick = {
-                navController.navigateUp()
+                if (upPress != null) {
+                    upPress()
+                }
             }) {
                 if (isNavigationIconVisible) {
                     Icon(
