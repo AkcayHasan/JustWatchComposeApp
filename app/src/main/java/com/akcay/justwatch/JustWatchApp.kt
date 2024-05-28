@@ -1,5 +1,7 @@
 package com.akcay.justwatch
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -9,7 +11,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -29,7 +30,6 @@ import com.akcay.justwatch.screens.home.addHomeGraph
 import com.akcay.justwatch.screens.onboarding.OnBoardingScreen
 import com.akcay.justwatch.ui.theme.JustWatchTheme
 import com.akcay.justwatch.util.ClickActions
-import kotlinx.coroutines.runBlocking
 
 object MainDestinations {
     const val HOME_ROUTE = "home"
@@ -40,18 +40,15 @@ object MainDestinations {
 fun JustWatchApp(viewModel: HomeViewModel = hiltViewModel()) {
     JustWatchTheme {
         val justWatchNavController = rememberNavController()
-        val scope = rememberCoroutineScope()
 
         var startDestination by remember {
             mutableStateOf(MainDestinations.HOME_ROUTE)
         }
 
         LaunchedEffect(Unit) {
-            runBlocking {
-                val shouldShowOnboarding = viewModel.storeManager.shouldOnBoardingVisible()
-                if (shouldShowOnboarding) {
-                    startDestination = MainDestinations.ONBOARDING_ROUTE
-                }
+            val shouldShowOnboarding = viewModel.storeManager.shouldOnBoardingVisible()
+            if (shouldShowOnboarding) {
+                startDestination = MainDestinations.ONBOARDING_ROUTE
             }
         }
 
@@ -75,7 +72,9 @@ fun JustWatchApp(viewModel: HomeViewModel = hiltViewModel()) {
                         modifier = Modifier,
                         navController = justWatchNavController,
                         selectedItem = {
-                            justWatchNavController.navigate(it.route)
+                            justWatchNavController.navigate(it.route) {
+                                launchSingleTop = true
+                            }
                         },
                         items = screens
                     )
@@ -89,7 +88,9 @@ fun JustWatchApp(viewModel: HomeViewModel = hiltViewModel()) {
             ) {
                 NavHost(
                     navController = justWatchNavController,
-                    startDestination = startDestination
+                    startDestination = startDestination,
+                    enterTransition = { EnterTransition.None },
+                    exitTransition = { ExitTransition.None }
                 ) {
                     justWatchNavGraph(
                         navController = justWatchNavController

@@ -1,6 +1,5 @@
 package com.akcay.justwatch.screens.onboarding
 
-import androidx.datastore.dataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.akcay.justwatch.util.DataStoreManager
