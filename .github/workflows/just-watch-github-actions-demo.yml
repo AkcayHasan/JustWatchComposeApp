@@ -4,6 +4,13 @@ name: JustWatch CI/CD
 
 run-name: ${{ github.actor }} is testing out Github Actions!
 
+env:
+  # The name of the main module repository
+  main_project_module: app
+
+  # The name of the Play Store
+  playstore_name: JustWatch
+
 on:
   push:
     branches: [ "master" ]
