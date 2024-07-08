@@ -29,19 +29,17 @@ class PopularMoviesViewModel @Inject constructor(
             repo.getAllPopularMovies().collect {
                 when(it) {
                     is NetworkResult.Success -> {
-                        hideLoading()
                         _popularMovieList.value = it.data
                         Log.d("osman", "success: ${it.data}")
                     }
                     is NetworkResult.Error -> {
-                        hideLoading()
                         Log.d("osman", "error: ${it.message}")
                     }
                     is NetworkResult.Exception -> {
-                        hideLoading()
                         Log.d("osman", "getAllPopularMovies: ${it.e}")
                     }
                 }
+                hideLoading()
             }
         }
     }

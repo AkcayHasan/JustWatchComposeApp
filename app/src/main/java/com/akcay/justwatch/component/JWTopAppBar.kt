@@ -12,12 +12,16 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import com.akcay.justwatch.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JWTopAppBar(
     upPress: (() -> Unit)? = null,
     toolbarTitle: String? = null,
+    titleColor: Color = Color.Black,
     barScrollBehavior: TopAppBarScrollBehavior,
     isNavigationIconVisible: Boolean = true,
     isActionIconVisible: Boolean = false
@@ -27,7 +31,14 @@ fun JWTopAppBar(
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.Transparent),
         scrollBehavior = barScrollBehavior,
         title = {
-            Text(text = toolbarTitle ?: "")
+            Text(
+                text = toolbarTitle ?: "", fontFamily = FontFamily(
+                    Font(
+                        resId = R.font.tt_medium
+                    )
+                ),
+                color = titleColor
+            )
         },
         navigationIcon = {
             IconButton(onClick = {

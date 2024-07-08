@@ -8,7 +8,7 @@ enum class AllScreens {
     MOVIE_DETAIL,
     POPULAR_MOVIES,
     UPCOMING_MOVIES,
-    SETTINGS
+    PROFILE
 }
 
 sealed class Screen(
@@ -38,10 +38,10 @@ sealed class Screen(
         fun createRoute() = AllScreens.UPCOMING_MOVIES.name
     }
 
-    object Settings : Screen(
-        route = AllScreens.SETTINGS.name
+    object Profile : Screen(
+        route = AllScreens.PROFILE.name
     ) {
-        fun createRoute() = AllScreens.SETTINGS.name
+        fun createRoute() = AllScreens.PROFILE.name
     }
 
 }

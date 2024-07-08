@@ -1,7 +1,6 @@
 package com.akcay.justwatch.screens.home
 
 import androidx.annotation.StringRes
-import androidx.compose.animation.EnterTransition
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,11 +27,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.navigation
 import com.akcay.justwatch.R
 import com.akcay.justwatch.component.JWBottomNavBar
 import com.akcay.justwatch.navigation.Screen
 import com.akcay.justwatch.screens.popular.PopularMoviesScreen
+import com.akcay.justwatch.screens.profile.ProfileScreen
 import com.akcay.justwatch.screens.settings.SettingsScreen
 import com.akcay.justwatch.screens.upcoming.UpcomingMoviesScreen
 
@@ -46,8 +45,8 @@ fun NavGraphBuilder.addHomeGraph(
     composable(BottomNavSections.UPCOMING_MOVIES.route) {
         UpcomingMoviesScreen()
     }
-    composable(BottomNavSections.SETTINGS.route) {
-        SettingsScreen()
+    composable(BottomNavSections.PROFILE.route) {
+        ProfileScreen()
     }
 }
 
@@ -66,7 +65,7 @@ enum class BottomNavSections(
         Icons.Default.Settings,
         Screen.UpcomingMovies.route
     ),
-    SETTINGS(R.string.settings_title, Icons.Default.Settings, Screen.Settings.route)
+    PROFILE(R.string.profile_title, Icons.Default.Settings, Screen.Profile.route)
 }
 
 @Composable
@@ -78,7 +77,7 @@ fun HomeScreen(
     val screens = listOf(
         BottomNavSections.POPULAR_MOVIES,
         BottomNavSections.UPCOMING_MOVIES,
-        BottomNavSections.SETTINGS
+        BottomNavSections.PROFILE
     )
 
     val showBottomBar =

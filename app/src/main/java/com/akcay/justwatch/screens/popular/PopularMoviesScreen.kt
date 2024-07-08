@@ -48,7 +48,7 @@ fun PopularMoviesScreen(
         topBar = {
             JWTopAppBar(
                 upPress = null,
-                toolbarTitle = "List",
+                toolbarTitle = "Popular Movies",
                 barScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
                 isNavigationIconVisible = false
             )

@@ -1,14 +1,12 @@
 package com.akcay.justwatch.screens.detail
 
 import android.util.Log
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.akcay.justwatch.data.model.detailresponse.MovieDetailResponse
 import com.akcay.justwatch.data.model.detailresponse.creditsresponse.MovieDetailCreditsResponse
 import com.akcay.justwatch.data.model.detailresponse.videoresponse.MovieVideoResponse
 import com.akcay.justwatch.repository.MovieRepository
-import com.akcay.justwatch.util.Constants
 import com.akcay.justwatch.util.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -56,7 +56,7 @@ fun JustWatchApp(viewModel: HomeViewModel = hiltViewModel()) {
         val screens = listOf(
             BottomNavSections.POPULAR_MOVIES,
             BottomNavSections.UPCOMING_MOVIES,
-            BottomNavSections.SETTINGS
+            BottomNavSections.PROFILE
         )
 
         val showBottomBar =
@@ -106,7 +106,7 @@ private fun NavGraphBuilder.justWatchNavGraph(
 ) {
     navigation(
         route = MainDestinations.HOME_ROUTE,
-        startDestination = BottomNavSections.POPULAR_MOVIES.route
+        startDestination = BottomNavSections.POPULAR_MOVIES.route,
     ) {
         addHomeGraph(onMovieSelected = { id ->
             navController.navigate(
