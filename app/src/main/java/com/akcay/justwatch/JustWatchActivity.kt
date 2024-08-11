@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import com.akcay.justwatch.screens.splash.SplashScreenViewModel
+import com.akcay.justwatch.ui.theme.JustWatchTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -38,7 +39,14 @@ class JustWatchActivity : ComponentActivity() {
         )
 
         setContent {
-            JustWatchApp()
+            if (splashViewModel.checkDeviceIsRooted()) {
+                splashViewModel.ErrorDialog {
+                    finish()
+                }
+            } else {
+                JustWatchApp()
+            }
+            splashViewModel.setLoadingStatus(loading = false)
         }
     }
 }

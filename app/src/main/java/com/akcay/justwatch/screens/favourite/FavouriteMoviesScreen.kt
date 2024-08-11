@@ -1,4 +1,4 @@
-package com.akcay.justwatch.screens.upcoming
+package com.akcay.justwatch.screens.favourite
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

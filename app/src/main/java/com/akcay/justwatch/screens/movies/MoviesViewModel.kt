@@ -1,4 +1,4 @@
-package com.akcay.justwatch.screens.popular
+package com.akcay.justwatch.screens.movies
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PopularMoviesViewModel @Inject constructor(
+class MoviesViewModel @Inject constructor(
     private val repo: MovieRepository
 ): ViewModel() {
 

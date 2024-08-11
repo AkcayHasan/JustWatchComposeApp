@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.akcay.justwatch.screens.home.BottomNavSections
+import com.akcay.justwatch.BottomNavSections
 
 @Composable
 fun JWBottomNavBar(

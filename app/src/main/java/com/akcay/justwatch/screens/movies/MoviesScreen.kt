@@ -1,4 +1,4 @@
-package com.akcay.justwatch.screens.popular
+package com.akcay.justwatch.screens.movies
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
@@ -16,26 +16,30 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.akcay.justwatch.component.JWTab
 import com.akcay.justwatch.component.JWTopAppBar
 import com.akcay.justwatch.component.ListMovieItem
 import com.akcay.justwatch.data.model.listresponse.MovieResponse
 import com.akcay.justwatch.data.model.listresponse.MovieResult
-import com.akcay.justwatch.navigation.Screen
 import com.akcay.justwatch.util.Constants
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PopularMoviesScreen(
-    viewModel: PopularMoviesViewModel = hiltViewModel(),
+fun MoviesScreen(
+    viewModel: MoviesViewModel = hiltViewModel(),
     onCardClick: (Long) -> Unit
 ) {
 
+    var selectedIndex by remember { mutableIntStateOf(0) }
     val list by viewModel.popularMovieList.collectAsState()
     val loadingState by viewModel.loadingState.collectAsState()
 
@@ -48,7 +52,7 @@ fun PopularMoviesScreen(
         topBar = {
             JWTopAppBar(
                 upPress = null,
-                toolbarTitle = "Popular Movies",
+                toolbarTitle = "Movies",
                 barScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
                 isNavigationIconVisible = false
             )
@@ -64,18 +68,33 @@ fun PopularMoviesScreen(
                     CircularProgressIndicator()
                 }
             } else {
-                LazyColumn {
-                    list?.movieResults?.let { itemsList ->
-                        items(count = itemsList.size) { index ->
-                            ListMovieItem(
-                                imageUrl = itemsList[index].posterPath,
-                                itemId = itemsList[index].id ?: Constants.ZERO,
-                                movieName = itemsList[index].originalTitle ?: "",
-                                onCardClicked = {
-                                    onCardClick.invoke(itemsList[index].id ?: Constants.ZERO)
-                                },
-                                onAddIconClicked = {}
-                            )
+                JWTab(tabIndex = { index ->
+                    selectedIndex = index
+                })
+                when (selectedIndex) {
+                    0 -> {
+                        LazyColumn {
+                            list?.movieResults?.let { itemsList ->
+                                items(count = itemsList.size) { index ->
+                                    ListMovieItem(
+                                        imageUrl = itemsList[index].posterPath,
+                                        itemId = itemsList[index].id ?: Constants.ZERO,
+                                        movieName = itemsList[index].originalTitle ?: "",
+                                        onCardClicked = {
+                                            onCardClick.invoke(
+                                                itemsList[index].id ?: Constants.ZERO
+                                            )
+                                        },
+                                        onAddIconClicked = {}
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    1 -> {
+                        Box {
+                            Text(text = "Second Page")
                         }
                     }
                 }
@@ -100,21 +119,33 @@ fun PopularMoviesScreenPreview() {
     )
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { CenterAlignedTopAppBar(title = { Text(text = "List") }) }
+        topBar = {
+            JWTopAppBar(
+                upPress = null,
+                toolbarTitle = "Movies",
+                barScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
+                isNavigationIconVisible = false
+            )
+        },
     ) {
         Column(
             modifier = Modifier
-                .padding(top = it.calculateTopPadding(), start = 10.dp, end = 10.dp, bottom = 10.dp)
                 .fillMaxSize()
+                .padding(top = it.calculateTopPadding())
         ) {
+            JWTab(tabIndex = { index ->
+
+            })
             LazyColumn {
                 list.movieResults?.let { itemsList ->
-                    items(itemsList.size) { index ->
+                    items(count = itemsList.size) { index ->
                         ListMovieItem(
-                            imageUrl = "",
-                            itemId = itemsList[index].id ?: 0,
+                            imageUrl = itemsList[index].posterPath,
+                            itemId = itemsList[index].id ?: Constants.ZERO,
                             movieName = itemsList[index].originalTitle ?: "",
-                            onCardClicked = {},
+                            onCardClicked = {
+
+                            },
                             onAddIconClicked = {}
                         )
                     }

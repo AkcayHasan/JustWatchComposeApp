@@ -36,14 +36,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.akcay.justwatch.R
 import com.akcay.justwatch.data.model.LoaderIntro
 import com.akcay.justwatch.data.model.OnBoardingData
-import com.akcay.justwatch.util.ClickActions
 import com.akcay.justwatch.util.Constants
 import kotlinx.coroutines.launch
+
+enum class ClickActions {
+    SKIP_ONBOARDING,
+    NEXT_ONBOARDING,
+    PREVIOUS_ONBOARDING,
+    GET_STARTED_ONBOARDING
+}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

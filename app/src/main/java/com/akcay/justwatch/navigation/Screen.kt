@@ -5,6 +5,9 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 
 enum class AllScreens {
+    LOGIN,
+    REGISTER,
+    FORGOT_PASSWORD,
     MOVIE_DETAIL,
     POPULAR_MOVIES,
     UPCOMING_MOVIES,
@@ -42,6 +45,24 @@ sealed class Screen(
         route = AllScreens.PROFILE.name
     ) {
         fun createRoute() = AllScreens.PROFILE.name
+    }
+
+    object Login : Screen(
+        route = AllScreens.LOGIN.name
+    ) {
+        fun createRoute() = AllScreens.LOGIN.name
+    }
+
+    object Register : Screen(
+        route = AllScreens.REGISTER.name
+    ) {
+        fun createRoute() = AllScreens.REGISTER.name
+    }
+
+    object ForgotPassword : Screen(
+        route = AllScreens.FORGOT_PASSWORD.name
+    ) {
+        fun createRoute() = AllScreens.FORGOT_PASSWORD.name
     }
 
 }

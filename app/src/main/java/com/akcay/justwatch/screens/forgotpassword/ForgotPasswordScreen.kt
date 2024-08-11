@@ -1,15 +1,15 @@
-package com.akcay.justwatch.screens.register
+package com.akcay.justwatch.screens.forgotpassword
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun RegisterScreen() {
+fun ForgotPasswordScreen() {
 
 }
 
 @Composable
 @Preview
-fun RegisterScreenPreview() {
+fun ForgotPasswordScreenPreview() {
 
 }
