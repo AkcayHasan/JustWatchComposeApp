@@ -7,9 +7,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.akcay.justwatch.BottomNavSections
+import com.akcay.justwatch.R
 
 @Composable
 fun JWBottomNavBar(
@@ -29,7 +32,12 @@ fun JWBottomNavBar(
                     selectedItem.invoke(justWatchBottomNavBarItems)
                 },
                 label = {
-                    Text(text = stringResource(id = justWatchBottomNavBarItems.titleResId))
+                    Text(
+                        text = stringResource(id = justWatchBottomNavBarItems.titleResId),
+                        fontFamily = FontFamily(
+                            Font(R.font.tt_medium)
+                        )
+                    )
                 },
                 icon = {
                     Icon(

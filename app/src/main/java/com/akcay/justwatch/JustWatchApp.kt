@@ -73,7 +73,11 @@ enum class BottomNavSections(
         Icons.Default.Settings,
         Screen.UpcomingMovies.route
     ),
-    PROFILE(R.string.profile_title, Icons.Default.Settings, Screen.Profile.route)
+    PROFILE(
+        R.string.profile_title,
+        Icons.Default.Settings,
+        Screen.Profile.route
+    )
 }
 
 @Composable
@@ -175,6 +179,7 @@ private fun NavGraphBuilder.justWatchNavGraph(
             },
         )
     }
+    // TODO: splash için de composable oluştur ve izinleri vs onun içerisinde al
     composable(route = MainDestinations.ONBOARDING_ROUTE) {
         OnBoardingScreen(
             buttonClicked = { clickActions, args ->

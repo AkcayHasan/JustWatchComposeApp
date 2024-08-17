@@ -1,6 +1,7 @@
 package com.akcay.justwatch
 
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -10,7 +11,6 @@ import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import com.akcay.justwatch.screens.splash.SplashScreenViewModel
-import com.akcay.justwatch.ui.theme.JustWatchTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -45,8 +45,8 @@ class JustWatchActivity : ComponentActivity() {
                 }
             } else {
                 JustWatchApp()
+                splashViewModel.setLoadingStatus(loading = false)
             }
-            splashViewModel.setLoadingStatus(loading = false)
         }
     }
 }

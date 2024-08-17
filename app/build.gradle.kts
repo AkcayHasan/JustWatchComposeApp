@@ -110,4 +110,7 @@ dependencies {
 
     // DataStore
     implementation(libs.dataStore)
+
+    // Chucker
+    debugImplementation(libs.chucker)
 }

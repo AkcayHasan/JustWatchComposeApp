@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config>
+        <domain includeSubdomains="true">developer.themoviedb.org</domain>
+        <pin-set>
+            <pin digest="SHA-256">qyJmEF8ijQSSOnhDs/4C+GrBin2Mvtn665DdX9gnQdY=</pin>
+            <!-- this is the backup pin-->
+            <pin digest="SHA-256">qyJmEF8ijQSSOnhDs/4C+GrBin2Mvtn665DdX9gnQdY=</pin>
+        </pin-set>
+    </domain-config>
+</network-security-config>

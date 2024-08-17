@@ -1,10 +1,13 @@
 package com.akcay.justwatch.di
 
+import android.content.Context
 import com.akcay.justwatch.BuildConfig
 import com.akcay.justwatch.network.MovieService
+import com.chuckerteam.chucker.api.ChuckerInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -21,11 +24,12 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideOkHttpClient(@ApplicationContext context: Context): OkHttpClient {
         return OkHttpClient.Builder()
             .connectTimeout(CONNECTION_TIMEOUT, TimeUnit.SECONDS)
             .readTimeout(CONNECTION_TIMEOUT, TimeUnit.SECONDS)
             .writeTimeout(CONNECTION_TIMEOUT, TimeUnit.SECONDS)
+            .addInterceptor(ChuckerInterceptor(context = context))
             .addInterceptor {
                 val request = it.request()
                 val newRequest = request.newBuilder()

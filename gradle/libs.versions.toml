@@ -17,6 +17,7 @@ retrofitVersion = "2.9.0"
 coilVersion = "2.6.0"
 lottieVersion = "6.4.0"
 dataStoreVersion = "1.0.0"
+chuckerVersion = "4.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -46,6 +47,7 @@ retrofit-gson = { group = "com.squareup.retrofit2", name = "converter-gson", ver
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coilVersion" }
 lottie = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottieVersion" }
 dataStore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStoreVersion" }
+chucker = { group = "com.github.chuckerteam.chucker", name = "library", version.ref = "chuckerVersion"}
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
