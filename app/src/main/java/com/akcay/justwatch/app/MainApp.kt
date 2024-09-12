@@ -1,4 +1,4 @@
-package com.akcay.justwatch
+package com.akcay.justwatch.app
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

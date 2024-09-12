@@ -30,6 +30,9 @@ class SplashScreenViewModel @Inject constructor() : ViewModel() {
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading
 
+    private val _onContinue = MutableStateFlow(false)
+    val onContinue: StateFlow<Boolean> = _onContinue
+
     fun setLoadingStatus(loading: Boolean) {
         _isLoading.value = loading
     }
@@ -58,12 +61,12 @@ class SplashScreenViewModel @Inject constructor() : ViewModel() {
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     @Composable
-    fun ShowNotificationPermission(onPermissionGranted: () -> Unit) {
+    fun ShowNotificationPermission() {
         val context = LocalContext.current
 
         val launcher =
             rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { isGranted ->
-                onPermissionGranted.invoke()
+                _onContinue.value = true
             }
 
         LaunchedEffect(key1 = Unit) {
@@ -73,7 +76,7 @@ class SplashScreenViewModel @Inject constructor() : ViewModel() {
                 ) == PermissionChecker.PERMISSION_GRANTED
             ) {
                 // Permission is already granted, proceed
-                onPermissionGranted.invoke()
+                _onContinue.value = true
             } else {
                 // Launch the native permission dialog
                 launcher.launch(Manifest.permission.POST_NOTIFICATIONS)

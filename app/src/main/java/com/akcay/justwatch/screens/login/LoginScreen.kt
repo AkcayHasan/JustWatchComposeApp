@@ -11,21 +11,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Blue
-import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
@@ -35,41 +32,58 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.akcay.justwatch.MainDestinations
 import com.akcay.justwatch.R
+import com.akcay.justwatch.component.EmailField
+import com.akcay.justwatch.R.string as AppText
+import com.akcay.justwatch.R.drawable as AppIcon
+import com.akcay.justwatch.component.JWRoundedCheckBox
+import com.akcay.justwatch.component.PasswordField
+import com.akcay.justwatch.ext.isValidEmail
 import com.akcay.justwatch.navigation.Screen
-import com.akcay.justwatch.screens.forgotpassword.ForgotPasswordScreen
-import com.akcay.justwatch.screens.register.RegisterScreen
 import com.akcay.justwatch.ui.theme.Green2
 import com.akcay.justwatch.ui.theme.LightBlue
 
-fun NavGraphBuilder.addLoginGraph(
-    modifier: Modifier = Modifier,
-    onLoginClick: (String, String) -> Unit,
-    onRegisterClick: () -> Unit,
-    onForgotPasswordClick: () -> Unit,
-    onGuestClick: () -> Unit,
-) {
-    composable(Screen.Login.route) {
-        LoginScreen(onLoginClick, onRegisterClick, onForgotPasswordClick, onGuestClick)
-    }
-    composable(Screen.Register.route) {
-        RegisterScreen()
-    }
-    composable(Screen.ForgotPassword.route) {
-        ForgotPasswordScreen()
-    }
-}
-
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun LoginScreen(
-    onLoginClick: (String, String) -> Unit,
-    onRegisterClick: () -> Unit,
-    onForgotPasswordClick: () -> Unit,
-    onGuestClick: () -> Unit,
+    navigate: (String) -> Unit,
+    navigateAndPopUp: (String, String) -> Unit,
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
+    val uiState by viewModel.uiState
+
+    LoginScreenContent(
+        uiState = uiState,
+        onForgotPasswordClick = { navigate.invoke("") },
+        onEntryAsGuestClick = {
+            navigateAndPopUp.invoke(
+                MainDestinations.HOME_ROUTE,
+                MainDestinations.LOGIN_ROUTE
+            )
+        },
+        onEmailChange = viewModel::onEmailChange,
+        onPasswordChange = viewModel::onPasswordChange,
+        onLoginClick = { viewModel.onLoginClick(navigateAndPopUp) },
+        onSignInClick = { navigate.invoke(Screen.Register.route) }
+    )
+}
+
+@Composable
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+fun LoginScreenContent(
+    uiState: LoginUiState,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onLoginClick: () -> Unit,
+    onSignInClick: () -> Unit,
+    onForgotPasswordClick: () -> Unit,
+    onEntryAsGuestClick: () -> Unit
+) {
+    var checked by remember { mutableStateOf(false) }
+
+    var passwordVisible by remember { mutableStateOf(false) }
+
     Scaffold(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -81,7 +95,7 @@ fun LoginScreen(
                 modifier = Modifier
                     .width(150.dp)
                     .height(150.dp),
-                painter = painterResource(id = R.drawable.just_watch_logo),
+                painter = painterResource(id = AppIcon.just_watch_logo),
                 contentDescription = "JustWatchLogo"
             )
             Text(
@@ -111,15 +125,18 @@ fun LoginScreen(
                 textAlign = TextAlign.Start,
                 fontSize = 15.sp
             )
-            OutlinedTextField(
+            EmailField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 10.dp, start = 20.dp, end = 20.dp),
                 shape = RoundedCornerShape(10.dp),
-                value = "",
-                onValueChange = {},
-                leadingIcon = { Icon(Icons.Default.Email, "", tint = Gray) },
-                maxLines = 1
+                value = uiState.email,
+                onNewValue = onEmailChange
+            )
+            JWRoundedCheckBox(
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp),
+                label = "We can use animations to make it behave similar to the default",
+                isChecked = uiState.email.isValidEmail()
             )
             Text(
                 modifier = Modifier
@@ -134,16 +151,15 @@ fun LoginScreen(
                 textAlign = TextAlign.Start,
                 fontSize = 15.sp
             )
-            OutlinedTextField(
+            PasswordField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 10.dp, start = 20.dp, end = 20.dp),
+                value = uiState.password,
                 shape = RoundedCornerShape(10.dp),
-                value = "",
-                onValueChange = {},
-                trailingIcon = { Icon(Icons.Default.Search, "", tint = Gray) },
-                leadingIcon = { Icon(Icons.Default.Lock, "", tint = Gray) },
-                maxLines = 1
+                onNewValue = onPasswordChange,
+                isVisible = passwordVisible,
+                visibilityClick = { passwordVisible = !passwordVisible }
             )
             Text(
                 modifier = Modifier
@@ -170,7 +186,8 @@ fun LoginScreen(
                     contentColor = White,
                     disabledContentColor = Green,
                     disabledContainerColor = Green
-                ), onClick = { /*TODO*/ }) {
+                ), onClick = onLoginClick
+            ) {
                 Text(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -198,7 +215,7 @@ fun LoginScreen(
                     modifier = Modifier
                         .padding(start = 5.dp)
                         .clickable {
-
+                            onSignInClick.invoke()
                         }, fontFamily = FontFamily(
                         Font(
                             R.font.tt_bold
@@ -211,7 +228,7 @@ fun LoginScreen(
                 modifier = Modifier
                     .padding(top = 10.dp)
                     .clickable {
-                        onGuestClick.invoke()
+                        onEntryAsGuestClick.invoke()
                     }, fontFamily = FontFamily(
                     Font(
                         R.font.tt_bold
@@ -221,6 +238,7 @@ fun LoginScreen(
         }
     }
 }
+
 
 @Preview
 @Composable
@@ -267,15 +285,18 @@ fun LoginScreenPreview() {
                 textAlign = TextAlign.Start,
                 fontSize = 15.sp
             )
-            OutlinedTextField(
+            EmailField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 10.dp, start = 20.dp, end = 20.dp),
                 shape = RoundedCornerShape(10.dp),
-                value = "",
-                onValueChange = {},
-                leadingIcon = { Icon(Icons.Default.Email, "", tint = Gray) },
-                maxLines = 1
+                value = "Email",
+                onNewValue = {}
+            )
+            JWRoundedCheckBox(
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp),
+                label = "We can use animations to make it behave similar to the default",
+                isChecked = true
             )
             Text(
                 modifier = Modifier
@@ -290,31 +311,38 @@ fun LoginScreenPreview() {
                 textAlign = TextAlign.Start,
                 fontSize = 15.sp
             )
-            OutlinedTextField(
+            PasswordField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 10.dp, start = 20.dp, end = 20.dp),
+                value = "asdasd",
                 shape = RoundedCornerShape(10.dp),
-                value = "",
-                onValueChange = {},
-                trailingIcon = { Icon(Icons.Default.Search, "", tint = Gray) },
-                leadingIcon = { Icon(Icons.Default.Lock, "", tint = Gray) },
-                maxLines = 1
+                onNewValue = {},
+                isVisible = false,
+                visibilityClick = {}
             )
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 10.dp, end = 30.dp),
-                fontFamily = FontFamily(
-                    Font(
-                        R.font.tt_bold
-                    )
-                ),
-                text = "Forgot password?",
-                color = Blue,
-                textAlign = TextAlign.End,
-                fontSize = 15.sp
-            )
+            Row {
+                JWRoundedCheckBox(
+                    modifier = Modifier.padding(top = 10.dp, start = 20.dp),
+                    label = "Remember Me",
+                    isChecked = false,
+                    isClickable = true
+                )
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 10.dp, end = 30.dp),
+                    fontFamily = FontFamily(
+                        Font(
+                            R.font.tt_bold
+                        )
+                    ),
+                    text = "Forgot password?",
+                    color = Blue,
+                    textAlign = TextAlign.End,
+                    fontSize = 15.sp
+                )
+            }
             ElevatedButton(
                 modifier = Modifier
                     .fillMaxWidth()

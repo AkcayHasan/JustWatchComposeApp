@@ -8,6 +8,8 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import com.akcay.justwatch.screens.splash.SplashScreenViewModel
@@ -39,13 +41,24 @@ class JustWatchActivity : ComponentActivity() {
         )
 
         setContent {
+            val continueState by splashViewModel.onContinue.collectAsState()
+
             if (splashViewModel.checkDeviceIsRooted()) {
                 splashViewModel.ErrorDialog {
                     finish()
                 }
             } else {
-                JustWatchApp()
-                splashViewModel.setLoadingStatus(loading = false)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    splashViewModel.ShowNotificationPermission().apply {
+                        if (continueState) {
+                            JustWatchApp()
+                            splashViewModel.setLoadingStatus(loading = false)
+                        }
+                    }
+                } else {
+                    JustWatchApp()
+                    splashViewModel.setLoadingStatus(loading = false)
+                }
             }
         }
     }

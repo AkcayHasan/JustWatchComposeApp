@@ -103,10 +103,15 @@ fun MoviesScreen(
     }
 }
 
+@Composable
+fun MoviesScreenContent() {
+
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun PopularMoviesScreenPreview() {
+fun MoviesScreenPreview() {
     val list = MovieResponse(
         page = null,
         movieResults = arrayListOf(

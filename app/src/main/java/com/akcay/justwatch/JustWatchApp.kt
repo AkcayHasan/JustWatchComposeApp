@@ -29,13 +29,77 @@ import com.akcay.justwatch.component.JWBottomNavBar
 import com.akcay.justwatch.navigation.Screen
 import com.akcay.justwatch.screens.detail.MovieDetailScreen
 import com.akcay.justwatch.screens.home.HomeViewModel
-import com.akcay.justwatch.screens.login.addLoginGraph
 import com.akcay.justwatch.screens.onboarding.ClickActions
 import com.akcay.justwatch.screens.onboarding.OnBoardingScreen
 import com.akcay.justwatch.screens.movies.MoviesScreen
 import com.akcay.justwatch.screens.profile.ProfileScreen
 import com.akcay.justwatch.screens.favourite.UpcomingMoviesScreen
+import com.akcay.justwatch.screens.forgotpassword.ForgotPasswordScreen
+import com.akcay.justwatch.screens.login.LoginScreen
+import com.akcay.justwatch.screens.register.RegisterScreen
 import com.akcay.justwatch.ui.theme.JustWatchTheme
+
+@Composable
+fun JustWatchApp(viewModel: HomeViewModel = hiltViewModel()) {
+    JustWatchTheme {
+        val justWatchNavController = rememberJustWatchNavController()
+
+        var startDestination by remember {
+            mutableStateOf(MainDestinations.LOGIN_ROUTE)
+        }
+
+        LaunchedEffect(Unit) {
+            val shouldShowOnboarding = viewModel.storeManager.shouldOnBoardingVisible()
+            if (shouldShowOnboarding) {
+                startDestination = MainDestinations.ONBOARDING_ROUTE
+            }
+        }
+
+        val screens = listOf(
+            BottomNavSections.POPULAR_MOVIES,
+            BottomNavSections.UPCOMING_MOVIES,
+            BottomNavSections.PROFILE
+        )
+
+        val showBottomBar =
+            justWatchNavController.navController.currentBackStackEntryAsState().value?.destination?.route in screens.map {
+                it.route
+            }
+
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            bottomBar = {
+                if (showBottomBar) {
+                    JWBottomNavBar(
+                        modifier = Modifier,
+                        navController = justWatchNavController.navController,
+                        selectedItem = {
+                            justWatchNavController.navigate(it.route)
+                        },
+                        items = screens
+                    )
+                }
+            }
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = it.calculateBottomPadding())
+            ) {
+                NavHost(
+                    navController = justWatchNavController.navController,
+                    startDestination = startDestination,
+                    enterTransition = { EnterTransition.None },
+                    exitTransition = { ExitTransition.None }
+                ) {
+                    justWatchNavGraph(
+                        justWatchNavController = justWatchNavController
+                    )
+                }
+            }
+        }
+    }
+}
 
 object MainDestinations {
     const val HOME_ROUTE = "home"
@@ -55,6 +119,31 @@ fun NavGraphBuilder.addHomeGraph(
     }
     composable(BottomNavSections.PROFILE.route) {
         ProfileScreen()
+    }
+}
+
+fun NavGraphBuilder.addLoginGraph(
+    justWatchNavController: JustWatchNavController
+) {
+    composable(Screen.Login.route) {
+        LoginScreen(
+            navigate = { route ->
+                justWatchNavController.navigate(route)
+            },
+            navigateAndPopUp = { route, popupName ->
+                justWatchNavController.navigateAndPopUp(route, popupName)
+            }
+        )
+    }
+    composable(Screen.Register.route) {
+        RegisterScreen(
+            navigateAndPopUp = { route, popupName ->
+                justWatchNavController.navigateAndPopUp(route, popupName)
+            }
+        )
+    }
+    composable(Screen.ForgotPassword.route) {
+        ForgotPasswordScreen()
     }
 }
 
@@ -81,79 +170,21 @@ enum class BottomNavSections(
 }
 
 @Composable
-fun JustWatchApp(viewModel: HomeViewModel = hiltViewModel()) {
-    JustWatchTheme {
-        val justWatchNavController = rememberNavController()
-
-        var startDestination by remember {
-            mutableStateOf(MainDestinations.LOGIN_ROUTE)
-        }
-
-        LaunchedEffect(Unit) {
-            val shouldShowOnboarding = viewModel.storeManager.shouldOnBoardingVisible()
-            if (shouldShowOnboarding) {
-                startDestination = MainDestinations.ONBOARDING_ROUTE
-            }
-        }
-
-
-        val screens = listOf(
-            BottomNavSections.POPULAR_MOVIES,
-            BottomNavSections.UPCOMING_MOVIES,
-            BottomNavSections.PROFILE
-        )
-
-        val showBottomBar =
-            justWatchNavController.currentBackStackEntryAsState().value?.destination?.route in screens.map {
-                it.route
-            }
-
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            bottomBar = {
-                if (showBottomBar) {
-                    JWBottomNavBar(
-                        modifier = Modifier,
-                        navController = justWatchNavController,
-                        selectedItem = {
-                            justWatchNavController.navigate(it.route) {
-                                launchSingleTop = true
-                            }
-                        },
-                        items = screens
-                    )
-                }
-            }
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(bottom = it.calculateBottomPadding())
-            ) {
-                NavHost(
-                    navController = justWatchNavController,
-                    startDestination = startDestination,
-                    enterTransition = { EnterTransition.None },
-                    exitTransition = { ExitTransition.None }
-                ) {
-                    justWatchNavGraph(
-                        navController = justWatchNavController
-                    )
-                }
-            }
-        }
-    }
+fun rememberJustWatchNavController(
+    navController: NavHostController = rememberNavController(),
+) = remember(navController) {
+    JustWatchNavController(navController = navController)
 }
 
 private fun NavGraphBuilder.justWatchNavGraph(
-    navController: NavHostController
+    justWatchNavController: JustWatchNavController
 ) {
     navigation(
         route = MainDestinations.HOME_ROUTE,
         startDestination = BottomNavSections.POPULAR_MOVIES.route,
     ) {
         addHomeGraph(onMovieSelected = { id ->
-            navController.navigate(
+            justWatchNavController.navigate(
                 route = Screen.MovieDetail.createRoute(id)
             )
         })
@@ -162,35 +193,19 @@ private fun NavGraphBuilder.justWatchNavGraph(
         route = MainDestinations.LOGIN_ROUTE,
         startDestination = Screen.Login.route
     ) {
-        addLoginGraph(
-            onLoginClick = { email, password ->
-
-            },
-            onRegisterClick = {
-
-            },
-            onForgotPasswordClick = {
-
-            },
-            onGuestClick = {
-                navController.navigate(
-                    route = MainDestinations.HOME_ROUTE
-                )
-            },
-        )
+        addLoginGraph(justWatchNavController)
     }
-    // TODO: splash için de composable oluştur ve izinleri vs onun içerisinde al
     composable(route = MainDestinations.ONBOARDING_ROUTE) {
         OnBoardingScreen(
             buttonClicked = { clickActions, args ->
                 when (clickActions) {
                     ClickActions.GET_STARTED_ONBOARDING -> {
-                        navController.navigate(MainDestinations.LOGIN_ROUTE)
+                        justWatchNavController.navigate(MainDestinations.LOGIN_ROUTE)
                     }
 
                     ClickActions.NEXT_ONBOARDING -> {}
                     ClickActions.SKIP_ONBOARDING -> {
-                        navController.navigate(MainDestinations.LOGIN_ROUTE)
+                        justWatchNavController.navigate(MainDestinations.LOGIN_ROUTE)
                     }
 
                     ClickActions.PREVIOUS_ONBOARDING -> {}
@@ -206,7 +221,7 @@ private fun NavGraphBuilder.justWatchNavGraph(
         val movieId = arguments.getLong("movieId")
         MovieDetailScreen(
             upPress = {
-                navController.navigateUp()
+                justWatchNavController.popUp()
             }, movieId = movieId
         )
     }
