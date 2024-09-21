@@ -49,8 +49,8 @@ class RegisterViewModel @Inject constructor(
     fun onRegisterClick(openAndPopUp: (String, String) -> Unit) {
 
         launchCatching(logService = logService) {
-            accountService.register(email = email, password = password)
             _loadingStatus.emit(true)
+            accountService.register(email = email, password = password)
             openAndPopUp.invoke(MainDestinations.HOME_ROUTE, AllScreens.REGISTER.name)
         }
     }

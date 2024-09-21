@@ -56,12 +56,7 @@ fun LoginScreen(
     LoginScreenContent(
         uiState = uiState,
         onForgotPasswordClick = { navigate.invoke("") },
-        onEntryAsGuestClick = {
-            navigateAndPopUp.invoke(
-                MainDestinations.HOME_ROUTE,
-                MainDestinations.LOGIN_ROUTE
-            )
-        },
+        onEntryAsGuestClick = { viewModel.createAnonymousUser(navigateAndPopUp) },
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
         onLoginClick = { viewModel.onLoginClick(navigateAndPopUp) },

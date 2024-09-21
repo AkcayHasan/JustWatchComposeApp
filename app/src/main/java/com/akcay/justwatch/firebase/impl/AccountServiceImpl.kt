@@ -31,7 +31,10 @@ class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : A
     }
 
     override suspend fun register(email: String, password: String) {
-        val credential = EmailAuthProvider.getCredential(email, password)
-        auth.currentUser!!.linkWithCredential(credential).await()
+        auth.createUserWithEmailAndPassword(email, password).await()
+    }
+
+    override suspend fun createAnonymousUser() {
+        auth.signInAnonymously().await()
     }
 }

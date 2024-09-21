@@ -3,6 +3,8 @@ agp = "8.3.2"
 kotlin = "1.8.10"
 coreKtx = "1.9.0"
 junit = "4.13.2"
+mockito = "3.11.2"
+coroutines-test = "1.5.2"
 lifecycleRuntimeKtx = "2.8.5"
 androidx-lifecycle-runtime-compose = "2.8.0"
 activityCompose = "1.8.2"
@@ -25,6 +27,8 @@ firebaseCrashlytics = "3.0.2"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+mockito = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
+coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines-test" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle-runtime-compose" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
