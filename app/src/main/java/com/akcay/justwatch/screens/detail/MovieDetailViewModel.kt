@@ -3,11 +3,11 @@ package com.akcay.justwatch.screens.detail
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.akcay.justwatch.data.model.detailresponse.MovieDetailResponse
-import com.akcay.justwatch.data.model.detailresponse.creditsresponse.MovieDetailCreditsResponse
-import com.akcay.justwatch.data.model.detailresponse.videoresponse.MovieVideoResponse
-import com.akcay.justwatch.repository.MovieRepository
-import com.akcay.justwatch.util.NetworkResult
+import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.detailresponse.MovieDetailResponse
+import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.detailresponse.creditsresponse.MovieDetailCreditsResponse
+import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.detailresponse.videoresponse.MovieVideoResponse
+import com.akcay.justwatch.domain.repository.MovieRepository
+import com.akcay.justwatch.internal.util.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

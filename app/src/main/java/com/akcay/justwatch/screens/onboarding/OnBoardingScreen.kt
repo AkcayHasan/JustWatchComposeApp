@@ -38,9 +38,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.akcay.justwatch.R
-import com.akcay.justwatch.data.model.LoaderIntro
-import com.akcay.justwatch.data.model.OnBoardingData
-import com.akcay.justwatch.util.Constants
+import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.LoaderIntro
+import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.OnBoardingData
+import com.akcay.justwatch.internal.util.Constants
 import kotlinx.coroutines.launch
 
 enum class ClickActions {

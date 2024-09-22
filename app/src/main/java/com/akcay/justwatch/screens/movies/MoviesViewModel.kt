@@ -3,9 +3,9 @@ package com.akcay.justwatch.screens.movies
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.akcay.justwatch.data.model.listresponse.MovieResponse
-import com.akcay.justwatch.repository.MovieRepository
-import com.akcay.justwatch.util.NetworkResult
+import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.listresponse.MovieResponse
+import com.akcay.justwatch.domain.usecase.GetAllPopularMoviesUseCase
+import com.akcay.justwatch.internal.util.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MoviesViewModel @Inject constructor(
-    private val repo: MovieRepository
+    private val getAllPopularMoviesUseCase: GetAllPopularMoviesUseCase
 ): ViewModel() {
 
     private val _loadingState = MutableStateFlow(value = false)
@@ -26,7 +26,7 @@ class MoviesViewModel @Inject constructor(
     fun getAllPopularMovies() {
         viewModelScope.launch {
             showLoading()
-            repo.getAllPopularMovies().collect {
+            getAllPopularMoviesUseCase().collect {
                 when(it) {
                     is NetworkResult.Success -> {
                         _popularMovieList.value = it.data

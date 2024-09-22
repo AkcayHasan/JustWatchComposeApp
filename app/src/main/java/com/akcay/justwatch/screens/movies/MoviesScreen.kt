@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -22,14 +21,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.akcay.justwatch.component.JWTab
-import com.akcay.justwatch.component.JWTopAppBar
-import com.akcay.justwatch.component.ListMovieItem
-import com.akcay.justwatch.data.model.listresponse.MovieResponse
-import com.akcay.justwatch.data.model.listresponse.MovieResult
-import com.akcay.justwatch.util.Constants
+import com.akcay.justwatch.ui.component.JWTab
+import com.akcay.justwatch.ui.component.JWTopAppBar
+import com.akcay.justwatch.ui.component.ListMovieItem
+import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.listresponse.MovieResponse
+import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.listresponse.MovieResult
+import com.akcay.justwatch.internal.util.Constants
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)

@@ -125,4 +125,5 @@ dependencies {
 
     // Chucker
     debugImplementation(libs.chucker)
+    releaseImplementation(libs.chucker.release)
 }

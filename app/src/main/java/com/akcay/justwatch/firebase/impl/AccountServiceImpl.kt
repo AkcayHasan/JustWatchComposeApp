@@ -1,10 +1,8 @@
 package com.akcay.justwatch.firebase.impl
 
-import com.akcay.justwatch.data.model.User
+import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.User
 import com.akcay.justwatch.firebase.service.AccountService
-import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthProvider
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow

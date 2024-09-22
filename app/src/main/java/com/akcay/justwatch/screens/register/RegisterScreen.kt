@@ -38,11 +38,12 @@ import com.akcay.justwatch.R.string as AppText
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.akcay.justwatch.R
-import com.akcay.justwatch.component.EmailField
-import com.akcay.justwatch.component.JWRoundedCheckBox
-import com.akcay.justwatch.component.PasswordField
-import com.akcay.justwatch.ext.isValidEmail
-import com.akcay.justwatch.ext.passwordMatches
+import com.akcay.justwatch.ui.component.EmailField
+import com.akcay.justwatch.ui.component.JWRoundedCheckBox
+import com.akcay.justwatch.ui.component.PasswordField
+import com.akcay.justwatch.internal.ext.isValidEmail
+import com.akcay.justwatch.internal.ext.passwordMatches
+import com.akcay.justwatch.navigation.Screen
 import com.akcay.justwatch.ui.theme.Green2
 import com.akcay.justwatch.ui.theme.LightBlue
 
@@ -60,7 +61,8 @@ fun RegisterScreen(
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
         onRepeatPasswordChange = viewModel::onRepeatPasswordChange,
-        onRegisterClick = { viewModel.onRegisterClick(navigateAndPopUp) }
+        onRegisterClick = { viewModel.onRegisterClick(navigateAndPopUp) },
+        onLoginClick = { navigateAndPopUp.invoke(Screen.Login.route, Screen.Register.route) }
     )
 }
 
@@ -72,7 +74,8 @@ fun RegisterScreenContent(
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onRepeatPasswordChange: (String) -> Unit,
-    onRegisterClick: () -> Unit
+    onRegisterClick: () -> Unit,
+    onLoginClick: () -> Unit
 ) {
     var isPasswordVisibility by remember {
         mutableStateOf(false)
@@ -82,7 +85,8 @@ fun RegisterScreenContent(
         mutableStateOf(false)
     }
 
-    val passwordMatches = uiState.password.isNotEmpty() && uiState.repeatPassword.passwordMatches(uiState.password)
+    val passwordMatches =
+        uiState.password.isNotEmpty() && uiState.repeatPassword.passwordMatches(uiState.password)
 
 
     Scaffold(modifier = Modifier.fillMaxSize()) {
@@ -234,7 +238,7 @@ fun RegisterScreenContent(
                         modifier = Modifier
                             .padding(start = 5.dp)
                             .clickable {
-
+                                onLoginClick.invoke()
                             }, fontFamily = FontFamily(
                             Font(
                                 R.font.tt_bold

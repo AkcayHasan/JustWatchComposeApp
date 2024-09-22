@@ -1,6 +1,6 @@
 package com.akcay.justwatch.firebase.service
 
-import com.akcay.justwatch.data.model.User
+import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.User
 import kotlinx.coroutines.flow.Flow
 
 interface AccountService {

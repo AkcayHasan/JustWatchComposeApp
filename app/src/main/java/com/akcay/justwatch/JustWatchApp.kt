@@ -25,7 +25,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
-import com.akcay.justwatch.component.JWBottomNavBar
+import com.akcay.justwatch.ui.component.JWBottomNavBar
 import com.akcay.justwatch.navigation.Screen
 import com.akcay.justwatch.screens.detail.MovieDetailScreen
 import com.akcay.justwatch.screens.home.HomeViewModel

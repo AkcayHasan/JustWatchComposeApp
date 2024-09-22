@@ -3,7 +3,7 @@ package com.akcay.justwatch.screens.login
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.akcay.justwatch.MainDestinations
-import com.akcay.justwatch.ext.launchCatching
+import com.akcay.justwatch.internal.ext.launchCatching
 import com.akcay.justwatch.firebase.service.AccountService
 import com.akcay.justwatch.firebase.service.LogService
 import dagger.hilt.android.lifecycle.HiltViewModel

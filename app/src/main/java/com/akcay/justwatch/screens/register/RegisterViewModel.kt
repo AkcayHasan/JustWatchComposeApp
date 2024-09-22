@@ -3,8 +3,8 @@ package com.akcay.justwatch.screens.register
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.akcay.justwatch.MainDestinations
-import com.akcay.justwatch.ext.isValidEmail
-import com.akcay.justwatch.ext.launchCatching
+import com.akcay.justwatch.internal.ext.isValidEmail
+import com.akcay.justwatch.internal.ext.launchCatching
 import com.akcay.justwatch.firebase.service.AccountService
 import com.akcay.justwatch.firebase.service.LogService
 import com.akcay.justwatch.navigation.AllScreens
