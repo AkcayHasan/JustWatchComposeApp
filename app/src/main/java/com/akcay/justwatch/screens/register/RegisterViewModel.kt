@@ -3,21 +3,19 @@ package com.akcay.justwatch.screens.register
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.akcay.justwatch.MainDestinations
-import com.akcay.justwatch.internal.ext.isValidEmail
 import com.akcay.justwatch.internal.ext.launchCatching
-import com.akcay.justwatch.firebase.service.AccountService
-import com.akcay.justwatch.firebase.service.LogService
+import com.akcay.justwatch.firebase.service.AccountRepository
+import com.akcay.justwatch.firebase.service.LogRepository
 import com.akcay.justwatch.navigation.AllScreens
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
-import kotlin.math.log
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val logService: LogService,
-    private val accountService: AccountService
+    private val logRepository: LogRepository,
+    private val accountRepository: AccountRepository
 ) : ViewModel() {
 
     val uiState = mutableStateOf(RegisterUiState())
@@ -48,9 +46,9 @@ class RegisterViewModel @Inject constructor(
 
     fun onRegisterClick(openAndPopUp: (String, String) -> Unit) {
 
-        launchCatching(logService = logService) {
+        launchCatching(logRepository = logRepository) {
             _loadingStatus.emit(true)
-            accountService.register(email = email, password = password)
+            accountRepository.register(email = email, password = password)
             openAndPopUp.invoke(MainDestinations.HOME_ROUTE, AllScreens.REGISTER.name)
         }
     }

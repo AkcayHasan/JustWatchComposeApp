@@ -28,7 +28,6 @@ import androidx.navigation.navigation
 import com.akcay.justwatch.ui.component.JWBottomNavBar
 import com.akcay.justwatch.navigation.Screen
 import com.akcay.justwatch.screens.detail.MovieDetailScreen
-import com.akcay.justwatch.screens.home.HomeViewModel
 import com.akcay.justwatch.screens.onboarding.ClickActions
 import com.akcay.justwatch.screens.onboarding.OnBoardingScreen
 import com.akcay.justwatch.screens.movies.MoviesScreen
@@ -40,189 +39,195 @@ import com.akcay.justwatch.screens.register.RegisterScreen
 import com.akcay.justwatch.ui.theme.JustWatchTheme
 
 @Composable
-fun JustWatchApp(viewModel: HomeViewModel = hiltViewModel()) {
-    JustWatchTheme {
-        val justWatchNavController = rememberJustWatchNavController()
+fun JustWatchApp(viewModel: AppViewModel = hiltViewModel()) {
+  JustWatchTheme {
+    val justWatchNavController = rememberJustWatchNavController()
 
-        var startDestination by remember {
-            mutableStateOf(MainDestinations.LOGIN_ROUTE)
-        }
-
-        LaunchedEffect(Unit) {
-            val shouldShowOnboarding = viewModel.storeManager.shouldOnBoardingVisible()
-            if (shouldShowOnboarding) {
-                startDestination = MainDestinations.ONBOARDING_ROUTE
-            }
-        }
-
-        val screens = listOf(
-            BottomNavSections.POPULAR_MOVIES,
-            BottomNavSections.UPCOMING_MOVIES,
-            BottomNavSections.PROFILE
-        )
-
-        val showBottomBar =
-            justWatchNavController.navController.currentBackStackEntryAsState().value?.destination?.route in screens.map {
-                it.route
-            }
-
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            bottomBar = {
-                if (showBottomBar) {
-                    JWBottomNavBar(
-                        modifier = Modifier,
-                        navController = justWatchNavController.navController,
-                        selectedItem = {
-                            justWatchNavController.navigate(it.route)
-                        },
-                        items = screens
-                    )
-                }
-            }
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(bottom = it.calculateBottomPadding())
-            ) {
-                NavHost(
-                    navController = justWatchNavController.navController,
-                    startDestination = startDestination,
-                    enterTransition = { EnterTransition.None },
-                    exitTransition = { ExitTransition.None }
-                ) {
-                    justWatchNavGraph(
-                        justWatchNavController = justWatchNavController
-                    )
-                }
-            }
-        }
+    var startDestination by remember {
+      mutableStateOf(MainDestinations.LOGIN_ROUTE)
     }
+
+    LaunchedEffect(Unit) {
+      val shouldShowOnboarding = viewModel.storeManager.shouldOnBoardingVisible()
+      if (shouldShowOnboarding) {
+        startDestination = MainDestinations.ONBOARDING_ROUTE
+      }
+    }
+
+    val screens = listOf(
+      BottomNavSections.POPULAR_MOVIES,
+      BottomNavSections.UPCOMING_MOVIES,
+      BottomNavSections.PROFILE
+    )
+
+    val showBottomBar =
+      justWatchNavController.navController.currentBackStackEntryAsState().value?.destination?.route in screens.map {
+        it.route
+      }
+
+    Scaffold(
+      modifier = Modifier.fillMaxSize(),
+      bottomBar = {
+        if (showBottomBar) {
+          JWBottomNavBar(
+            modifier = Modifier,
+            navController = justWatchNavController.navController,
+            selectedItem = {
+              justWatchNavController.navigate(it.route)
+            },
+            items = screens
+          )
+        }
+      }
+    ) {
+      Box(
+        modifier = Modifier
+          .fillMaxSize()
+          .padding(bottom = it.calculateBottomPadding())
+      ) {
+        NavHost(
+          navController = justWatchNavController.navController,
+          startDestination = startDestination,
+          enterTransition = { EnterTransition.None },
+          exitTransition = { ExitTransition.None }
+        ) {
+          justWatchNavGraph(
+            justWatchNavController = justWatchNavController
+          )
+        }
+      }
+    }
+  }
 }
 
 object MainDestinations {
-    const val HOME_ROUTE = "home"
-    const val LOGIN_ROUTE = "login"
-    const val ONBOARDING_ROUTE = "onboarding"
+  const val HOME_ROUTE = "home"
+  const val LOGIN_ROUTE = "login"
+  const val ONBOARDING_ROUTE = "onboarding"
 }
 
 fun NavGraphBuilder.addHomeGraph(
-    modifier: Modifier = Modifier,
-    onMovieSelected: (Long) -> Unit
+  modifier: Modifier = Modifier,
+  onMovieSelected: (Long) -> Unit
 ) {
-    composable(BottomNavSections.POPULAR_MOVIES.route) {
-        MoviesScreen(onCardClick = onMovieSelected)
-    }
-    composable(BottomNavSections.UPCOMING_MOVIES.route) {
-        UpcomingMoviesScreen()
-    }
-    composable(BottomNavSections.PROFILE.route) {
-        ProfileScreen()
-    }
+  composable(BottomNavSections.POPULAR_MOVIES.route) {
+    MoviesScreen(onCardClick = onMovieSelected)
+  }
+  composable(BottomNavSections.UPCOMING_MOVIES.route) {
+    UpcomingMoviesScreen()
+  }
+  composable(BottomNavSections.PROFILE.route) {
+    ProfileScreen()
+  }
 }
 
 fun NavGraphBuilder.addLoginGraph(
-    justWatchNavController: JustWatchNavController
+  justWatchNavController: JustWatchNavController
 ) {
-    composable(Screen.Login.route) {
-        LoginScreen(
-            navigate = { route ->
-                justWatchNavController.navigate(route)
-            },
-            navigateAndPopUp = { route, popupName ->
-                justWatchNavController.navigateAndPopUp(route, popupName)
-            }
-        )
-    }
-    composable(Screen.Register.route) {
-        RegisterScreen(
-            navigateAndPopUp = { route, popupName ->
-                justWatchNavController.navigateAndPopUp(route, popupName)
-            }
-        )
-    }
-    composable(Screen.ForgotPassword.route) {
-        ForgotPasswordScreen()
-    }
+  composable(Screen.Login.route) {
+    LoginScreen(
+      navigate = { route ->
+        justWatchNavController.navigate(route)
+      },
+      navigateAndPopUp = { route, popupName ->
+        justWatchNavController.navigateAndPopUp(route, popupName)
+      }
+    )
+  }
+  composable(Screen.Register.route) {
+    RegisterScreen(
+      navigateAndPopUp = { route, popupName ->
+        justWatchNavController.navigateAndPopUp(route, popupName)
+      }
+    )
+  }
+  composable(Screen.ForgotPassword.route) {
+    ForgotPasswordScreen()
+  }
 }
 
 enum class BottomNavSections(
-    @StringRes val titleResId: Int,
-    val drawableResId: ImageVector,
-    val route: String
+  @StringRes val titleResId: Int,
+  val drawableResId: ImageVector,
+  val route: String
 ) {
-    POPULAR_MOVIES(
-        R.string.popular_movies_title,
-        Icons.Default.Settings,
-        Screen.PopularMovies.route
-    ),
-    UPCOMING_MOVIES(
-        R.string.upcoming_movies_title,
-        Icons.Default.Settings,
-        Screen.UpcomingMovies.route
-    ),
-    PROFILE(
-        R.string.profile_title,
-        Icons.Default.Settings,
-        Screen.Profile.route
-    )
+  POPULAR_MOVIES(
+    R.string.popular_movies_title,
+    Icons.Default.Settings,
+    Screen.PopularMovies.route
+  ),
+  UPCOMING_MOVIES(
+    R.string.upcoming_movies_title,
+    Icons.Default.Settings,
+    Screen.UpcomingMovies.route
+  ),
+  PROFILE(
+    R.string.profile_title,
+    Icons.Default.Settings,
+    Screen.Profile.route
+  )
 }
 
 @Composable
 fun rememberJustWatchNavController(
-    navController: NavHostController = rememberNavController(),
+  navController: NavHostController = rememberNavController(),
 ) = remember(navController) {
-    JustWatchNavController(navController = navController)
+  JustWatchNavController(navController = navController)
 }
 
 private fun NavGraphBuilder.justWatchNavGraph(
-    justWatchNavController: JustWatchNavController
+  justWatchNavController: JustWatchNavController
 ) {
-    navigation(
-        route = MainDestinations.HOME_ROUTE,
-        startDestination = BottomNavSections.POPULAR_MOVIES.route,
-    ) {
-        addHomeGraph(onMovieSelected = { id ->
-            justWatchNavController.navigate(
-                route = Screen.MovieDetail.createRoute(id)
+  navigation(
+    route = MainDestinations.HOME_ROUTE,
+    startDestination = BottomNavSections.POPULAR_MOVIES.route,
+  ) {
+    addHomeGraph(onMovieSelected = { id ->
+      justWatchNavController.navigate(
+        route = Screen.MovieDetail.createRoute(id)
+      )
+    })
+  }
+  navigation(
+    route = MainDestinations.LOGIN_ROUTE,
+    startDestination = Screen.Login.route
+  ) {
+    addLoginGraph(justWatchNavController)
+  }
+  composable(route = MainDestinations.ONBOARDING_ROUTE) {
+    OnBoardingScreen(
+      buttonClicked = { clickActions, args ->
+        when (clickActions) {
+          ClickActions.GET_STARTED_ONBOARDING -> {
+            justWatchNavController.navigateAndPopUp(
+              MainDestinations.LOGIN_ROUTE,
+              MainDestinations.ONBOARDING_ROUTE
             )
-        })
-    }
-    navigation(
-        route = MainDestinations.LOGIN_ROUTE,
-        startDestination = Screen.Login.route
-    ) {
-        addLoginGraph(justWatchNavController)
-    }
-    composable(route = MainDestinations.ONBOARDING_ROUTE) {
-        OnBoardingScreen(
-            buttonClicked = { clickActions, args ->
-                when (clickActions) {
-                    ClickActions.GET_STARTED_ONBOARDING -> {
-                        justWatchNavController.navigate(MainDestinations.LOGIN_ROUTE)
-                    }
+          }
 
-                    ClickActions.NEXT_ONBOARDING -> {}
-                    ClickActions.SKIP_ONBOARDING -> {
-                        justWatchNavController.navigate(MainDestinations.LOGIN_ROUTE)
-                    }
+          ClickActions.NEXT_ONBOARDING -> {}
+          ClickActions.SKIP_ONBOARDING -> {
+            justWatchNavController.navigateAndPopUp(
+              MainDestinations.LOGIN_ROUTE,
+              MainDestinations.ONBOARDING_ROUTE
+            )
+          }
 
-                    ClickActions.PREVIOUS_ONBOARDING -> {}
-                }
-            }
-        )
-    }
-    composable(
-        route = Screen.MovieDetail.route,
-        arguments = Screen.MovieDetail.navArgument
-    ) { backStackEntry ->
-        val arguments = requireNotNull(backStackEntry.arguments)
-        val movieId = arguments.getLong("movieId")
-        MovieDetailScreen(
-            upPress = {
-                justWatchNavController.popUp()
-            }, movieId = movieId
-        )
-    }
+          ClickActions.PREVIOUS_ONBOARDING -> {}
+        }
+      }
+    )
+  }
+  composable(
+    route = Screen.MovieDetail.route,
+    arguments = Screen.MovieDetail.navArgument
+  ) { backStackEntry ->
+    val arguments = requireNotNull(backStackEntry.arguments)
+    val movieId = arguments.getLong("movieId")
+    MovieDetailScreen(
+      upPress = {
+        justWatchNavController.popUp()
+      }, movieId = movieId
+    )
+  }
 }

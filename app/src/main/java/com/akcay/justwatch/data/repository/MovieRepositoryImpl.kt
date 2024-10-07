@@ -6,6 +6,7 @@ import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.detailres
 import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.listresponse.MovieResponse
 import com.akcay.justwatch.internal.di.IoDispatcher
 import com.akcay.justwatch.data.remote.api.MovieService
+import com.akcay.justwatch.data.remote.datasource.MovieRemoteDataSource
 import com.akcay.justwatch.domain.repository.MovieRepository
 import com.akcay.justwatch.internal.util.NetworkResult
 import com.akcay.justwatch.internal.util.safeApiCall
@@ -16,32 +17,32 @@ import javax.inject.Inject
 
 class MovieRepositoryImpl @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
-    private val service: MovieService
+    private val remoteDataSource: MovieRemoteDataSource
 ) : MovieRepository {
 
     override fun getAllPopularMovies(): Flow<NetworkResult<MovieResponse>> = flow {
         emit(
             safeApiCall(defaultDispatcher = dispatcher) {
-                service.getAllPopularMovies()
+                remoteDataSource.getAllPopularMovies()
             }
         )
     }
 
     override suspend fun getMovieById(movieId: Long): NetworkResult<MovieDetailResponse> {
         return safeApiCall(defaultDispatcher = dispatcher) {
-            service.getMovieById(movieId)
+            remoteDataSource.getMovieById(movieId)
         }
     }
 
     override suspend fun getMovieCastById(movieId: Long): NetworkResult<MovieDetailCreditsResponse> {
         return safeApiCall(defaultDispatcher = dispatcher) {
-            service.getMovieCredits(movieId = movieId)
+            remoteDataSource.getMovieCredits(id = movieId)
         }
     }
 
     override suspend fun getMovieVideoById(movieId: Long): NetworkResult<MovieVideoResponse> {
         return safeApiCall(defaultDispatcher = dispatcher) {
-            service.getMovieVideo(movieId = movieId)
+            remoteDataSource.getMovieVideo(id = movieId)
         }
     }
 

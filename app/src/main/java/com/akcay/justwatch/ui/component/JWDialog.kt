@@ -126,8 +126,8 @@ data class JWDialogBoxModel(
     val mainColor: Color,
     val title: String,
     val description: String,
-    val positiveButtonText: String?,
-    val negativeButtonText: String?
+    val positiveButtonText: String? = null,
+    val negativeButtonText: String? = null
 )
 
 @OptIn(ExperimentalMaterial3Api::class)

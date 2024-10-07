@@ -7,5 +7,11 @@ class MovieRemoteDataSource @Inject constructor(
     private val movieService: MovieService
 ) {
 
+    suspend fun getAllPopularMovies() = movieService.getAllPopularMovies()
 
+    suspend fun getMovieById(id: Long) = movieService.getMovieById(id)
+
+    suspend fun getMovieCredits(id: Long) = movieService.getMovieCredits(id)
+
+    suspend fun getMovieVideo(id: Long) = movieService.getMovieVideo(id)
 }

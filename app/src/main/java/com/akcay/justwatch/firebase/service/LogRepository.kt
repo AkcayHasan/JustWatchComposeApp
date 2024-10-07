@@ -1,6 +1,6 @@
 package com.akcay.justwatch.firebase.service
 
-interface LogService {
+interface LogRepository {
 
     fun logNonFatalCrash(throwable: Throwable)
 }
