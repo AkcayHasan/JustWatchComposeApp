@@ -29,9 +29,6 @@ class RegisterViewModel @Inject constructor(
     private val password
         get() = uiState.value.password
 
-    private val repeatPassword
-        get() = uiState.value.repeatPassword
-
     fun onEmailChange(newValue: String) {
         uiState.value = uiState.value.copy(email = newValue)
     }

@@ -34,8 +34,7 @@ class LoginViewModel @Inject constructor(
   fun onLoginClick(openAndPopUp: (String, String) -> Unit) {
     showLoading()
     launchCatching(logRepository) {
-      val result = signInUseCase(uiState.value.email, uiState.value.password)
-      when(result) {
+      when(val result = signInUseCase(uiState.value.email, uiState.value.password)) {
         is NetworkResult.Success -> {
           openAndPopUp.invoke(
             MainDestinations.HOME_ROUTE,
@@ -46,8 +45,8 @@ class LoginViewModel @Inject constructor(
           hideLoading()
         }
         is NetworkResult.Exception -> {
-          hideLoading()
-          dialogState.value = JWDialogBoxModel(mainColor = Red, title = "Error", description = result.e.message.toString(), positiveButtonText = "Ok")
+          //hideLoading()
+          //dialogState.value = JWDialogBoxModel(mainColor = Red, title = "Error", description = result.e.message.toString(), positiveButtonText = "Ok")
         }
       }
     }

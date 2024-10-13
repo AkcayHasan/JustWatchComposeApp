@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.CircularProgressIndicator
@@ -96,172 +97,169 @@ fun LoginScreenContent(
         .padding(top = 100.dp),
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
-      if (uiState.isLoading) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-          CircularProgressIndicator()
-        }
-      } else {
-        if (dialogState != null) {
-          showDialog = true
-          JWDialogBox(
-            showDialog = showDialog,
-            onDismissRequest = {  },
-            content = JWDialogBoxModel(
-              mainColor = dialogState.mainColor,
-              title = dialogState.title,
-              description = dialogState.description,
-              positiveButtonText = "Ok"
-            ),
-            positiveButtonClickAction = {
-              showDialog = false
-            }
+      if (dialogState != null) {
+        showDialog = true
+        JWDialogBox(
+          showDialog = showDialog,
+          onDismissRequest = { },
+          content = JWDialogBoxModel(
+            mainColor = dialogState.mainColor,
+            title = dialogState.title,
+            description = dialogState.description,
+            positiveButtonText = "Ok"
+          ),
+          positiveButtonClickAction = {
+            showDialog = false
+          }
+        )
+      }
+      Image(
+        modifier = Modifier
+          .width(150.dp)
+          .height(150.dp),
+        painter = painterResource(id = AppIcon.just_watch_logo),
+        contentDescription = "JustWatchLogo"
+      )
+      Text(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(top = 50.dp, start = 20.dp),
+        fontFamily = FontFamily(
+          Font(
+            R.font.tt_bold
           )
-        }
-        Image(
-          modifier = Modifier
-            .width(150.dp)
-            .height(150.dp),
-          painter = painterResource(id = AppIcon.just_watch_logo),
-          contentDescription = "JustWatchLogo"
-        )
-        Text(
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 50.dp, start = 20.dp),
-          fontFamily = FontFamily(
-            Font(
-              R.font.tt_bold
-            )
-          ), color = LightBlue,
-          fontSize = 25.sp,
-          text = "Welcome Back!",
-          textAlign = TextAlign.Start
-        )
+        ), color = LightBlue,
+        fontSize = 25.sp,
+        text = "Welcome Back!",
+        textAlign = TextAlign.Start
+      )
 
+      Text(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(top = 30.dp, start = 30.dp),
+        fontFamily = FontFamily(
+          Font(
+            R.font.tt_bold
+          )
+        ),
+        text = "Email",
+        textAlign = TextAlign.Start,
+        fontSize = 15.sp
+      )
+      EmailField(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(top = 10.dp, start = 20.dp, end = 20.dp),
+        shape = RoundedCornerShape(10.dp),
+        value = uiState.email,
+        onNewValue = onEmailChange
+      )
+      JWRoundedCheckBox(
+        modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp),
+        label = "We can use animations to make it behave similar to the default",
+        isChecked = uiState.email.isValidEmail()
+      )
+      Text(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(top = 30.dp, start = 30.dp),
+        fontFamily = FontFamily(
+          Font(
+            R.font.tt_bold
+          )
+        ),
+        text = "Password",
+        textAlign = TextAlign.Start,
+        fontSize = 15.sp
+      )
+      PasswordField(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(top = 10.dp, start = 20.dp, end = 20.dp),
+        value = uiState.password,
+        shape = RoundedCornerShape(10.dp),
+        onNewValue = onPasswordChange,
+        isVisible = passwordVisible,
+        visibilityClick = { passwordVisible = !passwordVisible }
+      )
+      Text(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(top = 10.dp, end = 30.dp),
+        fontFamily = FontFamily(
+          Font(
+            R.font.tt_bold
+          )
+        ),
+        text = "Forgot password?",
+        color = Blue,
+        textAlign = TextAlign.End,
+        fontSize = 15.sp
+      )
+      ElevatedButton(
+        modifier = Modifier
+          .fillMaxWidth()
+          .height(100.dp)
+          .padding(top = 50.dp, start = 30.dp, end = 30.dp),
+        shape = RoundedCornerShape(10.dp),
+        colors = ButtonColors(
+          containerColor = Green2,
+          contentColor = White,
+          disabledContentColor = Green,
+          disabledContainerColor = Green
+        ), onClick = onLoginClick
+      ) {
         Text(
           modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 30.dp, start = 30.dp),
+            .fillMaxWidth(),
           fontFamily = FontFamily(
             Font(
               R.font.tt_bold
             )
           ),
-          text = "Email",
-          textAlign = TextAlign.Start,
-          fontSize = 15.sp
+          text = "Log In",
+          color = White,
+          textAlign = TextAlign.Center,
+          fontSize = 20.sp
         )
-        EmailField(
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 10.dp, start = 20.dp, end = 20.dp),
-          shape = RoundedCornerShape(10.dp),
-          value = uiState.email,
-          onNewValue = onEmailChange
-        )
-        JWRoundedCheckBox(
-          modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp),
-          label = "We can use animations to make it behave similar to the default",
-          isChecked = uiState.email.isValidEmail()
-        )
-        Text(
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 30.dp, start = 30.dp),
-          fontFamily = FontFamily(
-            Font(
-              R.font.tt_bold
-            )
-          ),
-          text = "Password",
-          textAlign = TextAlign.Start,
-          fontSize = 15.sp
-        )
-        PasswordField(
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 10.dp, start = 20.dp, end = 20.dp),
-          value = uiState.password,
-          shape = RoundedCornerShape(10.dp),
-          onNewValue = onPasswordChange,
-          isVisible = passwordVisible,
-          visibilityClick = { passwordVisible = !passwordVisible }
-        )
-        Text(
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 10.dp, end = 30.dp),
-          fontFamily = FontFamily(
-            Font(
-              R.font.tt_bold
-            )
-          ),
-          text = "Forgot password?",
-          color = Blue,
-          textAlign = TextAlign.End,
-          fontSize = 15.sp
-        )
-        ElevatedButton(
-          modifier = Modifier
-            .fillMaxWidth()
-            .height(100.dp)
-            .padding(top = 50.dp, start = 30.dp, end = 30.dp),
-          shape = RoundedCornerShape(10.dp),
-          colors = ButtonColors(
-            containerColor = Green2,
-            contentColor = White,
-            disabledContentColor = Green,
-            disabledContainerColor = Green
-          ), onClick = onLoginClick
-        ) {
-          Text(
-            modifier = Modifier
-              .fillMaxWidth(),
-            fontFamily = FontFamily(
-              Font(
-                R.font.tt_bold
-              )
-            ),
-            text = "Log In",
-            color = White,
-            textAlign = TextAlign.Center,
-            fontSize = 20.sp
-          )
-        }
+      }
 
-        Row(modifier = Modifier.padding(top = 20.dp)) {
-          Text(
-            text = "Don't have an account?", fontFamily = FontFamily(
-              Font(
-                R.font.tt_medium
-              )
+      Row(modifier = Modifier.padding(top = 20.dp)) {
+        Text(
+          text = "Don't have an account?", fontFamily = FontFamily(
+            Font(
+              R.font.tt_medium
             )
           )
-          Text(
-            modifier = Modifier
-              .padding(start = 5.dp)
-              .clickable {
-                onSignInClick.invoke()
-              }, fontFamily = FontFamily(
-              Font(
-                R.font.tt_bold
-              )
-            ), text = "Sign Up"
-          )
-        }
-
+        )
         Text(
           modifier = Modifier
-            .padding(top = 10.dp)
+            .padding(start = 5.dp)
             .clickable {
-              onEntryAsGuestClick.invoke()
+              onSignInClick.invoke()
             }, fontFamily = FontFamily(
             Font(
               R.font.tt_bold
             )
-          ), text = "Entry As Guest"
+          ), text = "Sign Up"
         )
       }
+
+      Text(
+        modifier = Modifier
+          .padding(top = 10.dp)
+          .clickable {
+            onEntryAsGuestClick.invoke()
+          }, fontFamily = FontFamily(
+          Font(
+            R.font.tt_bold
+          )
+        ), text = "Entry As Guest"
+      )
+    }
+    if (uiState.isLoading) {
+      CircularProgressIndicator(modifier = Modifier.fillMaxSize().wrapContentSize(align = Alignment.Center))
     }
   }
 }

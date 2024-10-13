@@ -60,10 +60,6 @@ class MoviesViewModel @Inject constructor(
     }
   }
 
-  fun onCardClick(id: Long) {
-
-  }
-
   private fun showLoading() {
     _uiState.value = uiState.value.copy(isLoading = true)
   }

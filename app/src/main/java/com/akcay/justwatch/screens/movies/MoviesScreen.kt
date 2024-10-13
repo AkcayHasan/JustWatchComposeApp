@@ -57,7 +57,7 @@ fun MoviesScreen(
     setSelectedIndex = {
       selectedIndex = it
     },
-    onCardClick = viewModel::onCardClick
+    onCardClick = onCardClick
   )
 }
 

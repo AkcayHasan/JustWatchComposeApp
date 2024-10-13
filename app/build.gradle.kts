@@ -14,6 +14,7 @@ android {
 
     defaultConfig {
         applicationId = "com.akcay.justwatch"
+        testApplicationId = "com.akcay.justwatch.test"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -51,7 +52,7 @@ android {
         buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.7"
     }
     packaging {
         resources {
