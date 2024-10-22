@@ -24,8 +24,8 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.akcay.justwatch.ui.component.JWTopAppBar
-import com.akcay.justwatch.ui.component.SettingsSwitchItem
+import com.akcay.justwatch.internal.component.JWTopAppBar
+import com.akcay.justwatch.internal.component.SettingsSwitchItem
 import com.akcay.justwatch.ui.theme.LightBlue
 import com.akcay.justwatch.ui.theme.LightGray
 

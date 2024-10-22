@@ -6,7 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class AppViewModel @Inject constructor(
+class JustWatchViewModel @Inject constructor(
     dataStoreManager: DataStoreManager
 ) : ViewModel() {
 

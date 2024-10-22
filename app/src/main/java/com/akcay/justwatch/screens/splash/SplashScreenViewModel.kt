@@ -11,8 +11,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker
 import androidx.lifecycle.ViewModel
-import com.akcay.justwatch.ui.component.JWDialogBox
-import com.akcay.justwatch.ui.component.JWDialogBoxModel
+import com.akcay.justwatch.internal.component.JWDialogBox
+import com.akcay.justwatch.internal.component.JWDialogBoxModel
 import com.akcay.justwatch.internal.util.JWSecurityUtil
 import com.akcay.justwatch.ui.theme.Red
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,7 +40,6 @@ class SplashScreenViewModel @Inject constructor() : ViewModel() {
         clickAction: () -> Unit
     ) {
         JWDialogBox(
-            showDialog = true,
             onDismissRequest = {},
             content = JWDialogBoxModel(
                 mainColor = Red,

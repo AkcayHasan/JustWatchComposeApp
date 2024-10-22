@@ -37,8 +37,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.akcay.justwatch.R
-import com.akcay.justwatch.ui.component.CastItemView
-import com.akcay.justwatch.ui.component.JWTopAppBar
+import com.akcay.justwatch.internal.component.CastItemView
+import com.akcay.justwatch.internal.component.JWTopAppBar
 import com.akcay.justwatch.internal.util.Constants
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

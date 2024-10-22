@@ -38,12 +38,12 @@ import com.akcay.justwatch.R.string as AppText
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.akcay.justwatch.R
-import com.akcay.justwatch.ui.component.EmailField
-import com.akcay.justwatch.ui.component.JWRoundedCheckBox
-import com.akcay.justwatch.ui.component.PasswordField
+import com.akcay.justwatch.internal.component.EmailField
+import com.akcay.justwatch.internal.component.JWRoundedCheckBox
+import com.akcay.justwatch.internal.component.PasswordField
 import com.akcay.justwatch.internal.ext.isValidEmail
 import com.akcay.justwatch.internal.ext.passwordMatches
-import com.akcay.justwatch.navigation.Screen
+import com.akcay.justwatch.internal.navigation.Screen
 import com.akcay.justwatch.ui.theme.Green2
 import com.akcay.justwatch.ui.theme.LightBlue
 

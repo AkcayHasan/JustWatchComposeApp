@@ -1,4 +1,4 @@
-package com.akcay.justwatch.ui.component
+package com.akcay.justwatch.internal.component
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar

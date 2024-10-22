@@ -6,15 +6,17 @@ import com.akcay.justwatch.MainDestinations
 import com.akcay.justwatch.domain.usecase.CreateAnonymousUseCase
 import com.akcay.justwatch.domain.usecase.SignInUseCase
 import com.akcay.justwatch.internal.ext.launchCatching
-import com.akcay.justwatch.firebase.service.LogRepository
+import com.akcay.justwatch.domain.repository.LogRepository
+import com.akcay.justwatch.internal.util.JWLoadingManager
 import com.akcay.justwatch.internal.util.NetworkResult
-import com.akcay.justwatch.ui.component.JWDialogBoxModel
+import com.akcay.justwatch.internal.component.JWDialogBoxModel
 import com.akcay.justwatch.ui.theme.Red
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
+  private val loadingState: JWLoadingManager,
   private val logRepository: LogRepository,
   private val signInUseCase: SignInUseCase,
   private val createAnonymousUseCase: CreateAnonymousUseCase
@@ -32,38 +34,39 @@ class LoginViewModel @Inject constructor(
   }
 
   fun onLoginClick(openAndPopUp: (String, String) -> Unit) {
-    showLoading()
+    loadingState.showLoading()
     launchCatching(logRepository) {
       when(val result = signInUseCase(uiState.value.email, uiState.value.password)) {
         is NetworkResult.Success -> {
+          loadingState.hideLoading()
           openAndPopUp.invoke(
             MainDestinations.HOME_ROUTE,
             MainDestinations.LOGIN_ROUTE
           )
         }
         is NetworkResult.Error -> {
-          hideLoading()
+          loadingState.hideLoading()
         }
         is NetworkResult.Exception -> {
-          //hideLoading()
-          //dialogState.value = JWDialogBoxModel(mainColor = Red, title = "Error", description = result.e.message.toString(), positiveButtonText = "Ok")
+          loadingState.hideLoading()
+          showDialog(result.e.message.toString())
         }
       }
     }
   }
 
-  private fun hideLoading() {
-    uiState.value = uiState.value.copy(isLoading = false)
+  private fun showDialog(desc: String) {
+    dialogState.value = JWDialogBoxModel(mainColor = Red, title = "Error", description = desc, positiveButtonText = "Ok")
   }
 
-  private fun showLoading() {
-    uiState.value = uiState.value.copy(isLoading = true)
+  fun closeDialog() {
+    dialogState.value = null
   }
 
   fun createAnonymousUser(openAndPopUp: (String, String) -> Unit) {
 
     launchCatching(logRepository) {
-      uiState.value = uiState.value.copy(isLoading = true)
+      loadingState.showLoading()
       createAnonymousUseCase.invoke()
       openAndPopUp.invoke(
         MainDestinations.HOME_ROUTE,

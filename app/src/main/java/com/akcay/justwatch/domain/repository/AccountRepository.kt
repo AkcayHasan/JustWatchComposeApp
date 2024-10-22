@@ -1,4 +1,4 @@
-package com.akcay.justwatch.firebase.service
+package com.akcay.justwatch.domain.repository
 
 import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.AuthUser
 import com.akcay.justwatch.internal.util.NetworkResult

@@ -4,9 +4,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.akcay.justwatch.MainDestinations
 import com.akcay.justwatch.internal.ext.launchCatching
-import com.akcay.justwatch.firebase.service.AccountRepository
-import com.akcay.justwatch.firebase.service.LogRepository
-import com.akcay.justwatch.navigation.AllScreens
+import com.akcay.justwatch.domain.repository.AccountRepository
+import com.akcay.justwatch.domain.repository.LogRepository
+import com.akcay.justwatch.internal.navigation.AllScreens
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

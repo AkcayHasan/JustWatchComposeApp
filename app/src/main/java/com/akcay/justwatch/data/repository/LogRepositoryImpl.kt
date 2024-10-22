@@ -1,6 +1,6 @@
-package com.akcay.justwatch.firebase.impl
+package com.akcay.justwatch.data.repository
 
-import com.akcay.justwatch.firebase.service.LogRepository
+import com.akcay.justwatch.domain.repository.LogRepository
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import javax.inject.Inject

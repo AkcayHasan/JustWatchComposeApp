@@ -1,4 +1,4 @@
-package com.akcay.justwatch.navigation
+package com.akcay.justwatch.internal.navigation
 
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType

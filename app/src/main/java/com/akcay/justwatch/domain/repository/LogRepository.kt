@@ -1,4 +1,4 @@
-package com.akcay.justwatch.firebase.service
+package com.akcay.justwatch.domain.repository
 
 interface LogRepository {
 

@@ -1,7 +1,9 @@
 package com.akcay.justwatch.screens.login
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.CircularProgressIndicator
@@ -25,9 +26,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -37,17 +40,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.akcay.justwatch.R
-import com.akcay.justwatch.ui.component.EmailField
+import com.akcay.justwatch.internal.component.EmailField
 import com.akcay.justwatch.R.drawable as AppIcon
-import com.akcay.justwatch.ui.component.JWRoundedCheckBox
-import com.akcay.justwatch.ui.component.PasswordField
+import com.akcay.justwatch.internal.component.JWRoundedCheckBox
+import com.akcay.justwatch.internal.component.PasswordField
 import com.akcay.justwatch.internal.ext.isValidEmail
-import com.akcay.justwatch.navigation.Screen
-import com.akcay.justwatch.ui.component.JWDialogBox
-import com.akcay.justwatch.ui.component.JWDialogBoxModel
+import com.akcay.justwatch.internal.navigation.Screen
+import com.akcay.justwatch.internal.component.JWDialogBox
+import com.akcay.justwatch.internal.component.JWDialogBoxModel
 import com.akcay.justwatch.ui.theme.Green2
 import com.akcay.justwatch.ui.theme.LightBlue
-import com.akcay.justwatch.ui.theme.Red
 
 @Composable
 fun LoginScreen(
@@ -58,6 +60,8 @@ fun LoginScreen(
   val uiState by viewModel.uiState
   val dialogState by viewModel.dialogState
 
+  var passwordVisible by remember { mutableStateOf(false) }
+
   LoginScreenContent(
     uiState = uiState,
     dialogState = dialogState,
@@ -65,10 +69,13 @@ fun LoginScreen(
     onEntryAsGuestClick = { viewModel.createAnonymousUser(navigateAndPopUp) },
     onEmailChange = viewModel::onEmailChange,
     onPasswordChange = viewModel::onPasswordChange,
+    onPasswordVisible = passwordVisible,
+    onTogglePasswordVisibility = { passwordVisible = !passwordVisible },
     onLoginClick = {
       viewModel.onLoginClick(navigateAndPopUp)
     },
-    onSignInClick = { navigate.invoke(Screen.Register.route) }
+    onSignInClick = { navigate.invoke(Screen.Register.route) },
+    onPositiveDialogButtonClick = { viewModel.closeDialog() }
   )
 }
 
@@ -79,40 +86,22 @@ fun LoginScreenContent(
   dialogState: JWDialogBoxModel?,
   onEmailChange: (String) -> Unit,
   onPasswordChange: (String) -> Unit,
+  onPasswordVisible: Boolean,
+  onTogglePasswordVisibility: () -> Unit,
   onLoginClick: () -> Unit,
   onSignInClick: () -> Unit,
   onForgotPasswordClick: () -> Unit,
-  onEntryAsGuestClick: () -> Unit
+  onEntryAsGuestClick: () -> Unit,
+  onPositiveDialogButtonClick: () -> Unit
 ) {
-  var checked by remember { mutableStateOf(false) }
-  var passwordVisible by remember { mutableStateOf(false) }
-  var showDialog by remember {
-    mutableStateOf(false)
-  }
 
-  Scaffold(modifier = Modifier.fillMaxSize()) {
+  Box(modifier = Modifier.fillMaxSize()) {
     Column(
       modifier = Modifier
         .fillMaxSize()
         .padding(top = 100.dp),
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
-      if (dialogState != null) {
-        showDialog = true
-        JWDialogBox(
-          showDialog = showDialog,
-          onDismissRequest = { },
-          content = JWDialogBoxModel(
-            mainColor = dialogState.mainColor,
-            title = dialogState.title,
-            description = dialogState.description,
-            positiveButtonText = "Ok"
-          ),
-          positiveButtonClickAction = {
-            showDialog = false
-          }
-        )
-      }
       Image(
         modifier = Modifier
           .width(150.dp)
@@ -180,8 +169,8 @@ fun LoginScreenContent(
         value = uiState.password,
         shape = RoundedCornerShape(10.dp),
         onNewValue = onPasswordChange,
-        isVisible = passwordVisible,
-        visibilityClick = { passwordVisible = !passwordVisible }
+        isVisible = onPasswordVisible,
+        visibilityClick = onTogglePasswordVisibility
       )
       Text(
         modifier = Modifier
@@ -258,8 +247,18 @@ fun LoginScreenContent(
         ), text = "Entry As Guest"
       )
     }
-    if (uiState.isLoading) {
-      CircularProgressIndicator(modifier = Modifier.fillMaxSize().wrapContentSize(align = Alignment.Center))
+
+    if (dialogState != null) {
+      JWDialogBox(
+        onDismissRequest = { },
+        content = JWDialogBoxModel(
+          mainColor = dialogState.mainColor,
+          title = dialogState.title,
+          description = dialogState.description,
+          positiveButtonText = "Ok"
+        ),
+        positiveButtonClickAction = onPositiveDialogButtonClick
+      )
     }
   }
 }

@@ -1,7 +1,7 @@
 package com.akcay.justwatch.tests.viewmodel
 
-import com.akcay.justwatch.firebase.service.AccountRepository
-import com.akcay.justwatch.firebase.service.LogRepository
+import com.akcay.justwatch.domain.repository.AccountRepository
+import com.akcay.justwatch.domain.repository.LogRepository
 import com.akcay.justwatch.screens.register.RegisterViewModel
 import com.akcay.justwatch.tests.util.MainDispatcherRule
 import kotlinx.coroutines.test.runTest

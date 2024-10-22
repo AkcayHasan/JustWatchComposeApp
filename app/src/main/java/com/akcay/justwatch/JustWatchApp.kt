@@ -25,8 +25,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
-import com.akcay.justwatch.ui.component.JWBottomNavBar
-import com.akcay.justwatch.navigation.Screen
+import com.akcay.justwatch.internal.component.JWBottomNavBar
+import com.akcay.justwatch.internal.navigation.Screen
 import com.akcay.justwatch.screens.detail.MovieDetailScreen
 import com.akcay.justwatch.screens.onboarding.ClickActions
 import com.akcay.justwatch.screens.onboarding.OnBoardingScreen
@@ -39,7 +39,7 @@ import com.akcay.justwatch.screens.register.RegisterScreen
 import com.akcay.justwatch.ui.theme.JustWatchTheme
 
 @Composable
-fun JustWatchApp(viewModel: AppViewModel = hiltViewModel()) {
+fun JustWatchApp(viewModel: JustWatchViewModel = hiltViewModel()) {
   JustWatchTheme {
     val justWatchNavController = rememberJustWatchNavController()
 
@@ -73,7 +73,7 @@ fun JustWatchApp(viewModel: AppViewModel = hiltViewModel()) {
             modifier = Modifier,
             navController = justWatchNavController.navController,
             selectedItem = {
-              justWatchNavController.navigate(it.route)
+              justWatchNavController.clearAndNavigate(it.route)
             },
             items = screens
           )
@@ -108,10 +108,11 @@ object MainDestinations {
 
 fun NavGraphBuilder.addHomeGraph(
   modifier: Modifier = Modifier,
+  justWatchNavController: JustWatchNavController,
   onMovieSelected: (Long) -> Unit
 ) {
   composable(BottomNavSections.POPULAR_MOVIES.route) {
-    MoviesScreen(onCardClick = onMovieSelected)
+    MoviesScreen(justWatchNavController = justWatchNavController, onCardClick = onMovieSelected)
   }
   composable(BottomNavSections.UPCOMING_MOVIES.route) {
     UpcomingMoviesScreen()
@@ -182,11 +183,14 @@ private fun NavGraphBuilder.justWatchNavGraph(
     route = MainDestinations.HOME_ROUTE,
     startDestination = BottomNavSections.POPULAR_MOVIES.route,
   ) {
-    addHomeGraph(onMovieSelected = { id ->
-      justWatchNavController.navigate(
-        route = Screen.MovieDetail.createRoute(id)
-      )
-    })
+    addHomeGraph(
+      onMovieSelected = { id ->
+        justWatchNavController.navigate(
+          route = Screen.MovieDetail.createRoute(id)
+        )
+      },
+      justWatchNavController = justWatchNavController
+    )
   }
   navigation(
     route = MainDestinations.LOGIN_ROUTE,
