@@ -8,6 +8,7 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -27,12 +28,10 @@ class JustWatchActivity : ComponentActivity() {
     lateinit var loadingState: JWLoadingManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val splashScreen = installSplashScreen()
-        super.onCreate(savedInstanceState)
-
-        splashScreen.setKeepOnScreenCondition {
+        installSplashScreen().setKeepOnScreenCondition {
             splashViewModel.isLoading.value
         }
+        super.onCreate(savedInstanceState)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
         enableEdgeToEdge(
@@ -47,30 +46,49 @@ class JustWatchActivity : ComponentActivity() {
         )
 
         setContent {
-            val continueState by splashViewModel.onContinue.collectAsState()
-            val isLoading by loadingState.isLoading.collectAsState()
-
-            if (splashViewModel.checkDeviceIsRooted()) {
-                splashViewModel.ErrorDialog {
+            JustWatchContent(
+                splashViewModel = splashViewModel,
+                loadingState = loadingState,
+                onAppReady = {
+                    JustWatchApp(startDestination = it)
+                },
+                onError = {
                     finish()
                 }
-            } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    splashViewModel.ShowNotificationPermission().apply {
-                        if (continueState) {
-                            JustWatchApp()
-                            splashViewModel.setLoadingStatus(loading = false)
-                        }
-                    }
-                } else {
-                    JustWatchApp()
-                    splashViewModel.setLoadingStatus(loading = false)
-                }
+            )
+        }
+    }
+}
 
-                if (isLoading) {
-                    JWLoadingView()
-                }
+@Composable
+fun JustWatchContent(
+    splashViewModel: SplashScreenViewModel,
+    loadingState: JWLoadingManager,
+    onAppReady: @Composable (String) -> Unit,
+    onError: () -> Unit
+) {
+    val startDestination by splashViewModel.startDestination.collectAsState()
+    val continueState by splashViewModel.onContinue.collectAsState()
+    val isLoading by loadingState.isLoading.collectAsState()
+
+    when {
+        splashViewModel.checkDeviceIsRooted() -> {
+            splashViewModel.ErrorDialog(onError)
+        }
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
+            splashViewModel.ShowNotificationPermission()
+            if (continueState) {
+                onAppReady(startDestination)
+                splashViewModel.setLoadingStatus(false)
             }
         }
+        else -> {
+            onAppReady(startDestination)
+            splashViewModel.setLoadingStatus(false)
+        }
+    }
+
+    if (isLoading) {
+        JWLoadingView()
     }
 }

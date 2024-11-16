@@ -1,8 +1,19 @@
 package com.akcay.justwatch
 
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -11,6 +22,8 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,6 +40,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.akcay.justwatch.internal.component.JWBottomNavBar
 import com.akcay.justwatch.internal.navigation.Screen
+import com.akcay.justwatch.internal.navigation.defaultEnterTransition
+import com.akcay.justwatch.internal.navigation.defaultExitTransition
+import com.akcay.justwatch.internal.navigation.defaultPopEnterTransition
+import com.akcay.justwatch.internal.navigation.defaultPopExitTransition
 import com.akcay.justwatch.screens.detail.MovieDetailScreen
 import com.akcay.justwatch.screens.onboarding.ClickActions
 import com.akcay.justwatch.screens.onboarding.OnBoardingScreen
@@ -34,67 +51,27 @@ import com.akcay.justwatch.screens.movies.MoviesScreen
 import com.akcay.justwatch.screens.profile.ProfileScreen
 import com.akcay.justwatch.screens.favourite.UpcomingMoviesScreen
 import com.akcay.justwatch.screens.forgotpassword.ForgotPasswordScreen
+import com.akcay.justwatch.screens.home.HomeScreen
 import com.akcay.justwatch.screens.login.LoginScreen
 import com.akcay.justwatch.screens.register.RegisterScreen
 import com.akcay.justwatch.ui.theme.JustWatchTheme
 
 @Composable
-fun JustWatchApp(viewModel: JustWatchViewModel = hiltViewModel()) {
+fun JustWatchApp(viewModel: JustWatchViewModel = hiltViewModel(), startDestination: String) {
   JustWatchTheme {
     val justWatchNavController = rememberJustWatchNavController()
 
-    var startDestination by remember {
-      mutableStateOf(MainDestinations.LOGIN_ROUTE)
-    }
-
-    LaunchedEffect(Unit) {
-      val shouldShowOnboarding = viewModel.storeManager.shouldOnBoardingVisible()
-      if (shouldShowOnboarding) {
-        startDestination = MainDestinations.ONBOARDING_ROUTE
-      }
-    }
-
-    val screens = listOf(
-      BottomNavSections.POPULAR_MOVIES,
-      BottomNavSections.UPCOMING_MOVIES,
-      BottomNavSections.PROFILE
-    )
-
-    val showBottomBar =
-      justWatchNavController.navController.currentBackStackEntryAsState().value?.destination?.route in screens.map {
-        it.route
-      }
-
-    Scaffold(
-      modifier = Modifier.fillMaxSize(),
-      bottomBar = {
-        if (showBottomBar) {
-          JWBottomNavBar(
-            modifier = Modifier,
-            navController = justWatchNavController.navController,
-            selectedItem = {
-              justWatchNavController.clearAndNavigate(it.route)
-            },
-            items = screens
-          )
-        }
-      }
+    Box(
+      modifier = Modifier
+        .fillMaxSize()
     ) {
-      Box(
-        modifier = Modifier
-          .fillMaxSize()
-          .padding(bottom = it.calculateBottomPadding())
+      NavHost(
+        navController = justWatchNavController.navController,
+        startDestination = startDestination,
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None }
       ) {
-        NavHost(
-          navController = justWatchNavController.navController,
-          startDestination = startDestination,
-          enterTransition = { EnterTransition.None },
-          exitTransition = { ExitTransition.None }
-        ) {
-          justWatchNavGraph(
-            justWatchNavController = justWatchNavController
-          )
-        }
+        justWatchNavGraph(justWatchNavController)
       }
     }
   }
@@ -104,47 +81,6 @@ object MainDestinations {
   const val HOME_ROUTE = "home"
   const val LOGIN_ROUTE = "login"
   const val ONBOARDING_ROUTE = "onboarding"
-}
-
-fun NavGraphBuilder.addHomeGraph(
-  modifier: Modifier = Modifier,
-  justWatchNavController: JustWatchNavController,
-  onMovieSelected: (Long) -> Unit
-) {
-  composable(BottomNavSections.POPULAR_MOVIES.route) {
-    MoviesScreen(justWatchNavController = justWatchNavController, onCardClick = onMovieSelected)
-  }
-  composable(BottomNavSections.UPCOMING_MOVIES.route) {
-    UpcomingMoviesScreen()
-  }
-  composable(BottomNavSections.PROFILE.route) {
-    ProfileScreen()
-  }
-}
-
-fun NavGraphBuilder.addLoginGraph(
-  justWatchNavController: JustWatchNavController
-) {
-  composable(Screen.Login.route) {
-    LoginScreen(
-      navigate = { route ->
-        justWatchNavController.navigate(route)
-      },
-      navigateAndPopUp = { route, popupName ->
-        justWatchNavController.navigateAndPopUp(route, popupName)
-      }
-    )
-  }
-  composable(Screen.Register.route) {
-    RegisterScreen(
-      navigateAndPopUp = { route, popupName ->
-        justWatchNavController.navigateAndPopUp(route, popupName)
-      }
-    )
-  }
-  composable(Screen.ForgotPassword.route) {
-    ForgotPasswordScreen()
-  }
 }
 
 enum class BottomNavSections(
@@ -176,21 +112,68 @@ fun rememberJustWatchNavController(
   JustWatchNavController(navController = navController)
 }
 
+fun NavGraphBuilder.addHomeGraph(
+  modifier: Modifier = Modifier,
+  onMovieSelected: (Long) -> Unit
+) {
+  composable(BottomNavSections.POPULAR_MOVIES.route) {
+    MoviesScreen(onCardClick = onMovieSelected)
+  }
+  composable(BottomNavSections.UPCOMING_MOVIES.route) {
+    UpcomingMoviesScreen()
+  }
+  composable(BottomNavSections.PROFILE.route) {
+    ProfileScreen()
+  }
+}
+
+fun NavGraphBuilder.addLoginGraph(
+  justWatchNavController: JustWatchNavController
+) {
+  composable(
+    Screen.Login.route,
+    exitTransition = defaultExitTransition(),
+    popEnterTransition = defaultPopEnterTransition()
+  ) {
+    LoginScreen(
+      navigate = { route ->
+        justWatchNavController.navigate(route)
+      },
+      navigateAndPopUp = { route, popupName ->
+        justWatchNavController.navigateAndPopUp(route, popupName)
+      }
+    )
+  }
+  composable(
+    Screen.Register.route,
+    enterTransition = defaultEnterTransition(),
+    exitTransition = defaultExitTransition(),
+    popExitTransition = defaultPopExitTransition()
+  ) {
+    RegisterScreen(
+      navigateAndPopUp = { route, popupName ->
+        justWatchNavController.navigateAndPopUp(route, popupName)
+      }
+    )
+  }
+  composable(Screen.ForgotPassword.route) {
+    ForgotPasswordScreen()
+  }
+}
+
 private fun NavGraphBuilder.justWatchNavGraph(
   justWatchNavController: JustWatchNavController
 ) {
-  navigation(
-    route = MainDestinations.HOME_ROUTE,
-    startDestination = BottomNavSections.POPULAR_MOVIES.route,
+  composable(
+    MainDestinations.HOME_ROUTE,
+    exitTransition = defaultExitTransition(),
+    popEnterTransition = defaultPopEnterTransition()
   ) {
-    addHomeGraph(
-      onMovieSelected = { id ->
-        justWatchNavController.navigate(
-          route = Screen.MovieDetail.createRoute(id)
-        )
-      },
-      justWatchNavController = justWatchNavController
-    )
+    HomeScreen { id ->
+      justWatchNavController.navigate(
+        route = Screen.MovieDetail.createRoute(id)
+      )
+    }
   }
   navigation(
     route = MainDestinations.LOGIN_ROUTE,
@@ -224,7 +207,10 @@ private fun NavGraphBuilder.justWatchNavGraph(
   }
   composable(
     route = Screen.MovieDetail.route,
-    arguments = Screen.MovieDetail.navArgument
+    arguments = Screen.MovieDetail.navArgument,
+    enterTransition = defaultEnterTransition(),
+    exitTransition = defaultExitTransition(),
+    popExitTransition = defaultPopExitTransition()
   ) { backStackEntry ->
     val arguments = requireNotNull(backStackEntry.arguments)
     val movieId = arguments.getLong("movieId")

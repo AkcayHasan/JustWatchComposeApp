@@ -6,3 +6,8 @@ data class AuthUser(
   val id: String? = "",
   val isAnonymous: Boolean? = true
 )
+
+data class User(
+  val firstName: String? = "",
+  val lastName: String? = "",
+)

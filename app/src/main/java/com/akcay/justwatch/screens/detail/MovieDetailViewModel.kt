@@ -9,6 +9,7 @@ import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.detailres
 import com.akcay.justwatch.domain.repository.MovieRepository
 import com.akcay.justwatch.internal.util.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -57,21 +58,17 @@ class MovieDetailViewModel @Inject constructor(
 
     fun getMovieCastById(movieId: Long) {
         viewModelScope.launch {
-            showLoading()
             when (val response = repo.getMovieCastById(movieId = movieId)) {
                 is NetworkResult.Success -> {
-                    hideLoading()
                     _castById.value = response.data
                     Log.d("osman", "success: ${response.data}")
                 }
 
                 is NetworkResult.Error -> {
-                    hideLoading()
                     Log.d("osman", "error: ${response.message}")
                 }
 
                 is NetworkResult.Exception -> {
-                    hideLoading()
                     Log.d("osman", "getMovieById: ${response.e}")
                 }
             }

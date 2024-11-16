@@ -4,24 +4,24 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.akcay.justwatch.MainDestinations
 import com.akcay.justwatch.internal.ext.launchCatching
-import com.akcay.justwatch.domain.repository.AccountRepository
 import com.akcay.justwatch.domain.repository.LogRepository
+import com.akcay.justwatch.domain.usecase.RegisterUseCase
+import com.akcay.justwatch.domain.usecase.SaveUserInfoUseCase
 import com.akcay.justwatch.internal.navigation.AllScreens
+import com.akcay.justwatch.internal.util.JWLoadingManager
+import com.akcay.justwatch.internal.util.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
+    private val loadingState: JWLoadingManager,
     private val logRepository: LogRepository,
-    private val accountRepository: AccountRepository
+    private val registerUseCase: RegisterUseCase,
+    private val saveUserInfoUseCase: SaveUserInfoUseCase
 ) : ViewModel() {
 
     val uiState = mutableStateOf(RegisterUiState())
-
-    private val _loadingStatus = MutableStateFlow(false)
-    val loadingStatus: StateFlow<Boolean> = _loadingStatus
 
     private val email
         get() = uiState.value.email
@@ -44,9 +44,21 @@ class RegisterViewModel @Inject constructor(
     fun onRegisterClick(openAndPopUp: (String, String) -> Unit) {
 
         launchCatching(logRepository = logRepository) {
-            _loadingStatus.emit(true)
-            accountRepository.register(email = email, password = password)
-            openAndPopUp.invoke(MainDestinations.HOME_ROUTE, AllScreens.REGISTER.name)
+            loadingState.showLoading()
+            when(val result = registerUseCase(email, password)) {
+                is NetworkResult.Success -> {
+                    loadingState.hideLoading()
+                    saveUserInfoUseCase.invoke(result.data.id!!, "Hasan", "Akçay")
+                    openAndPopUp.invoke(MainDestinations.HOME_ROUTE, AllScreens.REGISTER.name)
+                }
+                is NetworkResult.Error -> {
+                    loadingState.hideLoading()
+                }
+                is NetworkResult.Exception -> {
+                    loadingState.hideLoading()
+
+                }
+            }
         }
     }
 }

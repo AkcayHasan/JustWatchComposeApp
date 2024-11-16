@@ -1,6 +1,5 @@
 package com.akcay.justwatch.screens.detail
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,14 +33,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.akcay.justwatch.R
 import com.akcay.justwatch.internal.component.CastItemView
 import com.akcay.justwatch.internal.component.JWTopAppBar
 import com.akcay.justwatch.internal.util.Constants
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovieDetailScreen(
@@ -81,6 +78,7 @@ fun MovieDetailScreen(
         } else {
             Column(
                 modifier = Modifier
+                    .padding(bottom = it.calculateBottomPadding())
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally,

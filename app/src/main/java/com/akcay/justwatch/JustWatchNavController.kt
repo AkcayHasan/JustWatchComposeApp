@@ -13,7 +13,9 @@ class JustWatchNavController(
     }
 
     fun navigate(route: String) {
-        navController.navigate(route) { launchSingleTop = true }
+        navController.navigate(route) {
+            launchSingleTop = true
+        }
     }
 
     fun navigateAndPopUp(route: String, popUp: String) {

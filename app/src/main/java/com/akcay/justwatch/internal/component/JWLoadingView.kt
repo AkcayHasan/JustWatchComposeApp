@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,8 +25,9 @@ fun JWLoadingView(
     contentAlignment = Alignment.Center
   ) {
     CircularProgressIndicator(
-      strokeWidth = 8.dp,
-      color = Color.Blue
+      modifier = modifier.width(50.dp),
+      strokeWidth = 2.dp,
+      color = Color.Green
     )
   }
 }

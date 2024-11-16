@@ -11,17 +11,25 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.akcay.justwatch.MainDestinations
 import com.akcay.justwatch.internal.component.JWDialogBox
 import com.akcay.justwatch.internal.component.JWDialogBoxModel
+import com.akcay.justwatch.internal.util.DataStoreManager
+import com.akcay.justwatch.internal.util.JWLoadingManager
 import com.akcay.justwatch.internal.util.JWSecurityUtil
 import com.akcay.justwatch.ui.theme.Red
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SplashScreenViewModel @Inject constructor() : ViewModel() {
+class SplashScreenViewModel @Inject constructor(
+    private val storeManager: DataStoreManager
+) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading
@@ -29,8 +37,26 @@ class SplashScreenViewModel @Inject constructor() : ViewModel() {
     private val _onContinue = MutableStateFlow(false)
     val onContinue: StateFlow<Boolean> = _onContinue
 
+    private val _startDestination = MutableStateFlow(MainDestinations.LOGIN_ROUTE)
+    val startDestination: StateFlow<String> = _startDestination.asStateFlow()
+
     fun setLoadingStatus(loading: Boolean) {
         _isLoading.value = loading
+    }
+
+    init {
+        checkOnboardingStatus()
+    }
+
+    private fun checkOnboardingStatus() {
+        viewModelScope.launch {
+            val shouldShowOnboarding = storeManager.shouldOnBoardingVisible()
+            _startDestination.value = if (shouldShowOnboarding) {
+                MainDestinations.ONBOARDING_ROUTE
+            } else {
+                MainDestinations.LOGIN_ROUTE
+            }
+        }
     }
 
     fun checkDeviceIsRooted(): Boolean = JWSecurityUtil.isDeviceRooted()

@@ -1,5 +1,6 @@
 package com.akcay.justwatch.screens.login
 
+import JWSwitchButton
 import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
@@ -172,20 +173,23 @@ fun LoginScreenContent(
         isVisible = onPasswordVisible,
         visibilityClick = onTogglePasswordVisibility
       )
-      Text(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(top = 10.dp, end = 30.dp),
-        fontFamily = FontFamily(
-          Font(
-            R.font.tt_bold
-          )
-        ),
-        text = "Forgot password?",
-        color = Blue,
-        textAlign = TextAlign.End,
-        fontSize = 15.sp
-      )
+      Row {
+
+        Text(
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 10.dp, end = 30.dp),
+          fontFamily = FontFamily(
+            Font(
+              R.font.tt_bold
+            )
+          ),
+          text = "Forgot password?",
+          color = Blue,
+          textAlign = TextAlign.End,
+          fontSize = 15.sp
+        )
+      }
       ElevatedButton(
         modifier = Modifier
           .fillMaxWidth()
@@ -345,17 +349,19 @@ fun LoginScreenPreview() {
         isVisible = false,
         visibilityClick = {}
       )
-      Row {
-        JWRoundedCheckBox(
-          modifier = Modifier.padding(top = 10.dp, start = 20.dp),
-          label = "Remember Me",
-          isChecked = false,
-          isClickable = true
+      Row(modifier = Modifier.padding(top = 10.dp, start = 20.dp, end = 20.dp), verticalAlignment = Alignment.CenterVertically) {
+        JWSwitchButton(checked = true, onCheckedChange = {})
+        Text(
+          modifier = Modifier.padding(start = 5.dp),
+          text = "Remember Me", fontFamily = FontFamily(
+            Font(
+              R.font.tt_medium
+            )
+          )
         )
         Text(
           modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 10.dp, end = 30.dp),
+            .fillMaxWidth(),
           fontFamily = FontFamily(
             Font(
               R.font.tt_bold
