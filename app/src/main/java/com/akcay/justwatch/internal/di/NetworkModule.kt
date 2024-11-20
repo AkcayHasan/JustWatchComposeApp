@@ -3,7 +3,6 @@ package com.akcay.justwatch.internal.di
 import android.content.Context
 import com.akcay.justwatch.BuildConfig
 import com.akcay.justwatch.data.remote.api.MovieService
-import com.akcay.justwatch.internal.util.JWLoadingManager
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import dagger.Module
 import dagger.Provides
@@ -58,11 +57,5 @@ object NetworkModule {
   @Singleton
   fun provideMovieService(retrofit: Retrofit): MovieService {
     return retrofit.create(MovieService::class.java)
-  }
-
-  @Singleton
-  @Provides
-  fun provideLoadingState(): JWLoadingManager {
-    return JWLoadingManager()
   }
 }

@@ -2,16 +2,18 @@ package com.akcay.justwatch.screens.movies
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.User
-import com.akcay.justwatch.domain.usecase.GetAllPopularMoviesUseCase
+import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.listresponse.MovieResult
 import com.akcay.justwatch.domain.repository.AccountRepository
 import com.akcay.justwatch.domain.repository.LogRepository
+import com.akcay.justwatch.domain.usecase.GetPagedPopularMoviesUseCase
 import com.akcay.justwatch.domain.usecase.GetUserInfoUseCase
 import com.akcay.justwatch.internal.ext.launchCatching
-import com.akcay.justwatch.internal.util.JWLoadingManager
 import com.akcay.justwatch.internal.util.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,9 +23,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MoviesViewModel @Inject constructor(
-  private val loadingState: JWLoadingManager,
   private val logRepository: LogRepository,
-  private val getAllPopularMoviesUseCase: GetAllPopularMoviesUseCase,
+  getPagedPopularMoviesUseCase: GetPagedPopularMoviesUseCase,
   private val getUserInfoUseCase: GetUserInfoUseCase,
   accountRepository: AccountRepository
 ) : ViewModel() {
@@ -40,70 +41,59 @@ class MoviesViewModel @Inject constructor(
 
   init {
     viewModelScope.launch {
-      val userJob = async {
-        accountRepository.currentAuthUser.collect { authUser ->
-          if (authUser != null) {
-            getUserInfo(authUser.id!!)
-          }
+      accountRepository.currentAuthUser.collect { authUser ->
+        if (authUser != null) {
+          getUserInfo(authUser.id!!)
         }
       }
-      val movieJob = async { getAllPopularMovies() }
-
-      userJob.await()
-      movieJob.await()
     }
   }
+
+  val popularMovies: Flow<PagingData<MovieResult>> =
+    getPagedPopularMoviesUseCase()
+      .cachedIn(viewModelScope)
 
   private fun getUserInfo(uid: String) {
     launchCatching(logRepository = logRepository) {
-      loadingState.showLoading()
-      when (val result = getUserInfoUseCase(uid)) {
-        is NetworkResult.Success -> {
-          loadingState.hideLoading()
-          _uiState.update {
-            _uiState.value.copy(
-              user = User(
-                firstName = result.data.firstName,
-                lastName = result.data.lastName
+      showLoading()
+      try {
+        when (val result = getUserInfoUseCase(uid)) {
+          is NetworkResult.Success -> {
+            _uiState.update {
+              _uiState.value.copy(
+                user = User(
+                  firstName = result.data.firstName,
+                  lastName = result.data.lastName
+                )
               )
-            )
+            }
+          }
+
+          is NetworkResult.Error -> {
+          }
+
+          is NetworkResult.Exception -> {
           }
         }
-
-        is NetworkResult.Error -> {
-          loadingState.hideLoading()
-        }
-
-        is NetworkResult.Exception -> {
-          loadingState.hideLoading()
-
-        }
+      } finally {
+        hideLoading()
       }
     }
   }
 
-  private fun getAllPopularMovies() {
-    launchCatching(logRepository = logRepository) {
-      loadingState.showLoading()
-      try {
-        getAllPopularMoviesUseCase().collect { result ->
-          when (result) {
-            is NetworkResult.Success -> {
-              _uiState.update { _uiState.value.copy(movieList = result.data) }
-            }
+  private fun showLoading() {
+    _uiState.update {
+      _uiState.value.copy(
+        loading = true
+      )
+    }
+  }
 
-            is NetworkResult.Error -> {
-
-            }
-
-            is NetworkResult.Exception -> {
-
-            }
-          }
-        }
-      } finally {
-        loadingState.hideLoading()
-      }
+  private fun hideLoading() {
+    _uiState.update {
+      _uiState.value.copy(
+        loading = false
+      )
     }
   }
 }

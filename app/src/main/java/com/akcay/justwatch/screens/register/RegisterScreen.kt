@@ -2,15 +2,24 @@ package com.akcay.justwatch.screens.register
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Scaffold
@@ -42,6 +51,7 @@ import com.akcay.justwatch.internal.navigation.Screen
 import com.akcay.justwatch.ui.theme.Green2
 import com.akcay.justwatch.ui.theme.LightBlue
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun RegisterScreen(
   navigateAndPopUp: (String, String) -> Unit,
@@ -49,8 +59,13 @@ fun RegisterScreen(
 ) {
   val uiState by viewModel.uiState
 
+  val scrollState = rememberScrollState()
+  val isImeVisible = WindowInsets.isImeVisible
+
   RegisterScreenContent(
     uiState = uiState,
+    scrollState = scrollState,
+    isImeVisible = isImeVisible,
     onEmailChange = viewModel::onEmailChange,
     onPasswordChange = viewModel::onPasswordChange,
     onRepeatPasswordChange = viewModel::onRepeatPasswordChange,
@@ -63,6 +78,8 @@ fun RegisterScreen(
 @Composable
 fun RegisterScreenContent(
   uiState: RegisterUiState,
+  scrollState: ScrollState,
+  isImeVisible: Boolean,
   onEmailChange: (String) -> Unit,
   onPasswordChange: (String) -> Unit,
   onRepeatPasswordChange: (String) -> Unit,
@@ -80,7 +97,12 @@ fun RegisterScreenContent(
   val passwordMatches =
     uiState.password.isNotEmpty() && uiState.repeatPassword.passwordMatches(uiState.password)
 
-  Scaffold(modifier = Modifier.fillMaxSize()) {
+  Box(
+    modifier = Modifier
+      .fillMaxSize()
+      .imePadding()
+      .verticalScroll(state = scrollState, enabled = isImeVisible)
+  ) {
     Column(
       modifier = Modifier
         .fillMaxSize()
@@ -223,7 +245,10 @@ fun RegisterScreenContent(
         Text(
           modifier = Modifier
             .padding(start = 5.dp)
-            .clickable {
+            .clickable(
+              interactionSource = remember { MutableInteractionSource() },
+              indication = null
+            ) {
               onLoginClick.invoke()
             }, fontFamily = FontFamily(
             Font(

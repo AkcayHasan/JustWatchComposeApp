@@ -87,6 +87,10 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.firestore)
 
+    // Pagination
+    implementation(libs.paging.runtime)
+    implementation(libs.paging.compose)
+
     // Navigation
     implementation(libs.navigation)
 

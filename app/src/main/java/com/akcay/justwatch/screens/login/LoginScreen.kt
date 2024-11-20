@@ -1,37 +1,42 @@
 package com.akcay.justwatch.screens.login
 
-import JWSwitchButton
+import com.akcay.justwatch.internal.component.JWSwitchButton
 import android.annotation.SuppressLint
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -52,30 +57,42 @@ import com.akcay.justwatch.internal.component.JWDialogBoxModel
 import com.akcay.justwatch.ui.theme.Green2
 import com.akcay.justwatch.ui.theme.LightBlue
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun LoginScreen(
   navigate: (String) -> Unit,
   navigateAndPopUp: (String, String) -> Unit,
   viewModel: LoginViewModel = hiltViewModel()
 ) {
-  val uiState by viewModel.uiState
+  val uiState by viewModel.uiState.collectAsState()
   val dialogState by viewModel.dialogState
 
   var passwordVisible by remember { mutableStateOf(false) }
+  var isRememberMeChecked by remember { mutableStateOf(false) }
+  val scrollState = rememberScrollState()
+  val isImeVisible = WindowInsets.isImeVisible
+
+  LaunchedEffect(uiState.isRememberCheckboxChecked) {
+    isRememberMeChecked = uiState.isRememberCheckboxChecked
+  }
 
   LoginScreenContent(
     uiState = uiState,
     dialogState = dialogState,
+    scrollState = scrollState,
+    isImeVisible = isImeVisible,
     onForgotPasswordClick = { navigate.invoke("") },
     onEntryAsGuestClick = { viewModel.createAnonymousUser(navigateAndPopUp) },
     onEmailChange = viewModel::onEmailChange,
     onPasswordChange = viewModel::onPasswordChange,
     onPasswordVisible = passwordVisible,
     onTogglePasswordVisibility = { passwordVisible = !passwordVisible },
+    isRememberMeChecked = isRememberMeChecked,
+    onRememberMeCheckboxClick = { isRememberMeChecked = !isRememberMeChecked },
     onLoginClick = {
-      viewModel.onLoginClick(navigateAndPopUp)
+      viewModel.onLoginClick(navigateAndPopUp, isRememberMeChecked)
     },
-    onSignInClick = { navigate.invoke(Screen.Register.route) },
+    onSignUpClick = { navigate.invoke(Screen.Register.route) },
     onPositiveDialogButtonClick = { viewModel.closeDialog() }
   )
 }
@@ -85,18 +102,27 @@ fun LoginScreen(
 fun LoginScreenContent(
   uiState: LoginUiState,
   dialogState: JWDialogBoxModel?,
+  scrollState: ScrollState,
+  isImeVisible: Boolean,
   onEmailChange: (String) -> Unit,
   onPasswordChange: (String) -> Unit,
   onPasswordVisible: Boolean,
   onTogglePasswordVisibility: () -> Unit,
+  isRememberMeChecked: Boolean,
+  onRememberMeCheckboxClick: (Boolean) -> Unit,
   onLoginClick: () -> Unit,
-  onSignInClick: () -> Unit,
+  onSignUpClick: () -> Unit,
   onForgotPasswordClick: () -> Unit,
   onEntryAsGuestClick: () -> Unit,
   onPositiveDialogButtonClick: () -> Unit
 ) {
 
-  Box(modifier = Modifier.fillMaxSize()) {
+  Box(
+    modifier = Modifier
+      .fillMaxSize()
+      .imePadding()
+      .verticalScroll(state = scrollState, enabled = isImeVisible)
+  ) {
     Column(
       modifier = Modifier
         .fillMaxSize()
@@ -146,7 +172,9 @@ fun LoginScreenContent(
         onNewValue = onEmailChange
       )
       JWRoundedCheckBox(
-        modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp),
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(horizontal = 20.dp, vertical = 10.dp),
         label = "We can use animations to make it behave similar to the default",
         isChecked = uiState.email.isValidEmail()
       )
@@ -173,12 +201,22 @@ fun LoginScreenContent(
         isVisible = onPasswordVisible,
         visibilityClick = onTogglePasswordVisibility
       )
-      Row {
-
+      Row(
+        modifier = Modifier.padding(top = 10.dp, start = 20.dp, end = 20.dp),
+        verticalAlignment = Alignment.CenterVertically
+      ) {
+        JWSwitchButton(checked = isRememberMeChecked, onCheckedChange = onRememberMeCheckboxClick)
+        Text(
+          modifier = Modifier.padding(start = 5.dp),
+          text = "Remember Me", fontFamily = FontFamily(
+            Font(
+              R.font.tt_medium
+            )
+          )
+        )
         Text(
           modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 10.dp, end = 30.dp),
+            .fillMaxWidth(),
           fontFamily = FontFamily(
             Font(
               R.font.tt_bold
@@ -229,8 +267,11 @@ fun LoginScreenContent(
         Text(
           modifier = Modifier
             .padding(start = 5.dp)
-            .clickable {
-              onSignInClick.invoke()
+            .clickable(
+              interactionSource = remember { MutableInteractionSource() },
+              indication = null
+            ) {
+              onSignUpClick.invoke()
             }, fontFamily = FontFamily(
             Font(
               R.font.tt_bold
@@ -242,7 +283,10 @@ fun LoginScreenContent(
       Text(
         modifier = Modifier
           .padding(top = 10.dp)
-          .clickable {
+          .clickable(
+            interactionSource = remember { MutableInteractionSource() },
+            indication = null
+          ) {
             onEntryAsGuestClick.invoke()
           }, fontFamily = FontFamily(
           Font(
@@ -322,7 +366,9 @@ fun LoginScreenPreview() {
         onNewValue = {}
       )
       JWRoundedCheckBox(
-        modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp),
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(horizontal = 20.dp, vertical = 10.dp),
         label = "We can use animations to make it behave similar to the default",
         isChecked = true
       )
@@ -349,7 +395,10 @@ fun LoginScreenPreview() {
         isVisible = false,
         visibilityClick = {}
       )
-      Row(modifier = Modifier.padding(top = 10.dp, start = 20.dp, end = 20.dp), verticalAlignment = Alignment.CenterVertically) {
+      Row(
+        modifier = Modifier.padding(top = 10.dp, start = 20.dp, end = 20.dp),
+        verticalAlignment = Alignment.CenterVertically
+      ) {
         JWSwitchButton(checked = true, onCheckedChange = {})
         Text(
           modifier = Modifier.padding(start = 5.dp),

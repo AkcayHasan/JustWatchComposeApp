@@ -22,6 +22,8 @@ class DataStoreManager @Inject constructor(
 
     private val onBoardingVisibility = booleanPreferencesKey("onBoardingVisibility")
     private val rememberedEmailKey = stringPreferencesKey("rememberedEmail")
+    private val rememberedPasswordKey = stringPreferencesKey("rememberedPassword")
+    private val rememberMeCheckboxKey = booleanPreferencesKey("rememberMeCheckbox")
   }
 
   suspend fun shouldOnBoardingVisible() = context.dataStore.data.map { preferences ->
@@ -49,6 +51,34 @@ class DataStoreManager @Inject constructor(
   suspend fun clearRememberedEmail() {
     context.dataStore.edit { preferences ->
       preferences.remove(rememberedEmailKey)
+    }
+  }
+
+  suspend fun saveRememberMeCheckboxStatus(isChecked: Boolean) {
+    context.dataStore.edit { preferences ->
+      preferences[rememberMeCheckboxKey] = isChecked
+    }
+  }
+
+  suspend fun getRememberMeCheckboxStatus() = context.dataStore.data.map { preferences ->
+    preferences[rememberMeCheckboxKey] ?: false
+  }.first()
+
+  suspend fun saveRememberedPassword(password: String) {
+    context.dataStore.edit { preferences ->
+      preferences[rememberedPasswordKey] = password
+    }
+  }
+
+  suspend fun getRememberedPassword(): String? {
+    return context.dataStore.data.map { preferences ->
+      preferences[rememberedPasswordKey]
+    }.firstOrNull()
+  }
+
+  suspend fun clearRememberedPassword() {
+    context.dataStore.edit { preferences ->
+      preferences.remove(rememberedPasswordKey)
     }
   }
 }

@@ -10,26 +10,26 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.navigation.NavBackStackEntry
 
-fun defaultEnterTransition(): (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?) {
+fun defaultEnterTransition(durationTime: Int = 400): (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?) {
   return {
-    slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(200))
+    slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(durationTime))
   }
 }
 
-fun defaultExitTransition(): (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?) {
+fun defaultExitTransition(durationTime: Int = 400): (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?) {
   return {
-    slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(200))
+    slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(durationTime))
   }
 }
 
-fun defaultPopEnterTransition(): (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?) {
+fun defaultPopEnterTransition(durationTime: Int = 400): (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?) {
   return {
-    slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(200))
+    slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(durationTime))
   }
 }
 
-fun defaultPopExitTransition(): (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?) {
+fun defaultPopExitTransition(durationTime: Int = 400): (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?) {
   return {
-    slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(200))
+    slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(durationTime))
   }
 }

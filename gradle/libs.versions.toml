@@ -23,6 +23,7 @@ chuckerVersion = "4.0.0"
 googleServicesVersion = "4.4.2"
 firebaseBomVersion = "33.4.0"
 firebaseCrashlytics = "3.0.2"
+paginationVersion = "3.3.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -61,6 +62,8 @@ firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
+paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paginationVersion" }
+paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paginationVersion" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

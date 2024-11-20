@@ -7,11 +7,14 @@ import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.listrespo
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface MovieService {
 
     @GET("movie/popular")
-    suspend fun getAllPopularMovies(): Response<MovieResponse>
+    suspend fun getAllPopularMovies(
+        @Query("page") pageNumber: Int
+    ): Response<MovieResponse>
 
     @GET("movie/{movie_id}")
     suspend fun getMovieById(

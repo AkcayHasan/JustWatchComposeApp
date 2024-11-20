@@ -1,6 +1,10 @@
+package com.akcay.justwatch.internal.component
+
+import android.annotation.SuppressLint
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.*
@@ -12,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.akcay.justwatch.ui.theme.Green2
 
+@SuppressLint("UseOfNonLambdaOffsetOverload")
 @Composable
 fun JWSwitchButton(
   checked: Boolean,
@@ -36,7 +41,10 @@ fun JWSwitchButton(
       .height(21.dp)
       .clip(CircleShape)
       .background(if (isChecked) checkedColor else uncheckedColor)
-      .clickable(enabled = enabled) {
+      .clickable(
+        indication = null,
+        enabled = enabled,
+        interactionSource = remember { MutableInteractionSource() }) {
         isChecked = !isChecked
         onCheckedChange(isChecked)
       },
@@ -55,7 +63,7 @@ fun JWSwitchButton(
 @Preview(showBackground = true)
 @Composable
 fun CustomIosSwitchPreview() {
-  var isChecked by remember { mutableStateOf(false) }
+  var isChecked by remember { mutableStateOf(true) }
 
   JWSwitchButton(
     checked = isChecked,

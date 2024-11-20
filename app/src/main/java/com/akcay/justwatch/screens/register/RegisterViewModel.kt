@@ -8,14 +8,12 @@ import com.akcay.justwatch.domain.repository.LogRepository
 import com.akcay.justwatch.domain.usecase.RegisterUseCase
 import com.akcay.justwatch.domain.usecase.SaveUserInfoUseCase
 import com.akcay.justwatch.internal.navigation.AllScreens
-import com.akcay.justwatch.internal.util.JWLoadingManager
 import com.akcay.justwatch.internal.util.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val loadingState: JWLoadingManager,
     private val logRepository: LogRepository,
     private val registerUseCase: RegisterUseCase,
     private val saveUserInfoUseCase: SaveUserInfoUseCase
@@ -44,18 +42,18 @@ class RegisterViewModel @Inject constructor(
     fun onRegisterClick(openAndPopUp: (String, String) -> Unit) {
 
         launchCatching(logRepository = logRepository) {
-            loadingState.showLoading()
+
             when(val result = registerUseCase(email, password)) {
                 is NetworkResult.Success -> {
-                    loadingState.hideLoading()
+
                     saveUserInfoUseCase.invoke(result.data.id!!, "Hasan", "Akçay")
                     openAndPopUp.invoke(MainDestinations.HOME_ROUTE, AllScreens.REGISTER.name)
                 }
                 is NetworkResult.Error -> {
-                    loadingState.hideLoading()
+
                 }
                 is NetworkResult.Exception -> {
-                    loadingState.hideLoading()
+
 
                 }
             }

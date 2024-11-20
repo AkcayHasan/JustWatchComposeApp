@@ -16,7 +16,6 @@ import com.akcay.justwatch.MainDestinations
 import com.akcay.justwatch.internal.component.JWDialogBox
 import com.akcay.justwatch.internal.component.JWDialogBoxModel
 import com.akcay.justwatch.internal.util.DataStoreManager
-import com.akcay.justwatch.internal.util.JWLoadingManager
 import com.akcay.justwatch.internal.util.JWSecurityUtil
 import com.akcay.justwatch.ui.theme.Red
 import dagger.hilt.android.lifecycle.HiltViewModel

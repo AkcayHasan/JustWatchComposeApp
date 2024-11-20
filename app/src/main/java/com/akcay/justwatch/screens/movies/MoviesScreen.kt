@@ -6,13 +6,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -22,12 +28,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.User
 import com.akcay.justwatch.internal.component.JWTab
 import com.akcay.justwatch.internal.component.JWTopAppBar
 import com.akcay.justwatch.internal.component.ListMovieItem
 import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.listresponse.MovieResponse
 import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.listresponse.MovieResult
+import com.akcay.justwatch.internal.component.JWLoadingView
 import com.akcay.justwatch.internal.util.Constants
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -38,10 +47,14 @@ fun MoviesScreen(
 ) {
   val uiState by viewModel.uiState.collectAsState()
   val selectedIndex by viewModel.selectedIndex.collectAsState()
+  val movies = viewModel.popularMovies.collectAsLazyPagingItems()
+  val listState = rememberLazyListState()
 
   MoviesScreenContent(
     uiState = uiState,
+    movieList = movies,
     selectedIndex = selectedIndex,
+    listState = listState,
     onTabSelected = viewModel::setSelectedIndex,
     onCardClick = onCardClick
   )
@@ -51,7 +64,9 @@ fun MoviesScreen(
 @Composable
 fun MoviesScreenContent(
   uiState: MoviesUiState,
+  movieList: LazyPagingItems<MovieResult>,
   selectedIndex: Int,
+  listState: LazyListState,
   onTabSelected: (Int) -> Unit,
   onCardClick: (Long) -> Unit
 ) {
@@ -66,64 +81,68 @@ fun MoviesScreenContent(
       )
     }
   ) {
-    Column(
-      modifier = Modifier
-        .fillMaxSize()
-        .padding(top = it.calculateTopPadding())
-    ) {
-      Text(
-        modifier = Modifier.padding(horizontal = 20.dp),
-        text = buildAnnotatedString {
-          withStyle(style = SpanStyle(fontSize = 12.sp, fontWeight = FontWeight.Bold)) {
-            append("Hi, ")
+    JWLoadingView(isLoading = uiState.loading) {
+      Column(
+        modifier = Modifier
+          .fillMaxSize()
+          .padding(top = it.calculateTopPadding())
+      ) {
+        Text(
+          modifier = Modifier.padding(horizontal = 20.dp),
+          text = buildAnnotatedString {
+            withStyle(style = SpanStyle(fontSize = 12.sp, fontWeight = FontWeight.Bold)) {
+              append("Hi, ")
+            }
+            withStyle(style = SpanStyle(fontSize = 30.sp)) {
+              append(uiState.user?.firstName ?: "")
+            }
           }
-          withStyle(style = SpanStyle(fontSize = 30.sp)) {
-            append(uiState.user?.firstName ?: "")
-          }
-        }
-      )
-      JWTab(tabIndex = onTabSelected)
-      when (selectedIndex) {
-        0 -> {
-          LazyColumn {
-            uiState.movieList?.movieResults?.let { itemsList ->
-              items(count = itemsList.size) { index ->
-                val item = itemsList[index]
+        )
+        JWTab(tabIndex = onTabSelected)
+        when (selectedIndex) {
+          0 -> {
+            LazyColumn(state = listState) {
+              items(movieList.itemCount) { index ->
+                val item = movieList[index]
                 ListMovieItem(
-                  imageUrl = item.posterPath,
-                  itemId = item.id ?: Constants.ZERO,
-                  movieName = item.originalTitle ?: "",
-                  onCardClicked = { onCardClick(item.id ?: Constants.ZERO) },
+                  imageUrl = item?.posterPath,
+                  itemId = item?.id ?: Constants.ZERO,
+                  movieName = item?.originalTitle ?: "",
+                  onCardClicked = { onCardClick(item?.id ?: Constants.ZERO) },
                   onAddIconClicked = {}
                 )
               }
             }
           }
-        }
 
-        1 -> Box { Text(text = "Second Page") }
+          1 -> Box { Text(text = "Second Page") }
+        }
       }
     }
   }
+
+//  LaunchedEffect(listState) {
+//    snapshotFlow { listState.layoutInfo }
+//      .debounce(300)
+//      .collect { layoutInfo ->
+//        val totalItems = layoutInfo.totalItemsCount
+//        val visibleItems = layoutInfo.visibleItemsInfo.map { it.index }
+//
+//        val middleItemIndex = totalItems / 2
+//
+//        if (middleItemIndex in visibleItems) {
+//          Log.d("osman", "middle item")
+//        }
+//      }
+//  }
+}
+
+fun LazyListState.isScrollToEnd(): Boolean {
+  return layoutInfo.visibleItemsInfo.lastOrNull()?.index == layoutInfo.totalItemsCount - 1
 }
 
 @Preview
 @Composable
 fun MoviesScreenPreview() {
-  MoviesScreenContent(
-    uiState = MoviesUiState(
-      user = User(firstName = "Preview User"),
-      movieList = MovieResponse(
-        movieResults = listOf(
-          MovieResult(id = 1, originalTitle = "Sample Movie", posterPath = "")
-        ),
-        page = null,
-        totalResults = null,
-        totalPages = null
-      )
-    ),
-    selectedIndex = 0,
-    onTabSelected = {},
-    onCardClick = {}
-  )
+
 }

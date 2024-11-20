@@ -11,8 +11,8 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.akcay.justwatch.BottomNavSections
 import com.akcay.justwatch.R
+import com.akcay.justwatch.screens.home.BottomNavSections
 
 @Composable
 fun JWBottomNavBar(

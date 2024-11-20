@@ -15,19 +15,24 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun JWLoadingView(
   modifier: Modifier = Modifier,
-  backgroundColor: Color = Color.Black.copy(alpha = 0.5f)
+  isLoading: Boolean,
+  block: @Composable () -> Unit
 ) {
-  Box(
-    modifier = modifier
-      .fillMaxSize()
-      .background(backgroundColor)
-      .clickable(enabled = false) {  },
-    contentAlignment = Alignment.Center
-  ) {
-    CircularProgressIndicator(
-      modifier = modifier.width(50.dp),
-      strokeWidth = 2.dp,
-      color = Color.Green
-    )
+  if (isLoading) {
+    Box(
+      modifier = modifier
+        .fillMaxSize()
+        .background(Color.White)
+        .clickable(enabled = false) { },
+      contentAlignment = Alignment.Center
+    ) {
+      CircularProgressIndicator(
+        modifier = modifier.width(50.dp),
+        strokeWidth = 4.dp,
+        color = Color.Green
+      )
+    }
+  } else {
+    block.invoke()
   }
 }
