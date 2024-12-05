@@ -34,17 +34,19 @@ class LoginViewModel @Inject constructor(
   val dialogState = mutableStateOf<JWDialogBoxModel?>(value = null)
 
   init {
+    showLoading()
     viewModelScope.launch {
       dataStoreManager.apply {
         if (!getRememberedPassword().isNullOrEmpty() && !getRememberedEmail().isNullOrEmpty() && getRememberMeCheckboxStatus()) {
           _uiState.update {
             _uiState.value.copy(
-              email = getRememberedEmail()!!,
-              password = getRememberedPassword()!!,
+              email = getRememberedEmail() ?: "",
+              password = getRememberedPassword() ?: "",
               isRememberCheckboxChecked = true
             )
           }
         }
+        hideLoading()
       }
     }
   }

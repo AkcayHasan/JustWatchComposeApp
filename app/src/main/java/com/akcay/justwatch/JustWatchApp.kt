@@ -5,6 +5,9 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -19,6 +22,7 @@ import com.akcay.justwatch.internal.navigation.defaultEnterTransition
 import com.akcay.justwatch.internal.navigation.defaultExitTransition
 import com.akcay.justwatch.internal.navigation.defaultPopEnterTransition
 import com.akcay.justwatch.internal.navigation.defaultPopExitTransition
+import com.akcay.justwatch.internal.util.LocalThemeManager
 import com.akcay.justwatch.screens.detail.MovieDetailScreen
 import com.akcay.justwatch.screens.onboarding.ClickActions
 import com.akcay.justwatch.screens.onboarding.OnBoardingScreen
@@ -33,8 +37,13 @@ import com.akcay.justwatch.screens.register.RegisterScreen
 import com.akcay.justwatch.ui.theme.JustWatchTheme
 
 @Composable
-fun JustWatchApp(viewModel: JustWatchViewModel = hiltViewModel(), startDestination: String) {
-  JustWatchTheme {
+fun JustWatchApp(
+  viewModel: JustWatchViewModel = hiltViewModel(),
+  startDestination: String
+) {
+  val isDarkTheme by LocalThemeManager.current.isDarkThemeEnabled.collectAsState()
+
+  JustWatchTheme(darkTheme = isDarkTheme) {
     val justWatchNavController = rememberJustWatchNavController()
 
     Box(
@@ -58,7 +67,7 @@ private fun NavGraphBuilder.justWatchNavGraph(
 ) {
   composable(
     MainDestinations.HOME_ROUTE,
-    enterTransition = defaultEnterTransition(durationTime = 500),
+    enterTransition = defaultEnterTransition(),
     exitTransition = defaultExitTransition(),
     popEnterTransition = defaultPopEnterTransition()
   ) {

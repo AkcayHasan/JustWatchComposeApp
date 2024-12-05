@@ -9,21 +9,30 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.traceEventStart
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import com.akcay.justwatch.internal.util.LocalThemeManager
+import com.akcay.justwatch.internal.util.ThemeManager
 import com.akcay.justwatch.screens.splash.SplashScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class JustWatchActivity : ComponentActivity() {
 
   private val splashViewModel: SplashScreenViewModel by viewModels()
 
+  @Inject
+  lateinit var themeManager: ThemeManager
+
   override fun onCreate(savedInstanceState: Bundle?) {
     installSplashScreen().setKeepOnScreenCondition {
-      splashViewModel.isLoading.value
+      splashViewModel.uiState.value.canContinue
     }
     super.onCreate(savedInstanceState)
 
@@ -40,15 +49,19 @@ class JustWatchActivity : ComponentActivity() {
     )
 
     setContent {
-      JustWatchContent(
-        splashViewModel = splashViewModel,
-        onAppReady = {
-          JustWatchApp(startDestination = it)
-        },
-        onError = {
-          finish()
-        }
-      )
+      CompositionLocalProvider(LocalThemeManager provides themeManager) {
+        JustWatchContent(
+          splashViewModel = splashViewModel,
+          onAppReady = { destination ->
+            JustWatchApp(
+              startDestination = destination
+            )
+          },
+          onError = {
+            finish()
+          }
+        )
+      }
     }
   }
 }
@@ -59,23 +72,22 @@ fun JustWatchContent(
   onAppReady: @Composable (String) -> Unit,
   onError: () -> Unit
 ) {
-  val startDestination by splashViewModel.startDestination.collectAsState()
-  val continueState by splashViewModel.onContinue.collectAsState()
+  val uiState by splashViewModel.uiState.collectAsState()
 
   when {
-    splashViewModel.checkDeviceIsRooted() -> {
+    uiState.isRooted -> {
       splashViewModel.ErrorDialog(onError)
     }
+
     Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
       splashViewModel.ShowNotificationPermission()
-      if (continueState) {
-        onAppReady(startDestination)
-        splashViewModel.setLoadingStatus(false)
+      if (!uiState.canContinue) {
+        onAppReady(uiState.startDestination)
       }
     }
-    else -> {
-      onAppReady(startDestination)
-      splashViewModel.setLoadingStatus(false)
+
+    uiState.canContinue -> {
+      onAppReady(uiState.startDestination)
     }
   }
 

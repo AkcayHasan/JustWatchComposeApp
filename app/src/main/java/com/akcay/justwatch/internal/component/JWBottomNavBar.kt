@@ -29,7 +29,9 @@ fun JWBottomNavBar(
             NavigationBarItem(
                 selected = selected,
                 onClick = {
-                    selectedItem.invoke(justWatchBottomNavBarItems)
+                    if (!selected) {
+                        selectedItem.invoke(justWatchBottomNavBarItems)
+                    }
                 },
                 label = {
                     Text(

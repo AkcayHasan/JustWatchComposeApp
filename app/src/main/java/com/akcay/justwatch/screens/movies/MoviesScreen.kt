@@ -120,25 +120,6 @@ fun MoviesScreenContent(
       }
     }
   }
-
-//  LaunchedEffect(listState) {
-//    snapshotFlow { listState.layoutInfo }
-//      .debounce(300)
-//      .collect { layoutInfo ->
-//        val totalItems = layoutInfo.totalItemsCount
-//        val visibleItems = layoutInfo.visibleItemsInfo.map { it.index }
-//
-//        val middleItemIndex = totalItems / 2
-//
-//        if (middleItemIndex in visibleItems) {
-//          Log.d("osman", "middle item")
-//        }
-//      }
-//  }
-}
-
-fun LazyListState.isScrollToEnd(): Boolean {
-  return layoutInfo.visibleItemsInfo.lastOrNull()?.index == layoutInfo.totalItemsCount - 1
 }
 
 @Preview

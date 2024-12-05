@@ -7,6 +7,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -21,7 +22,7 @@ import com.akcay.justwatch.R
 fun JWTopAppBar(
     upPress: (() -> Unit)? = null,
     toolbarTitle: String? = null,
-    titleColor: Color = Color.Black,
+    titleColor: Color = MaterialTheme.colorScheme.onSurface,
     barScrollBehavior: TopAppBarScrollBehavior,
     isNavigationIconVisible: Boolean = true,
     isActionIconVisible: Boolean = false

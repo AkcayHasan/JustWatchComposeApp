@@ -22,7 +22,6 @@ fun JWSwitchButton(
   checked: Boolean,
   onCheckedChange: (Boolean) -> Unit,
   modifier: Modifier = Modifier,
-  enabled: Boolean = true,
   checkedColor: Color = Green2,
   uncheckedColor: Color = Color(0xFFD1D1D6),
   thumbColor: Color = Color.White
@@ -43,7 +42,6 @@ fun JWSwitchButton(
       .background(if (isChecked) checkedColor else uncheckedColor)
       .clickable(
         indication = null,
-        enabled = enabled,
         interactionSource = remember { MutableInteractionSource() }) {
         isChecked = !isChecked
         onCheckedChange(isChecked)

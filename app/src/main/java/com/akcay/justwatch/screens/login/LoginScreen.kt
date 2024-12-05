@@ -54,6 +54,7 @@ import com.akcay.justwatch.internal.ext.isValidEmail
 import com.akcay.justwatch.internal.navigation.Screen
 import com.akcay.justwatch.internal.component.JWDialogBox
 import com.akcay.justwatch.internal.component.JWDialogBoxModel
+import com.akcay.justwatch.internal.component.JWLoadingView
 import com.akcay.justwatch.ui.theme.Green2
 import com.akcay.justwatch.ui.theme.LightBlue
 
@@ -62,7 +63,7 @@ import com.akcay.justwatch.ui.theme.LightBlue
 fun LoginScreen(
   navigate: (String) -> Unit,
   navigateAndPopUp: (String, String) -> Unit,
-  viewModel: LoginViewModel = hiltViewModel()
+  viewModel: LoginViewModel = hiltViewModel(),
 ) {
   val uiState by viewModel.uiState.collectAsState()
   val dialogState by viewModel.dialogState
@@ -116,197 +117,198 @@ fun LoginScreenContent(
   onEntryAsGuestClick: () -> Unit,
   onPositiveDialogButtonClick: () -> Unit
 ) {
-
-  Box(
-    modifier = Modifier
-      .fillMaxSize()
-      .imePadding()
-      .verticalScroll(state = scrollState, enabled = isImeVisible)
-  ) {
-    Column(
+  JWLoadingView(isLoading = uiState.loading) {
+    Box(
       modifier = Modifier
         .fillMaxSize()
-        .padding(top = 100.dp),
-      horizontalAlignment = Alignment.CenterHorizontally
+        .imePadding()
+        .verticalScroll(state = scrollState, enabled = isImeVisible)
     ) {
-      Image(
+      Column(
         modifier = Modifier
-          .width(150.dp)
-          .height(150.dp),
-        painter = painterResource(id = AppIcon.just_watch_logo),
-        contentDescription = "JustWatchLogo"
-      )
-      Text(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(top = 50.dp, start = 20.dp),
-        fontFamily = FontFamily(
-          Font(
-            R.font.tt_bold
-          )
-        ), color = LightBlue,
-        fontSize = 25.sp,
-        text = "Welcome Back!",
-        textAlign = TextAlign.Start
-      )
-
-      Text(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(top = 30.dp, start = 30.dp),
-        fontFamily = FontFamily(
-          Font(
-            R.font.tt_bold
-          )
-        ),
-        text = "Email",
-        textAlign = TextAlign.Start,
-        fontSize = 15.sp
-      )
-      EmailField(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(top = 10.dp, start = 20.dp, end = 20.dp),
-        shape = RoundedCornerShape(10.dp),
-        value = uiState.email,
-        onNewValue = onEmailChange
-      )
-      JWRoundedCheckBox(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(horizontal = 20.dp, vertical = 10.dp),
-        label = "We can use animations to make it behave similar to the default",
-        isChecked = uiState.email.isValidEmail()
-      )
-      Text(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(top = 30.dp, start = 30.dp),
-        fontFamily = FontFamily(
-          Font(
-            R.font.tt_bold
-          )
-        ),
-        text = "Password",
-        textAlign = TextAlign.Start,
-        fontSize = 15.sp
-      )
-      PasswordField(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(top = 10.dp, start = 20.dp, end = 20.dp),
-        value = uiState.password,
-        shape = RoundedCornerShape(10.dp),
-        onNewValue = onPasswordChange,
-        isVisible = onPasswordVisible,
-        visibilityClick = onTogglePasswordVisibility
-      )
-      Row(
-        modifier = Modifier.padding(top = 10.dp, start = 20.dp, end = 20.dp),
-        verticalAlignment = Alignment.CenterVertically
+          .fillMaxSize()
+          .padding(top = 100.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
       ) {
-        JWSwitchButton(checked = isRememberMeChecked, onCheckedChange = onRememberMeCheckboxClick)
-        Text(
-          modifier = Modifier.padding(start = 5.dp),
-          text = "Remember Me", fontFamily = FontFamily(
-            Font(
-              R.font.tt_medium
-            )
-          )
+        Image(
+          modifier = Modifier
+            .width(150.dp)
+            .height(150.dp),
+          painter = painterResource(id = AppIcon.just_watch_logo),
+          contentDescription = "JustWatchLogo"
         )
         Text(
           modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(top = 50.dp, start = 20.dp),
+          fontFamily = FontFamily(
+            Font(
+              R.font.tt_bold
+            )
+          ), color = LightBlue,
+          fontSize = 25.sp,
+          text = "Welcome Back!",
+          textAlign = TextAlign.Start
+        )
+
+        Text(
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 30.dp, start = 30.dp),
           fontFamily = FontFamily(
             Font(
               R.font.tt_bold
             )
           ),
-          text = "Forgot password?",
-          color = Blue,
-          textAlign = TextAlign.End,
+          text = "Email",
+          textAlign = TextAlign.Start,
           fontSize = 15.sp
         )
-      }
-      ElevatedButton(
-        modifier = Modifier
-          .fillMaxWidth()
-          .height(100.dp)
-          .padding(top = 50.dp, start = 30.dp, end = 30.dp),
-        shape = RoundedCornerShape(10.dp),
-        colors = ButtonColors(
-          containerColor = Green2,
-          contentColor = White,
-          disabledContentColor = Green,
-          disabledContainerColor = Green
-        ), onClick = onLoginClick
-      ) {
+        EmailField(
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 10.dp, start = 20.dp, end = 20.dp),
+          shape = RoundedCornerShape(10.dp),
+          value = uiState.email,
+          onNewValue = onEmailChange
+        )
+        JWRoundedCheckBox(
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp, vertical = 10.dp),
+          label = "We can use animations to make it behave similar to the default",
+          isChecked = uiState.email.isValidEmail()
+        )
         Text(
           modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(top = 30.dp, start = 30.dp),
           fontFamily = FontFamily(
             Font(
               R.font.tt_bold
             )
           ),
-          text = "Log In",
-          color = White,
-          textAlign = TextAlign.Center,
-          fontSize = 20.sp
+          text = "Password",
+          textAlign = TextAlign.Start,
+          fontSize = 15.sp
         )
-      }
-
-      Row(modifier = Modifier.padding(top = 20.dp)) {
-        Text(
-          text = "Don't have an account?", fontFamily = FontFamily(
-            Font(
-              R.font.tt_medium
+        PasswordField(
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 10.dp, start = 20.dp, end = 20.dp),
+          value = uiState.password,
+          shape = RoundedCornerShape(10.dp),
+          onNewValue = onPasswordChange,
+          isVisible = onPasswordVisible,
+          visibilityClick = onTogglePasswordVisibility
+        )
+        Row(
+          modifier = Modifier.padding(top = 10.dp, start = 20.dp, end = 20.dp),
+          verticalAlignment = Alignment.CenterVertically
+        ) {
+          JWSwitchButton(checked = isRememberMeChecked, onCheckedChange = onRememberMeCheckboxClick)
+          Text(
+            modifier = Modifier.padding(start = 5.dp),
+            text = "Remember Me", fontFamily = FontFamily(
+              Font(
+                R.font.tt_medium
+              )
             )
           )
-        )
+          Text(
+            modifier = Modifier
+              .fillMaxWidth(),
+            fontFamily = FontFamily(
+              Font(
+                R.font.tt_bold
+              )
+            ),
+            text = "Forgot password?",
+            color = Blue,
+            textAlign = TextAlign.End,
+            fontSize = 15.sp
+          )
+        }
+        ElevatedButton(
+          modifier = Modifier
+            .fillMaxWidth()
+            .height(100.dp)
+            .padding(top = 50.dp, start = 30.dp, end = 30.dp),
+          shape = RoundedCornerShape(10.dp),
+          colors = ButtonColors(
+            containerColor = Green2,
+            contentColor = White,
+            disabledContentColor = Green,
+            disabledContainerColor = Green
+          ), onClick = onLoginClick
+        ) {
+          Text(
+            modifier = Modifier
+              .fillMaxWidth(),
+            fontFamily = FontFamily(
+              Font(
+                R.font.tt_bold
+              )
+            ),
+            text = "Log In",
+            color = White,
+            textAlign = TextAlign.Center,
+            fontSize = 20.sp
+          )
+        }
+
+        Row(modifier = Modifier.padding(top = 20.dp)) {
+          Text(
+            text = "Don't have an account?", fontFamily = FontFamily(
+              Font(
+                R.font.tt_medium
+              )
+            )
+          )
+          Text(
+            modifier = Modifier
+              .padding(start = 5.dp)
+              .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+              ) {
+                onSignUpClick.invoke()
+              }, fontFamily = FontFamily(
+              Font(
+                R.font.tt_bold
+              )
+            ), text = "Sign Up"
+          )
+        }
+
         Text(
           modifier = Modifier
-            .padding(start = 5.dp)
+            .padding(top = 10.dp)
             .clickable(
               interactionSource = remember { MutableInteractionSource() },
               indication = null
             ) {
-              onSignUpClick.invoke()
+              onEntryAsGuestClick.invoke()
             }, fontFamily = FontFamily(
             Font(
               R.font.tt_bold
             )
-          ), text = "Sign Up"
+          ), text = "Entry As Guest"
         )
       }
 
-      Text(
-        modifier = Modifier
-          .padding(top = 10.dp)
-          .clickable(
-            interactionSource = remember { MutableInteractionSource() },
-            indication = null
-          ) {
-            onEntryAsGuestClick.invoke()
-          }, fontFamily = FontFamily(
-          Font(
-            R.font.tt_bold
-          )
-        ), text = "Entry As Guest"
-      )
-    }
-
-    if (dialogState != null) {
-      JWDialogBox(
-        onDismissRequest = { },
-        content = JWDialogBoxModel(
-          mainColor = dialogState.mainColor,
-          title = dialogState.title,
-          description = dialogState.description,
-          positiveButtonText = "Ok"
-        ),
-        positiveButtonClickAction = onPositiveDialogButtonClick
-      )
+      if (dialogState != null) {
+        JWDialogBox(
+          onDismissRequest = { },
+          content = JWDialogBoxModel(
+            mainColor = dialogState.mainColor,
+            title = dialogState.title,
+            description = dialogState.description,
+            positiveButtonText = "Ok"
+          ),
+          positiveButtonClickAction = onPositiveDialogButtonClick
+        )
+      }
     }
   }
 }

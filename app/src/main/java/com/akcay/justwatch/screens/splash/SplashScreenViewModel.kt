@@ -17,90 +17,97 @@ import com.akcay.justwatch.internal.component.JWDialogBox
 import com.akcay.justwatch.internal.component.JWDialogBoxModel
 import com.akcay.justwatch.internal.util.DataStoreManager
 import com.akcay.justwatch.internal.util.JWSecurityUtil
+import com.akcay.justwatch.internal.util.ThemeManager
 import com.akcay.justwatch.ui.theme.Red
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SplashScreenViewModel @Inject constructor(
-    private val storeManager: DataStoreManager
+  private val storeManager: DataStoreManager,
+  private val themeManager: ThemeManager
 ) : ViewModel() {
+  private val _uiState = MutableStateFlow(SplashUiState())
+  val uiState: StateFlow<SplashUiState> = _uiState
 
-    private val _isLoading = MutableStateFlow(true)
-    val isLoading: StateFlow<Boolean> = _isLoading
+  init {
+    checkDeviceIsRooted()
+    checkOnboardingStatus()
+    checkAppTheme()
+  }
 
-    private val _onContinue = MutableStateFlow(false)
-    val onContinue: StateFlow<Boolean> = _onContinue
-
-    private val _startDestination = MutableStateFlow(MainDestinations.LOGIN_ROUTE)
-    val startDestination: StateFlow<String> = _startDestination.asStateFlow()
-
-    fun setLoadingStatus(loading: Boolean) {
-        _isLoading.value = loading
+  private fun checkAppTheme() {
+    viewModelScope.launch {
+      val isDarkThemeEnable = storeManager.getDarkThemeEnabled().first()
+      themeManager.setDarkThemeEnabled(isDarkThemeEnable)
     }
+  }
 
-    init {
-        checkOnboardingStatus()
-    }
-
-    private fun checkOnboardingStatus() {
-        viewModelScope.launch {
-            val shouldShowOnboarding = storeManager.shouldOnBoardingVisible()
-            _startDestination.value = if (shouldShowOnboarding) {
-                MainDestinations.ONBOARDING_ROUTE
-            } else {
-                MainDestinations.LOGIN_ROUTE
-            }
-        }
-    }
-
-    fun checkDeviceIsRooted(): Boolean = JWSecurityUtil.isDeviceRooted()
-
-    @Composable
-    fun ErrorDialog(
-        clickAction: () -> Unit
-    ) {
-        JWDialogBox(
-            onDismissRequest = {},
-            content = JWDialogBoxModel(
-                mainColor = Red,
-                title = "Hata!",
-                description = "Rootlu cihaz ile giriş yapıyorsunuz!",
-                positiveButtonText = "Çık!",
-                negativeButtonText = null
-            ),
-            positiveButtonClickAction = {
-                clickAction.invoke()
-            }
+  private fun checkOnboardingStatus() {
+    viewModelScope.launch {
+      val shouldShowOnboarding = storeManager.shouldOnBoardingVisible()
+      _uiState.update {
+        it.copy(
+          startDestination = if (shouldShowOnboarding) {
+            MainDestinations.ONBOARDING_ROUTE
+          } else {
+            MainDestinations.LOGIN_ROUTE
+          }
         )
+      }
     }
+  }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    @Composable
-    fun ShowNotificationPermission() {
-        val context = LocalContext.current
+  private fun checkDeviceIsRooted() {
+    _uiState.update { it.copy(isRooted = JWSecurityUtil.isDeviceRooted()) }
+  }
 
-        val launcher =
-            rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { isGranted ->
-                _onContinue.value = true
-            }
+  @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+  @Composable
+  fun ShowNotificationPermission() {
+    val context = LocalContext.current
 
-        LaunchedEffect(key1 = Unit) {
-            if (ContextCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.POST_NOTIFICATIONS
-                ) == PermissionChecker.PERMISSION_GRANTED
-            ) {
-                // Permission is already granted, proceed
-                _onContinue.value = true
-            } else {
-                // Launch the native permission dialog
-                launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
-            }
-        }
+    val launcher =
+      rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { isGranted ->
+        _uiState.update { it.copy(canContinue = false) }
+      }
+
+    LaunchedEffect(key1 = Unit) {
+      if (ContextCompat.checkSelfPermission(
+          context,
+          Manifest.permission.POST_NOTIFICATIONS
+        ) == PermissionChecker.PERMISSION_GRANTED
+      ) {
+        // Permission is already granted, proceed
+        _uiState.update { it.copy(canContinue = false) }
+      } else {
+        // Launch the native permission dialog
+        launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
+      }
     }
+  }
+
+  @Composable
+  fun ErrorDialog(
+    clickAction: () -> Unit
+  ) {
+    JWDialogBox(
+      onDismissRequest = {},
+      content = JWDialogBoxModel(
+        mainColor = Red,
+        title = "Hata!",
+        description = "Rootlu cihaz ile giriş yapıyorsunuz!",
+        positiveButtonText = "Çık!",
+        negativeButtonText = null
+      ),
+      positiveButtonClickAction = {
+        clickAction.invoke()
+      }
+    )
+  }
 }

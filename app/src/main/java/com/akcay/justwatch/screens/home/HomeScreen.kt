@@ -18,6 +18,7 @@ import com.akcay.justwatch.R
 import com.akcay.justwatch.addHomeGraph
 import com.akcay.justwatch.internal.component.JWBottomNavBar
 import com.akcay.justwatch.internal.navigation.Screen
+import com.akcay.justwatch.internal.navigation.defaultPopEnterTransition
 import com.akcay.justwatch.rememberJustWatchNavController
 
 @Composable

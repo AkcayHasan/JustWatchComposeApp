@@ -24,6 +24,7 @@ class DataStoreManager @Inject constructor(
     private val rememberedEmailKey = stringPreferencesKey("rememberedEmail")
     private val rememberedPasswordKey = stringPreferencesKey("rememberedPassword")
     private val rememberMeCheckboxKey = booleanPreferencesKey("rememberMeCheckbox")
+    private val darkThemeKey = booleanPreferencesKey("darkThemeKey")
   }
 
   suspend fun shouldOnBoardingVisible() = context.dataStore.data.map { preferences ->
@@ -80,5 +81,15 @@ class DataStoreManager @Inject constructor(
     context.dataStore.edit { preferences ->
       preferences.remove(rememberedPasswordKey)
     }
+  }
+
+  suspend fun setDarkThemeEnabled(isEnable: Boolean) {
+    context.dataStore.edit { preferences ->
+      preferences[darkThemeKey] = isEnable
+    }
+  }
+
+  fun getDarkThemeEnabled() = context.dataStore.data.map { preferences ->
+    preferences[darkThemeKey] ?: false
   }
 }

@@ -16,6 +16,7 @@ import com.akcay.justwatch.internal.util.NetworkResult
 import com.akcay.justwatch.internal.util.safeApiCall
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -24,7 +25,7 @@ class MovieRepositoryImpl @Inject constructor(
   private val remoteDataSource: MovieRemoteDataSource
 ) : MovieRepository {
 
-  override fun getPagedPopularMovies(): Flow<PagingData<MovieResult>> = flow {
+  /*override fun getPagedPopularMovies(): Flow<PagingData<MovieResult>> = flow {
     Pager(
       config = PagingConfig(
         pageSize = 20,
@@ -32,6 +33,16 @@ class MovieRepositoryImpl @Inject constructor(
       ),
       pagingSourceFactory = { MoviePagingSource(remoteDataSource, dispatcher) }
     )
+  }*/
+
+  override fun getPagedPopularMovies(): Flow<PagingData<MovieResult>> {
+    return Pager(
+      config = PagingConfig(
+        pageSize = 20,
+        enablePlaceholders = false
+      ),
+      pagingSourceFactory = { MoviePagingSource(remoteDataSource, dispatcher) }
+    ).flow
   }
 
   override fun getAllPopularMovies(pageNumber: Int): Flow<NetworkResult<MovieResponse>> = flow {
