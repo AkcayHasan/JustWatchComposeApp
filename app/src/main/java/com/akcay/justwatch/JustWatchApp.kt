@@ -5,7 +5,6 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -27,8 +26,8 @@ import com.akcay.justwatch.screens.detail.MovieDetailScreen
 import com.akcay.justwatch.screens.onboarding.ClickActions
 import com.akcay.justwatch.screens.onboarding.OnBoardingScreen
 import com.akcay.justwatch.screens.movies.MoviesScreen
-import com.akcay.justwatch.screens.profile.ProfileScreen
-import com.akcay.justwatch.screens.favourite.UpcomingMoviesScreen
+import com.akcay.justwatch.screens.favourite.FavouriteMoviesScreen
+import com.akcay.justwatch.screens.search.SearchMoviesScreen
 import com.akcay.justwatch.screens.forgotpassword.ForgotPasswordScreen
 import com.akcay.justwatch.screens.home.BottomNavSections
 import com.akcay.justwatch.screens.home.HomeScreen
@@ -67,7 +66,7 @@ private fun NavGraphBuilder.justWatchNavGraph(
 ) {
   composable(
     MainDestinations.HOME_ROUTE,
-    enterTransition = defaultEnterTransition(),
+    enterTransition = defaultEnterTransition(durationTime = 600),
     exitTransition = defaultExitTransition(),
     popEnterTransition = defaultPopEnterTransition()
   ) {
@@ -79,7 +78,7 @@ private fun NavGraphBuilder.justWatchNavGraph(
   }
   navigation(
     route = MainDestinations.LOGIN_ROUTE,
-    startDestination = Screen.Login.route
+    startDestination = Screen.Login.route,
   ) {
     addLoginGraph(justWatchNavController)
   }
@@ -87,22 +86,13 @@ private fun NavGraphBuilder.justWatchNavGraph(
     OnBoardingScreen(
       buttonClicked = { clickActions, args ->
         when (clickActions) {
-          ClickActions.GET_STARTED_ONBOARDING -> {
+          ClickActions.GET_STARTED_ONBOARDING, ClickActions.SKIP_ONBOARDING -> {
             justWatchNavController.navigateAndPopUp(
               MainDestinations.LOGIN_ROUTE,
               MainDestinations.ONBOARDING_ROUTE
             )
           }
-
-          ClickActions.NEXT_ONBOARDING -> {}
-          ClickActions.SKIP_ONBOARDING -> {
-            justWatchNavController.navigateAndPopUp(
-              MainDestinations.LOGIN_ROUTE,
-              MainDestinations.ONBOARDING_ROUTE
-            )
-          }
-
-          ClickActions.PREVIOUS_ONBOARDING -> {}
+          else -> {}
         }
       }
     )
@@ -141,14 +131,14 @@ fun NavGraphBuilder.addHomeGraph(
   modifier: Modifier = Modifier,
   onMovieSelected: (Long) -> Unit
 ) {
-  composable(BottomNavSections.POPULAR_MOVIES.route) {
+  composable(BottomNavSections.MOVIES.route) {
     MoviesScreen(onCardClick = onMovieSelected)
   }
-  composable(BottomNavSections.UPCOMING_MOVIES.route) {
-    UpcomingMoviesScreen()
+  composable(BottomNavSections.SEARCH.route) {
+    SearchMoviesScreen()
   }
-  composable(BottomNavSections.PROFILE.route) {
-    ProfileScreen()
+  composable(BottomNavSections.FAVOURITE.route) {
+    FavouriteMoviesScreen()
   }
 }
 

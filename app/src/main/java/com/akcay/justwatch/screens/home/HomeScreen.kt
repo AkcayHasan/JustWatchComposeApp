@@ -18,7 +18,6 @@ import com.akcay.justwatch.R
 import com.akcay.justwatch.addHomeGraph
 import com.akcay.justwatch.internal.component.JWBottomNavBar
 import com.akcay.justwatch.internal.navigation.Screen
-import com.akcay.justwatch.internal.navigation.defaultPopEnterTransition
 import com.akcay.justwatch.rememberJustWatchNavController
 
 @Composable
@@ -28,9 +27,9 @@ fun HomeScreen(
 ) {
   val justWatchNavController = rememberJustWatchNavController()
   val screens = listOf(
-    BottomNavSections.POPULAR_MOVIES,
-    BottomNavSections.UPCOMING_MOVIES,
-    BottomNavSections.PROFILE
+    BottomNavSections.MOVIES,
+    BottomNavSections.SEARCH,
+    BottomNavSections.FAVOURITE
   )
 
   Scaffold(
@@ -53,7 +52,7 @@ fun HomeScreen(
     ) {
       NavHost(
         navController = justWatchNavController.navController,
-        startDestination = Screen.PopularMovies.route,
+        startDestination = Screen.Movies.route,
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None }
       ) {
@@ -73,22 +72,26 @@ fun HomeScreenPreview(modifier: Modifier = Modifier) {
 
 enum class BottomNavSections(
   @StringRes val titleResId: Int,
-  val drawableResId: ImageVector,
+  val selectedDrawableResId: Int,
+  val notSelectedDrawableResId: Int,
   val route: String
 ) {
-  POPULAR_MOVIES(
-    R.string.popular_movies_title,
-    Icons.Default.Settings,
-    Screen.PopularMovies.route
+  MOVIES(
+    titleResId = R.string.movies_title,
+    selectedDrawableResId = R.drawable.ic_home_solid,
+    notSelectedDrawableResId = R.drawable.ic_home,
+    route = Screen.Movies.route
   ),
-  UPCOMING_MOVIES(
-    R.string.upcoming_movies_title,
-    Icons.Default.Settings,
-    Screen.UpcomingMovies.route
+  SEARCH(
+    titleResId = R.string.search_title,
+    selectedDrawableResId = R.drawable.ic_search_solid,
+    notSelectedDrawableResId = R.drawable.ic_search,
+    route = Screen.Search.route
   ),
-  PROFILE(
-    R.string.profile_title,
-    Icons.Default.Settings,
-    Screen.Profile.route
+  FAVOURITE(
+    titleResId = R.string.favourite_title,
+    selectedDrawableResId = R.drawable.ic_favourite_solid,
+    notSelectedDrawableResId = R.drawable.ic_favourite,
+    route = Screen.Favourite.route
   )
 }

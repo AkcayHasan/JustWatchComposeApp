@@ -9,9 +9,9 @@ enum class AllScreens {
   REGISTER,
   FORGOT_PASSWORD,
   MOVIE_DETAIL,
-  POPULAR_MOVIES,
-  UPCOMING_MOVIES,
-  PROFILE
+  MOVIES,
+  SEARCH,
+  FAVOURITE
 }
 
 sealed class Screen(
@@ -28,22 +28,22 @@ sealed class Screen(
     fun createRoute(movieId: Long) = "${AllScreens.MOVIE_DETAIL.name}/$movieId"
   }
 
-  data object PopularMovies : Screen(
-    route = AllScreens.POPULAR_MOVIES.name
+  data object Movies : Screen(
+    route = AllScreens.MOVIES.name
   ) {
-    fun createRoute() = AllScreens.POPULAR_MOVIES.name
+    fun createRoute() = AllScreens.MOVIES.name
   }
 
-  data object UpcomingMovies : Screen(
-    route = AllScreens.UPCOMING_MOVIES.name
+  data object Search : Screen(
+    route = AllScreens.SEARCH.name
   ) {
-    fun createRoute() = AllScreens.UPCOMING_MOVIES.name
+    fun createRoute() = AllScreens.SEARCH.name
   }
 
-  data object Profile : Screen(
-    route = AllScreens.PROFILE.name
+  data object Favourite : Screen(
+    route = AllScreens.FAVOURITE.name
   ) {
-    fun createRoute() = AllScreens.PROFILE.name
+    fun createRoute() = AllScreens.FAVOURITE.name
   }
 
   data object Login : Screen(

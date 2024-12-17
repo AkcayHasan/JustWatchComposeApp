@@ -1,14 +1,22 @@
 package com.akcay.justwatch.screens.onboarding
 
+import android.content.res.Configuration
 import android.os.Bundle
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.updateTransition
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,11 +34,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,273 +51,328 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.akcay.justwatch.R
 import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.LoaderIntro
-import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.OnBoardingData
+import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.OnBoardingDataWithLottie
+import com.akcay.justwatch.internal.component.JWButton
 import com.akcay.justwatch.internal.util.Constants
 import kotlinx.coroutines.launch
 
-enum class ClickActions {
-    SKIP_ONBOARDING,
-    NEXT_ONBOARDING,
-    PREVIOUS_ONBOARDING,
-    GET_STARTED_ONBOARDING
-}
-
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnBoardingScreen(
-    buttonClicked: (ClickActions, Bundle?) -> Unit,
-    viewModel: OnBoardingViewModel = hiltViewModel()
+  buttonClicked: (ClickActions, Bundle?) -> Unit,
+  viewModel: OnBoardingViewModel = hiltViewModel()
 ) {
-    val coroutineScope = rememberCoroutineScope()
+  val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(key1 = Unit) {
-        viewModel.changeVisibilityOfOnBoarding()
+  val pages = listOf(
+    OnBoardingDataWithLottie(
+      R.raw.stage1,
+      "Stage1",
+      "Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface."
+    ),
+    OnBoardingDataWithLottie(
+      R.raw.stage2,
+      "Stage2",
+      "Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface. Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface."
+    ),
+    OnBoardingDataWithLottie(
+      R.raw.stage1,
+      "Stage3",
+      "Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface."
+    )
+  )
+
+  val pagerState = rememberPagerState(
+    pageCount = {
+      pages.size
     }
+  )
 
-    val pages = listOf(
-        OnBoardingData(
-            R.raw.stage1,
-            "Stage1",
-            "Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface."
-        ),
-        OnBoardingData(
-            R.raw.stage2,
-            "Stage2",
-            "Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface. Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface."
-        ),
-        OnBoardingData(
-            R.raw.stage1,
-            "Stage3",
-            "Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface."
+  Column(
+    modifier = Modifier
+      .fillMaxSize()
+      .background(color = Color.Black),
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+
+    HorizontalPager(
+      state = pagerState
+    ) { page ->
+      Column(
+        modifier = Modifier
+          .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+      ) {
+        Image(
+          modifier = Modifier
+            .fillMaxWidth()
+            .height(395.dp),
+          painter = painterResource(R.drawable.ic_launcher_background),
+          contentDescription = null
         )
-    )
 
-    val pagerState = rememberPagerState(
-        pageCount = {
-            pages.size
-        }
-    )
+        Text(
+          text = pages[page].title,
+          modifier = Modifier.padding(top = 50.dp),
+          color = Color.White,
+          style = MaterialTheme.typography.headlineSmall,
+        )
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Box(
-            modifier = Modifier
-                .padding(top = 50.dp, end = 20.dp)
-                .fillMaxWidth(),
-            contentAlignment = Alignment.TopEnd
-        ) {
-            if (pagerState.currentPage != pages.size.minus(1)) {
-                OnBoardingTextButtons(
-                    text = "Skip",
-                    modifier = Modifier.clickable {
-                        buttonClicked.invoke(ClickActions.SKIP_ONBOARDING, null)
-                    }
-                )
-            }
-        }
-
-        HorizontalPager(
-            modifier = Modifier.padding(top = 100.dp, start = 10.dp, end = 10.dp),
-            state = pagerState
-        ) { page ->
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                LoaderIntro(
-                    modifier = Modifier
-                        .size(200.dp)
-                        .fillMaxWidth()
-                        .align(alignment = Alignment.CenterHorizontally),
-                    file = pages[page].lottieFile
-                )
-
-                Text(
-                    text = pages[page].title,
-                    modifier = Modifier.padding(top = 50.dp),
-                    color = Color.Black,
-                    style = MaterialTheme.typography.headlineSmall,
-                )
-
-                Text(
-                    text = pages[page].description,
-                    modifier = Modifier
-                        .padding(top = 30.dp, start = 20.dp, end = 20.dp)
-                        .fillMaxWidth()
-                        .height(150.dp),
-                    color = Color.Black,
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Center
-                )
-            }
-        }
-
-
-        Box(modifier = Modifier.align(Alignment.BottomCenter)) {
-            PagerIndicator(
-                modifier = Modifier.padding(bottom = 200.dp),
-                pages.size,
-                pagerState.currentPage
-            )
-        }
-
-
-        Box(modifier = Modifier.align(Alignment.BottomCenter)) {
-            BottomSection(pages, pagerState) { actions ->
-                when(actions) {
-                    ClickActions.NEXT_ONBOARDING -> {
-                        coroutineScope.launch {
-                            pagerState.animateScrollToPage(pagerState.currentPage.plus(1))
-                        }
-                    }
-                    ClickActions.PREVIOUS_ONBOARDING -> {
-                        coroutineScope.launch {
-                            pagerState.animateScrollToPage(pagerState.currentPage.minus(1))
-                        }
-                    }
-                    ClickActions.GET_STARTED_ONBOARDING -> {
-                        buttonClicked.invoke(ClickActions.GET_STARTED_ONBOARDING, null)
-                    }
-                    else -> Unit
-                }
-            }
-        }
+        Text(
+          text = pages[page].description,
+          modifier = Modifier
+            .padding(top = 30.dp, start = 20.dp, end = 20.dp)
+            .fillMaxWidth()
+            .height(150.dp),
+          color = Color.Gray,
+          fontSize = 16.sp,
+          style = MaterialTheme.typography.bodyMedium,
+          textAlign = TextAlign.Center
+        )
+      }
     }
+
+    Spacer(modifier = Modifier.weight(1f))
+
+    PagerIndicator(
+      modifier = Modifier.padding(bottom = 40.dp),
+      size = pages.size,
+      currentPage = pagerState.currentPage
+    )
+
+    BottomSection(
+      modifier = Modifier
+        .height(90.dp)
+        .padding(bottom = 20.dp),
+      pages = pages,
+      pagerState = pagerState
+    ) { actions ->
+      when (actions) {
+        ClickActions.NEXT_ONBOARDING -> {
+          coroutineScope.launch {
+            pagerState.animateScrollToPage(pagerState.currentPage.plus(1))
+          }
+        }
+
+        ClickActions.GET_STARTED_ONBOARDING, ClickActions.SKIP_ONBOARDING -> {
+          buttonClicked.invoke(ClickActions.GET_STARTED_ONBOARDING, null)
+          viewModel.changeVisibilityOfOnBoarding()
+        }
+      }
+    }
+  }
 }
 
 @Composable
 fun PagerIndicator(
-    modifier: Modifier = Modifier,
-    size: Int,
-    currentPage: Int
+  modifier: Modifier = Modifier,
+  size: Int,
+  currentPage: Int
 ) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        repeat(size) {
-            IndicatorView(isSelected = it == currentPage)
-        }
+  Row(
+    modifier = modifier,
+    horizontalArrangement = Arrangement.SpaceBetween
+  ) {
+    repeat(size) {
+      IndicatorView(isSelected = it == currentPage)
     }
+  }
 }
 
 @Composable
 fun IndicatorView(isSelected: Boolean) {
-    val width = animateDpAsState(targetValue = if (isSelected) 25.dp else 10.dp, label = "")
+  val width = animateDpAsState(targetValue = if (isSelected) 55.dp else 20.dp, label = "")
 
-    Box(
-        modifier = Modifier
-            .padding(1.dp)
-            .height(10.dp)
-            .width(width.value)
-            .clip(CircleShape)
-            .background(
-                if (isSelected) Color.Red else Color.Gray.copy(alpha = 0.5f)
-            )
-    )
+  Box(
+    modifier = Modifier
+      .padding(1.dp)
+      .height(4.dp)
+      .width(width.value)
+      .clip(CircleShape)
+      .background(
+        if (isSelected) Color.White else Color.Gray.copy(alpha = 0.5f)
+      )
+  )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BottomSection(
-    pages: List<OnBoardingData>,
-    pagerState: PagerState,
-    clickActions: (ClickActions) -> Unit
+  modifier: Modifier = Modifier,
+  pages: List<OnBoardingDataWithLottie>,
+  pagerState: PagerState,
+  clickActions: (ClickActions) -> Unit
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 50.dp),
-        horizontalArrangement = if (pages.lastIndex == pagerState.currentPage) {
-            Arrangement.Center
-        } else if (pagerState.currentPage.toLong() != Constants.ZERO){
-            Arrangement.SpaceBetween
-        } else {
-            Arrangement.End
-        }
-    ) {
-        if (pages.lastIndex == pagerState.currentPage) {
-            OutlinedButton(onClick = {
-                clickActions.invoke(ClickActions.GET_STARTED_ONBOARDING)
-            }, shape = RoundedCornerShape(size = 50.dp)) {
-                Text(
-                    text = "Get Started",
-                    modifier = Modifier
-                        .padding(vertical = 8.dp, horizontal = 40.dp),
-                    color = Color.LightGray
-                )
-            }
-        } else {
-            if (pagerState.currentPage.toLong() != Constants.ZERO) {
-                OnBoardingTextButtons(
-                    text = "Previous",
-                    modifier = Modifier
-                        .padding(start = 20.dp)
-                        .clickable {
-                            clickActions.invoke(ClickActions.PREVIOUS_ONBOARDING)
-                        })
-            }
-            OnBoardingTextButtons(
-                text = "Next",
-                modifier = Modifier
-                    .padding(end = 20.dp)
-                    .clickable {
-                        clickActions.invoke(ClickActions.NEXT_ONBOARDING)
-                    },
-            )
-        }
+  val isLastPage = pages.lastIndex == pagerState.currentPage
+
+  val skipButtonWeight by animateFloatAsState(
+    targetValue = if (isLastPage) 0f else 1f,
+    animationSpec = tween(durationMillis = 600),
+    label = ""
+  )
+
+  val skipButtonAlpha by animateFloatAsState(
+    targetValue = if (isLastPage) 0f else 1f,
+    animationSpec = tween(durationMillis = 300),
+    label = ""
+  )
+
+  val nextButtonWeight by animateFloatAsState(
+    targetValue = if (isLastPage) 3f else 2f,
+    animationSpec = tween(durationMillis = 600),
+    label = ""
+  )
+
+  Row(
+    modifier = modifier
+      .fillMaxWidth()
+      .padding(horizontal = 20.dp),
+    horizontalArrangement = Arrangement.Center
+  ) {
+    if (skipButtonWeight > 0f) {
+      JWButton(
+        modifier = modifier
+          .weight(skipButtonWeight)
+          .padding(end = 10.dp)
+          .alpha(skipButtonAlpha),
+        text = "Skip",
+        textColor = Color.Gray,
+        backgroundColor = Color.LightGray
+      ) {
+
+      }
     }
+    JWButton(
+      modifier = modifier
+        .weight(nextButtonWeight),
+      text = if (isLastPage) "Get Started" else "Next",
+      textColor = Color.Black,
+      backgroundColor = Color.White
+    ) {
+      clickActions.invoke(if (isLastPage) ClickActions.GET_STARTED_ONBOARDING else ClickActions.NEXT_ONBOARDING)
+    }
+  }
 }
 
-@Composable
-fun OnBoardingTextButtons(
-    text: String,
-    modifier: Modifier = Modifier,
-) {
-    Text(
-        modifier = modifier,
-        text = text,
-        color = Color.Black,
-        fontSize = 18.sp,
-        style = MaterialTheme.typography.bodyLarge,
-        fontWeight = FontWeight.Medium
-    )
-}
-
-
-@OptIn(ExperimentalFoundationApi::class)
-@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun OnBoardingScreenPreview() {
-    val pages = listOf(
-        OnBoardingData(
-            R.raw.stage1,
-            "Stage1", "Description1"
-        ),
-        OnBoardingData(
-            R.raw.stage2,
-            "Stage2", "Description2"
-        ),
-        OnBoardingData(
-            R.raw.stage1,
-            "Stage3", "Description1"
-        )
+  val pages = listOf(
+    OnBoardingDataWithLottie(
+      R.raw.stage1,
+      "Stage1",
+      "Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface."
+    ),
+    OnBoardingDataWithLottie(
+      R.raw.stage2,
+      "Stage2",
+      "Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface. Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface."
+    ),
+    OnBoardingDataWithLottie(
+      R.raw.stage1,
+      "Stage3",
+      "Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface."
     )
+  )
 
-    val pagerState = rememberPagerState(
-        pageCount = {
-            pages.size
-        }
-    )
-
-    Surface {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            HorizontalPager(state = pagerState) { page ->
-
-            }
-        }
+  val pagerState = rememberPagerState(
+    pageCount = {
+      pages.size
     }
+  )
+
+  Column(
+    modifier = Modifier
+      .fillMaxSize()
+      .background(color = Color.Black),
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+
+    HorizontalPager(
+      state = pagerState
+    ) { page ->
+      Column(
+        modifier = Modifier
+          .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+      ) {
+        Image(
+          modifier = Modifier
+            .fillMaxWidth()
+            .height(395.dp),
+          painter = painterResource(R.drawable.ic_launcher_background),
+          contentDescription = null
+        )
+
+        Text(
+          text = pages[page].title,
+          modifier = Modifier.padding(top = 50.dp),
+          color = Color.White,
+          style = MaterialTheme.typography.headlineSmall,
+        )
+
+        Text(
+          text = pages[page].description,
+          modifier = Modifier
+            .padding(top = 30.dp, start = 20.dp, end = 20.dp)
+            .fillMaxWidth()
+            .height(150.dp),
+          color = Color.Gray,
+          fontSize = 16.sp,
+          style = MaterialTheme.typography.bodyMedium,
+          textAlign = TextAlign.Center
+        )
+      }
+    }
+
+    Spacer(modifier = Modifier.weight(1f))
+
+    PagerIndicator(
+      modifier = Modifier.padding(bottom = 40.dp),
+      size = pages.size,
+      currentPage = pagerState.currentPage
+    )
+
+    BottomSection(
+      modifier = Modifier
+        .height(90.dp)
+        .padding(bottom = 20.dp),
+      pages = pages,
+      pagerState = pagerState
+    ) { actions -> }
+
+  }
+}
+
+@Preview
+@Composable
+fun BottomSectionPreview(modifier: Modifier = Modifier) {
+  val pages = listOf(
+    OnBoardingDataWithLottie(
+      R.raw.stage1,
+      "Stage1",
+      "Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface."
+    ),
+    OnBoardingDataWithLottie(
+      R.raw.stage2,
+      "Stage2",
+      "Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface. Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface."
+    ),
+    OnBoardingDataWithLottie(
+      R.raw.stage1,
+      "Stage3",
+      "Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface."
+    )
+  )
+
+  val pagerState = rememberPagerState(
+    pageCount = {
+      pages.size
+    }
+  )
+  BottomSection(modifier = Modifier.height(50.dp), pages = pages, pagerState = pagerState) { }
+}
+
+enum class ClickActions {
+  SKIP_ONBOARDING,
+  NEXT_ONBOARDING,
+  GET_STARTED_ONBOARDING
 }

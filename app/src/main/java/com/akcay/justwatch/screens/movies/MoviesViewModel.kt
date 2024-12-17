@@ -32,13 +32,6 @@ class MoviesViewModel @Inject constructor(
   private val _uiState = MutableStateFlow(MoviesUiState())
   val uiState: StateFlow<MoviesUiState> = _uiState.asStateFlow()
 
-  private val _selectedIndex = MutableStateFlow(0)
-  val selectedIndex: StateFlow<Int> = _selectedIndex.asStateFlow()
-
-  fun setSelectedIndex(index: Int) {
-    _selectedIndex.value = index
-  }
-
   init {
     viewModelScope.launch {
       accountRepository.currentAuthUser.collect { authUser ->

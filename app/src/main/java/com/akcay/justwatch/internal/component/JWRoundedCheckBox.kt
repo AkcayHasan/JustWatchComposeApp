@@ -37,7 +37,7 @@ fun JWRoundedCheckBox(
     label: String,
     isChecked: Boolean,
     isClickable: Boolean = false,
-    checkedColor: Color = Green2,
+    checkedColor: Color = Color.Black,
     unCheckedColor: Color = Color.White,
     onValueChange: ((Boolean) -> Unit)? = null
 ) {
@@ -72,7 +72,7 @@ fun JWRoundedCheckBox(
             modifier = Modifier
                 .size(20.dp)
                 .background(color = checkBoxColor, shape = RoundedCornerShape(15.dp))
-                .border(width = 1.5.dp, color = Green2, shape = RoundedCornerShape(15.dp))
+                .border(width = 1.5.dp, color = Color.Black, shape = RoundedCornerShape(15.dp))
             ,
             contentAlignment = Alignment.Center
         ) {
@@ -111,8 +111,8 @@ fun JWRoundedCheckBoxPreview(
         Box(
             modifier = Modifier
                 .size(20.dp)
-                .background(color = Green2, shape = RoundedCornerShape(15.dp))
-                .border(width = 1.5.dp, color = Green2, shape = RoundedCornerShape(15.dp))
+                .background(color = Color.Black, shape = RoundedCornerShape(15.dp))
+                .border(width = 1.5.dp, color = Color.Black, shape = RoundedCornerShape(15.dp))
             ,
             contentAlignment = Alignment.Center
         ) {

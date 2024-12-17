@@ -1,6 +1,7 @@
 package com.akcay.justwatch.screens.detail
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,8 +15,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -25,10 +32,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -94,10 +104,47 @@ fun MovieDetailScreenContent(
     modifier = Modifier.fillMaxSize(),
     topBar = {
       JWTopAppBar(
-        upPress = upPress,
         barScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
-        isNavigationIconVisible = true,
-        isActionIconVisible = true
+        navigationIcon = {
+          IconButton(onClick = {
+            upPress.invoke()
+          }) {
+            Box(
+              modifier = Modifier
+                .size(32.dp)
+                .clip(CircleShape)
+                .background(Color.Gray.copy(alpha = 0.5f)),
+              contentAlignment = Alignment.Center
+            ) {
+              Icon(
+                modifier = Modifier.size(20.dp),
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = "Localized description",
+                tint = Color.White
+              )
+            }
+          }
+        },
+        actionIcons = {
+          IconButton(onClick = {
+
+          }) {
+            Box(
+              modifier = Modifier
+                .size(32.dp)
+                .clip(CircleShape)
+                .background(Color.Gray.copy(alpha = 0.5f)),
+              contentAlignment = Alignment.Center
+            ) {
+              Icon(
+                modifier = Modifier.size(20.dp),
+                imageVector = Icons.Filled.FavoriteBorder,
+                contentDescription = "Localized description",
+                tint = Color.White
+              )
+            }
+          }
+        }
       )
     }
   ) {
@@ -166,6 +213,7 @@ fun MovieDetailScreenContent(
 }
 
 @Composable
+@Preview
 fun MovieDetailScreenPreview() {
 
 }

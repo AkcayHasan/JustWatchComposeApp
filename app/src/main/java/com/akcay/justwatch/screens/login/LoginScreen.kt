@@ -4,12 +4,16 @@ import com.akcay.justwatch.internal.component.JWSwitchButton
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,12 +21,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,29 +39,32 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.Blue
-import androidx.compose.ui.graphics.Color.Companion.Green
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.akcay.justwatch.R
-import com.akcay.justwatch.internal.component.EmailField
-import com.akcay.justwatch.R.drawable as AppIcon
-import com.akcay.justwatch.internal.component.JWRoundedCheckBox
-import com.akcay.justwatch.internal.component.PasswordField
-import com.akcay.justwatch.internal.ext.isValidEmail
+import com.akcay.justwatch.internal.component.JWButton
 import com.akcay.justwatch.internal.navigation.Screen
 import com.akcay.justwatch.internal.component.JWDialogBox
 import com.akcay.justwatch.internal.component.JWDialogBoxModel
 import com.akcay.justwatch.internal.component.JWLoadingView
-import com.akcay.justwatch.ui.theme.Green2
-import com.akcay.justwatch.ui.theme.LightBlue
+import com.akcay.justwatch.internal.component.JWPasswordField
+import com.akcay.justwatch.internal.component.JWRichText
+import com.akcay.justwatch.internal.component.JWTextField
+import com.akcay.justwatch.ui.theme.BorderGray
+import com.akcay.justwatch.ui.theme.LightGray
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -70,6 +78,7 @@ fun LoginScreen(
 
   var passwordVisible by remember { mutableStateOf(false) }
   var isRememberMeChecked by remember { mutableStateOf(false) }
+  var layoutResult by remember { mutableStateOf<TextLayoutResult?>(null) }
   val scrollState = rememberScrollState()
   val isImeVisible = WindowInsets.isImeVisible
 
@@ -94,7 +103,11 @@ fun LoginScreen(
       viewModel.onLoginClick(navigateAndPopUp, isRememberMeChecked)
     },
     onSignUpClick = { navigate.invoke(Screen.Register.route) },
-    onPositiveDialogButtonClick = { viewModel.closeDialog() }
+    onPositiveDialogButtonClick = { viewModel.closeDialog() },
+    layoutResult = layoutResult,
+    onLayoutResultChange = { newLayoutResult ->
+      layoutResult = newLayoutResult
+    }
   )
 }
 
@@ -115,89 +128,52 @@ fun LoginScreenContent(
   onSignUpClick: () -> Unit,
   onForgotPasswordClick: () -> Unit,
   onEntryAsGuestClick: () -> Unit,
-  onPositiveDialogButtonClick: () -> Unit
+  onPositiveDialogButtonClick: () -> Unit,
+  layoutResult: TextLayoutResult?,
+  onLayoutResultChange: (TextLayoutResult) -> Unit
 ) {
   JWLoadingView(isLoading = uiState.loading) {
     Box(
       modifier = Modifier
         .fillMaxSize()
         .imePadding()
-        .verticalScroll(state = scrollState, enabled = isImeVisible)
     ) {
       Column(
         modifier = Modifier
           .fillMaxSize()
+          .then(
+            if (isImeVisible) Modifier.verticalScroll(scrollState)
+            else Modifier
+          )
           .padding(top = 100.dp),
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
-        Image(
-          modifier = Modifier
-            .width(150.dp)
-            .height(150.dp),
-          painter = painterResource(id = AppIcon.just_watch_logo),
-          contentDescription = "JustWatchLogo"
-        )
         Text(
           modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 50.dp, start = 20.dp),
+            .fillMaxWidth(),
           fontFamily = FontFamily(
             Font(
-              R.font.tt_bold
+              R.font.tt_medium
             )
-          ), color = LightBlue,
-          fontSize = 25.sp,
-          text = "Welcome Back!",
-          textAlign = TextAlign.Start
+          ), color = Black,
+          fontSize = 32.sp,
+          text = "Sign In",
+          textAlign = TextAlign.Center
         )
-
-        Text(
+        JWTextField(
           modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 30.dp, start = 30.dp),
-          fontFamily = FontFamily(
-            Font(
-              R.font.tt_bold
-            )
-          ),
-          text = "Email",
-          textAlign = TextAlign.Start,
-          fontSize = 15.sp
-        )
-        EmailField(
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 10.dp, start = 20.dp, end = 20.dp),
-          shape = RoundedCornerShape(10.dp),
+            .padding(all = 10.dp),
           value = uiState.email,
+          label = "E-mail",
           onNewValue = onEmailChange
         )
-        JWRoundedCheckBox(
+        JWPasswordField(
           modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 10.dp),
-          label = "We can use animations to make it behave similar to the default",
-          isChecked = uiState.email.isValidEmail()
-        )
-        Text(
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 30.dp, start = 30.dp),
-          fontFamily = FontFamily(
-            Font(
-              R.font.tt_bold
-            )
-          ),
-          text = "Password",
-          textAlign = TextAlign.Start,
-          fontSize = 15.sp
-        )
-        PasswordField(
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 10.dp, start = 20.dp, end = 20.dp),
+            .padding(top = 10.dp, start = 10.dp, end = 10.dp),
           value = uiState.password,
-          shape = RoundedCornerShape(10.dp),
+          label = "Password",
           onNewValue = onPasswordChange,
           isVisible = onPasswordVisible,
           visibilityClick = onTogglePasswordVisibility
@@ -206,7 +182,11 @@ fun LoginScreenContent(
           modifier = Modifier.padding(top = 10.dp, start = 20.dp, end = 20.dp),
           verticalAlignment = Alignment.CenterVertically
         ) {
-          JWSwitchButton(checked = isRememberMeChecked, onCheckedChange = onRememberMeCheckboxClick)
+          JWSwitchButton(
+            checked = isRememberMeChecked,
+            onCheckedChange = onRememberMeCheckboxClick,
+            checkedColor = Black
+          )
           Text(
             modifier = Modifier.padding(start = 5.dp),
             text = "Remember Me", fontFamily = FontFamily(
@@ -220,70 +200,116 @@ fun LoginScreenContent(
               .fillMaxWidth(),
             fontFamily = FontFamily(
               Font(
-                R.font.tt_bold
+                R.font.tt_light
               )
             ),
             text = "Forgot password?",
-            color = Blue,
+            color = Gray,
             textAlign = TextAlign.End,
             fontSize = 15.sp
           )
         }
-        ElevatedButton(
+        JWButton(
           modifier = Modifier
             .fillMaxWidth()
-            .height(100.dp)
-            .padding(top = 50.dp, start = 30.dp, end = 30.dp),
-          shape = RoundedCornerShape(10.dp),
-          colors = ButtonColors(
-            containerColor = Green2,
-            contentColor = White,
-            disabledContentColor = Green,
-            disabledContainerColor = Green
-          ), onClick = onLoginClick
+            .padding(top = 20.dp, start = 10.dp, end = 10.dp)
+            .height(52.dp),
+          text = "Sign In",
+          textColor = White,
+          backgroundColor = Black,
+          onClick = onLoginClick
+        )
+
+        JWRichText(
+          modifier = Modifier.padding(top = 15.dp),
+          normalText = "By continuning, you accept our ",
+          clickableText = "Privacy Policy",
+          layoutResult = layoutResult,
+          onLayoutResultChange = onLayoutResultChange,
+          onClick = {
+
+          }
+        )
+
+        Row(
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 20.dp, end = 20.dp, top = 70.dp),
+          verticalAlignment = Alignment.CenterVertically
         ) {
-          Text(
+          HorizontalDivider(
             modifier = Modifier
-              .fillMaxWidth(),
-            fontFamily = FontFamily(
-              Font(
-                R.font.tt_bold
-              )
-            ),
-            text = "Log In",
-            color = White,
-            textAlign = TextAlign.Center,
-            fontSize = 20.sp
+              .weight(1f)
+              .height(1.dp),
+            color = Color.LightGray
+          )
+          Text(
+            text = "Or Continue with",
+            color = Gray,
+            fontSize = 14.sp,
+            modifier = Modifier.padding(horizontal = 8.dp)
+          )
+          HorizontalDivider(
+            modifier = Modifier
+              .weight(1f)
+              .height(1.dp),
+            color = Color.LightGray
           )
         }
 
-        Row(modifier = Modifier.padding(top = 20.dp)) {
-          Text(
-            text = "Don't have an account?", fontFamily = FontFamily(
-              Font(
-                R.font.tt_medium
-              )
-            )
-          )
-          Text(
+        Row(
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 70.dp),
+          horizontalArrangement = Arrangement.Center
+        ) {
+          // Google Button
+          IconButton(
+            onClick = {},
             modifier = Modifier
-              .padding(start = 5.dp)
-              .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null
-              ) {
-                onSignUpClick.invoke()
-              }, fontFamily = FontFamily(
-              Font(
-                R.font.tt_bold
-              )
-            ), text = "Sign Up"
-          )
+              .size(64.dp)
+              .clip(CircleShape)
+              .border(1.dp, color = BorderGray, shape = CircleShape)
+              .background(LightGray)
+          ) {
+            Image(
+              painter = painterResource(id = R.drawable.ic_google),
+              contentDescription = "Google Login",
+              modifier = Modifier.size(20.dp)
+            )
+          }
+          Spacer(modifier = Modifier.width(5.dp))
+          // Apple Button
+          IconButton(
+            onClick = {},
+            modifier = Modifier
+              .size(64.dp)
+              .clip(CircleShape)
+              .border(1.dp, color = BorderGray, shape = CircleShape)
+              .background(LightGray)
+          ) {
+            Image(
+              painter = painterResource(id = R.drawable.ic_apple),
+              contentDescription = "Apple Login",
+              modifier = Modifier.size(20.dp)
+            )
+          }
         }
+
+        Spacer(modifier = Modifier.fillMaxWidth().weight(1f))
+        JWRichText(
+          normalText = "Don't have an account? ",
+          clickableText = "Sign In",
+          layoutResult = layoutResult,
+          onLayoutResultChange = onLayoutResultChange,
+          onClick = {
+            onSignUpClick.invoke()
+          }
+        )
 
         Text(
           modifier = Modifier
-            .padding(top = 10.dp)
+            .padding(top = 10.dp, bottom = 50.dp)
             .clickable(
               interactionSource = remember { MutableInteractionSource() },
               indication = null
@@ -325,83 +351,41 @@ fun LoginScreenPreview() {
         .padding(top = 100.dp),
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
-      Image(
-        modifier = Modifier
-          .width(150.dp)
-          .height(150.dp),
-        painter = painterResource(id = R.drawable.just_watch_logo),
-        contentDescription = "JustWatchLogo"
-      )
       Text(
         modifier = Modifier
-          .fillMaxWidth()
-          .padding(top = 50.dp, start = 20.dp),
+          .fillMaxWidth(),
         fontFamily = FontFamily(
           Font(
-            R.font.tt_bold
+            R.font.tt_medium
           )
-        ), color = LightBlue,
-        fontSize = 25.sp,
-        text = "Welcome Back!",
-        textAlign = TextAlign.Start
+        ), color = Black,
+        fontSize = 32.sp,
+        text = "Sign In",
+        textAlign = TextAlign.Center
       )
-
-      Text(
+      JWTextField(
         modifier = Modifier
           .fillMaxWidth()
-          .padding(top = 30.dp, start = 30.dp),
-        fontFamily = FontFamily(
-          Font(
-            R.font.tt_bold
-          )
-        ),
-        text = "Email",
-        textAlign = TextAlign.Start,
-        fontSize = 15.sp
-      )
-      EmailField(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(top = 10.dp, start = 20.dp, end = 20.dp),
-        shape = RoundedCornerShape(10.dp),
-        value = "Email",
+          .padding(all = 10.dp),
+        value = "hasan@gmail.com",
+        label = "E-mail",
         onNewValue = {}
       )
-      JWRoundedCheckBox(
+      JWPasswordField(
         modifier = Modifier
           .fillMaxWidth()
-          .padding(horizontal = 20.dp, vertical = 10.dp),
-        label = "We can use animations to make it behave similar to the default",
-        isChecked = true
-      )
-      Text(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(top = 30.dp, start = 30.dp),
-        fontFamily = FontFamily(
-          Font(
-            R.font.tt_bold
-          )
-        ),
-        text = "Password",
-        textAlign = TextAlign.Start,
-        fontSize = 15.sp
-      )
-      PasswordField(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(top = 10.dp, start = 20.dp, end = 20.dp),
+          .padding(start = 10.dp, end = 10.dp),
         value = "asdasd",
-        shape = RoundedCornerShape(10.dp),
+        label = "Password",
         onNewValue = {},
         isVisible = false,
         visibilityClick = {}
       )
       Row(
-        modifier = Modifier.padding(top = 10.dp, start = 20.dp, end = 20.dp),
+        modifier = Modifier.padding(top = 20.dp, start = 20.dp, end = 20.dp, bottom = 10.dp),
         verticalAlignment = Alignment.CenterVertically
       ) {
-        JWSwitchButton(checked = true, onCheckedChange = {})
+        JWSwitchButton(checked = true, onCheckedChange = {}, checkedColor = Black)
         Text(
           modifier = Modifier.padding(start = 5.dp),
           text = "Remember Me", fontFamily = FontFamily(
@@ -415,66 +399,113 @@ fun LoginScreenPreview() {
             .fillMaxWidth(),
           fontFamily = FontFamily(
             Font(
-              R.font.tt_bold
+              R.font.tt_light
             )
           ),
           text = "Forgot password?",
-          color = Blue,
+          color = Gray,
           textAlign = TextAlign.End,
           fontSize = 15.sp
         )
       }
-      ElevatedButton(
+      JWButton(
         modifier = Modifier
           .fillMaxWidth()
-          .height(100.dp)
-          .padding(top = 50.dp, start = 30.dp, end = 30.dp),
-        shape = RoundedCornerShape(10.dp),
-        colors = ButtonColors(
-          containerColor = Green2,
-          contentColor = White,
-          disabledContentColor = Green,
-          disabledContainerColor = Green
-        ), onClick = { /*TODO*/ }) {
-        Text(
+          .padding(top = 20.dp, start = 10.dp, end = 10.dp)
+          .height(52.dp),
+        text = "Sign In",
+        textColor = White,
+        backgroundColor = Black,
+        onClick = {}
+      )
+
+      JWRichText(
+        modifier = Modifier.padding(top = 15.dp),
+        normalText = "By continuning, you accept our ",
+        clickableText = "Privacy Policy",
+        clickableFontWeight = FontWeight.Normal,
+        layoutResult = null,
+        onLayoutResultChange = {},
+        onClick = {}
+      )
+
+      Row(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(start = 20.dp, end = 20.dp, top = 70.dp),
+        verticalAlignment = Alignment.CenterVertically
+      ) {
+        HorizontalDivider(
           modifier = Modifier
-            .fillMaxWidth(),
-          fontFamily = FontFamily(
-            Font(
-              R.font.tt_bold
-            )
-          ),
-          text = "Log In",
-          color = White,
-          textAlign = TextAlign.Center,
-          fontSize = 20.sp
+            .weight(1f)
+            .height(1.dp),
+          color = Color.LightGray
+        )
+        Text(
+          text = "Or Continue with",
+          color = Gray,
+          fontSize = 14.sp,
+          modifier = Modifier.padding(horizontal = 8.dp)
+        )
+        HorizontalDivider(
+          modifier = Modifier
+            .weight(1f)
+            .height(1.dp),
+          color = Color.LightGray
         )
       }
 
-      Row(modifier = Modifier.padding(top = 20.dp)) {
-        Text(
-          text = "Don't have an account?", fontFamily = FontFamily(
-            Font(
-              R.font.tt_medium
-            )
+      Row(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(top = 70.dp),
+        horizontalArrangement = Arrangement.Center
+      ) {
+        // Google Button
+        IconButton(
+          onClick = {},
+          modifier = Modifier
+            .size(64.dp)
+            .clip(CircleShape)
+            .border(1.dp, color = BorderGray, shape = CircleShape)
+            .background(LightGray)
+        ) {
+          Image(
+            painter = painterResource(id = R.drawable.ic_google),
+            contentDescription = "Google Login",
+            modifier = Modifier.size(20.dp)
           )
-        )
-        Text(
+        }
+        Spacer(modifier = Modifier.width(5.dp))
+        // Apple Button
+        IconButton(
+          onClick = {},
           modifier = Modifier
-            .padding(start = 5.dp)
-            .clickable {
-
-            }, fontFamily = FontFamily(
-            Font(
-              R.font.tt_bold
-            )
-          ), text = "Sign Up"
-        )
+            .size(64.dp)
+            .clip(CircleShape)
+            .border(1.dp, color = BorderGray, shape = CircleShape)
+            .background(LightGray)
+        ) {
+          Image(
+            painter = painterResource(id = R.drawable.ic_apple),
+            contentDescription = "Apple Login",
+            modifier = Modifier.size(20.dp)
+          )
+        }
       }
+
+      Spacer(modifier = Modifier.weight(1f))
+      JWRichText(
+        normalText = "Don't have an account? ",
+        clickableText = "Sign In",
+        layoutResult = null,
+        onLayoutResultChange = {},
+        onClick = {}
+      )
 
       Text(
         modifier = Modifier
-          .padding(top = 10.dp)
+          .padding(top = 10.dp, bottom = 50.dp)
           .clickable {
 
           }, fontFamily = FontFamily(

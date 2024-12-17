@@ -22,6 +22,7 @@ import com.akcay.justwatch.ui.theme.Red
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -35,16 +36,32 @@ class SplashScreenViewModel @Inject constructor(
   private val _uiState = MutableStateFlow(SplashUiState())
   val uiState: StateFlow<SplashUiState> = _uiState
 
+  private val isCheckDevice = MutableStateFlow(false)
+  private val isCheckOnboardingStatus = MutableStateFlow(false)
+  private val isCheckAppTheme = MutableStateFlow(false)
+  private val isCheckNotifications = MutableStateFlow(false)
+
   init {
     checkDeviceIsRooted()
     checkOnboardingStatus()
     checkAppTheme()
+
+    viewModelScope.launch {
+      combine(isCheckDevice, isCheckOnboardingStatus, isCheckAppTheme, isCheckNotifications) { s1, s2, s3, s4 ->
+        s1 && s2 && s3 && s4
+      }.collect { allOk ->
+        _uiState.update {
+          it.copy(canContinue = !allOk)
+        }
+      }
+    }
   }
 
   private fun checkAppTheme() {
     viewModelScope.launch {
       val isDarkThemeEnable = storeManager.getDarkThemeEnabled().first()
       themeManager.setDarkThemeEnabled(isDarkThemeEnable)
+      isCheckAppTheme.value = true
     }
   }
 
@@ -60,11 +77,13 @@ class SplashScreenViewModel @Inject constructor(
           }
         )
       }
+      isCheckOnboardingStatus.value = true
     }
   }
 
   private fun checkDeviceIsRooted() {
     _uiState.update { it.copy(isRooted = JWSecurityUtil.isDeviceRooted()) }
+    isCheckDevice.value = true
   }
 
   @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -74,7 +93,7 @@ class SplashScreenViewModel @Inject constructor(
 
     val launcher =
       rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { isGranted ->
-        _uiState.update { it.copy(canContinue = false) }
+        isCheckNotifications.value = true
       }
 
     LaunchedEffect(key1 = Unit) {
@@ -83,10 +102,8 @@ class SplashScreenViewModel @Inject constructor(
           Manifest.permission.POST_NOTIFICATIONS
         ) == PermissionChecker.PERMISSION_GRANTED
       ) {
-        // Permission is already granted, proceed
-        _uiState.update { it.copy(canContinue = false) }
+        isCheckNotifications.value = true
       } else {
-        // Launch the native permission dialog
         launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
       }
     }

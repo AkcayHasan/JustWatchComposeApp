@@ -15,6 +15,7 @@ val Red = Color(0xFFFF0000)
 val BoneWhite = Color(0xFFF9F6EE)
 
 val LightBlue = Color(0xFF3D64FF)
-val LightGray = Color(0xFFEDEDED)
+val LightGray = Color(0xFFF5F5F5)
+val BorderGray = Color(0xFFF1F1F1)
 
 val Green2 = Color(0xFF17988B)

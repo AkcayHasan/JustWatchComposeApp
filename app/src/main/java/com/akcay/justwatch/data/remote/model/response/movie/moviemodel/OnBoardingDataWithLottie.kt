@@ -8,8 +8,14 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 
-data class OnBoardingData(
+data class OnBoardingDataWithLottie(
     val lottieFile: Int,
+    val title: String,
+    val description: String
+)
+
+data class OnBoardingDataWithImage(
+    val image: String,
     val title: String,
     val description: String
 )

@@ -1,12 +1,8 @@
 package com.akcay.justwatch.internal.component
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -20,52 +16,32 @@ import com.akcay.justwatch.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JWTopAppBar(
-    upPress: (() -> Unit)? = null,
-    toolbarTitle: String? = null,
+    navigationIcon: (@Composable (() -> Unit))? = null,
+    actionIcons: (@Composable (RowScope.() -> Unit))? = null,
+    toolbarTitle: String = "",
     titleColor: Color = MaterialTheme.colorScheme.onSurface,
     barScrollBehavior: TopAppBarScrollBehavior,
-    isNavigationIconVisible: Boolean = true,
-    isActionIconVisible: Boolean = false
+    titleIcon: (@Composable (() -> Unit))? = null
 ) {
-
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.Transparent),
         scrollBehavior = barScrollBehavior,
         title = {
-            Text(
-                text = toolbarTitle ?: "", fontFamily = FontFamily(
-                    Font(
-                        resId = R.font.tt_medium
-                    )
-                ),
-                color = titleColor
-            )
+            if (titleIcon != null) {
+                titleIcon()
+            } else if (toolbarTitle.isNotEmpty()) {
+                Text(
+                    text = toolbarTitle,
+                    fontFamily = FontFamily(Font(resId = R.font.tt_medium)),
+                    color = titleColor
+                )
+            }
         },
         navigationIcon = {
-            IconButton(onClick = {
-                if (upPress != null) {
-                    upPress()
-                }
-            }) {
-                if (isNavigationIconVisible) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Localized description"
-                    )
-                }
-            }
+            navigationIcon?.invoke()
         },
         actions = {
-            if (isActionIconVisible) {
-                IconButton(onClick = {
-
-                }) {
-                    Icon(
-                        imageVector = Icons.Filled.FavoriteBorder,
-                        contentDescription = "Localized description"
-                    )
-                }
-            }
+            actionIcons?.invoke(this)
         }
     )
 }
