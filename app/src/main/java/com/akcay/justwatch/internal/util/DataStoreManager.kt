@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class DataStoreManager @Inject constructor(
-  @ApplicationContext private val context: Context
+  @param: ApplicationContext private val context: Context
 ) {
 
   companion object {

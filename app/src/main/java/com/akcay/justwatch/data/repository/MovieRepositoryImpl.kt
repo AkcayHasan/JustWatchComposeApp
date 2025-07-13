@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class MovieRepositoryImpl @Inject constructor(
-  @IoDispatcher private val dispatcher: CoroutineDispatcher,
+  @param: IoDispatcher private val dispatcher: CoroutineDispatcher,
   private val remoteDataSource: MovieRemoteDataSource
 ) : MovieRepository {
 
