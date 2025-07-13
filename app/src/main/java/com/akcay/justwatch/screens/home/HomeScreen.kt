@@ -71,7 +71,7 @@ fun HomeScreenPreview(modifier: Modifier = Modifier) {
 }
 
 enum class BottomNavSections(
-  @StringRes val titleResId: Int,
+  @param: StringRes val titleResId: Int,
   val selectedDrawableResId: Int,
   val notSelectedDrawableResId: Int,
   val route: String
