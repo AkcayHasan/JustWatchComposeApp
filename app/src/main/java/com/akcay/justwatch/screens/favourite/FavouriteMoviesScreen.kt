@@ -42,71 +42,69 @@ import com.akcay.justwatch.ui.theme.LightGray
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun FavouriteMoviesScreen(
-  viewModel: FavouriteMoviesViewModel = hiltViewModel()
+    viewModel: FavouriteMoviesViewModel = hiltViewModel(),
 ) {
-  val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
-  ProfileScreenContent(
-    uiState = uiState,
-    darkThemeCheckedChange = viewModel::darkThemeCheckedChange
-  )
+    ProfileScreenContent(
+        uiState = uiState,
+        darkThemeCheckedChange = viewModel::darkThemeCheckedChange,
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreenContent(
-  modifier: Modifier = Modifier,
-  uiState: FavouriteMoviesUiState,
-  darkThemeCheckedChange: (Boolean) -> Unit
+    modifier: Modifier = Modifier,
+    uiState: FavouriteMoviesUiState,
+    darkThemeCheckedChange: (Boolean) -> Unit,
 ) {
-  Scaffold(
-    modifier = Modifier.fillMaxSize(),
-    containerColor = LightGray,
-    topBar = {
-      JWTopAppBar(
-        toolbarTitle = "Account Settings",
-        titleColor = Color.White,
-        barScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
-      )
-    },
-  ) { innerPadding ->
-    JWLoadingView(isLoading = uiState.loading) {
-      Box(
-        modifier = Modifier
-          .fillMaxWidth()
-          .height(300.dp)
-          .background(color = LightBlue)
-      )
-      Column(
-        modifier = Modifier
-          .fillMaxSize()
-          .padding(innerPadding),
-        horizontalAlignment = Alignment.CenterHorizontally
-      ) {
-        Image(
-          modifier = Modifier
-            .size(64.dp)
-            .clip(CircleShape),
-          painter = painterResource(R.drawable.ic_launcher_background),
-          contentDescription = "avatar",
-          contentScale = ContentScale.Crop
-        )
-        Text(modifier = Modifier.padding(top = 15.dp), text = "Hasan Akçay")
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        containerColor = LightGray,
+        topBar = {
+            JWTopAppBar(
+                title = "Account Settings",
+            )
+        },
+    ) { innerPadding ->
+        JWLoadingView(isLoading = uiState.loading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp)
+                    .background(color = LightBlue),
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Image(
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(CircleShape),
+                    painter = painterResource(R.drawable.ic_launcher_background),
+                    contentDescription = "avatar",
+                    contentScale = ContentScale.Crop,
+                )
+                Text(modifier = Modifier.padding(top = 15.dp), text = "Hasan Akçay")
 
-        Spacer(modifier = Modifier.height(30.dp))
+                Spacer(modifier = Modifier.height(30.dp))
 
-        SettingsSwitchItem(
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp),
-          title = "Dark Theme",
-          desc = "Try new look on dark version",
-          checked = uiState.darkThemeChecked,
-          onCheckedChange = darkThemeCheckedChange
-        )
-      }
+                SettingsSwitchItem(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp),
+                    title = "Dark Theme",
+                    desc = "Try new look on dark version",
+                    checked = uiState.darkThemeChecked,
+                    onCheckedChange = darkThemeCheckedChange,
+                )
+            }
+        }
     }
-  }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -114,57 +112,55 @@ fun ProfileScreenContent(
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ProfileScreenPreview() {
-  JustWatchTheme {
-    Scaffold(
-      modifier = Modifier
-        .fillMaxSize(),
-      containerColor = LightGray,
-      topBar = {
-        JWTopAppBar(
-          toolbarTitle = "Account Settings",
-          titleColor = Color.White,
-          barScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-        )
-      },
-    ) { innerPadding ->
-      Box(
-        modifier = Modifier
-          .fillMaxWidth()
-          .height(300.dp)
-          .background(color = LightBlue)
-      )
-      Column(
-        modifier = Modifier
-          .fillMaxSize()
-          .padding(innerPadding),
-        horizontalAlignment = Alignment.CenterHorizontally
-      ) {
-        Image(
-          modifier = Modifier
-            .size(64.dp)
-            .clip(CircleShape),
-          painter = painterResource(R.drawable.ic_launcher_background),
-          contentDescription = "avatar",
-          contentScale = ContentScale.Crop
-        )
-        Text(
-          modifier = Modifier.padding(top = 15.dp),
-          text = "Hasan Akçay",
-          style = TextStyle(color = MaterialTheme.colorScheme.onSurface)
-        )
+    JustWatchTheme {
+        Scaffold(
+            modifier = Modifier
+                .fillMaxSize(),
+            containerColor = LightGray,
+            topBar = {
+                JWTopAppBar(
+                    title = "Account Settings",
+                )
+            },
+        ) { innerPadding ->
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp)
+                    .background(color = LightBlue),
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Image(
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(CircleShape),
+                    painter = painterResource(R.drawable.ic_launcher_background),
+                    contentDescription = "avatar",
+                    contentScale = ContentScale.Crop,
+                )
+                Text(
+                    modifier = Modifier.padding(top = 15.dp),
+                    text = "Hasan Akçay",
+                    style = TextStyle(color = MaterialTheme.colorScheme.onSurface),
+                )
 
-        Spacer(modifier = Modifier.height(30.dp))
+                Spacer(modifier = Modifier.height(30.dp))
 
-        SettingsSwitchItem(
-          modifier = Modifier.padding(horizontal = 20.dp),
-          title = "Dark Theme",
-          desc = "Try new look on dark version",
-          checked = true,
-          onCheckedChange = {}
-        )
-      }
+                SettingsSwitchItem(
+                    modifier = Modifier.padding(horizontal = 20.dp),
+                    title = "Dark Theme",
+                    desc = "Try new look on dark version",
+                    checked = true,
+                    onCheckedChange = {},
+                )
+            }
+        }
     }
-  }
 }
 
 /*
@@ -186,56 +182,54 @@ LazyColumn {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ProfileScreenPreviewDark() {
-  JustWatchTheme {
-    Scaffold(
-      modifier = Modifier
-        .fillMaxSize(),
-      containerColor = LightGray,
-      topBar = {
-        JWTopAppBar(
-          toolbarTitle = "Account Settings",
-          titleColor = Color.White,
-          barScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-        )
-      },
-    ) { innerPadding ->
-      Box(
-        modifier = Modifier
-          .fillMaxWidth()
-          .height(300.dp)
-          .background(color = LightBlue)
-      )
-      Column(
-        modifier = Modifier
-          .fillMaxSize()
-          .padding(innerPadding),
-        horizontalAlignment = Alignment.CenterHorizontally
-      ) {
+    JustWatchTheme {
+        Scaffold(
+            modifier = Modifier
+                .fillMaxSize(),
+            containerColor = LightGray,
+            topBar = {
+                JWTopAppBar(
+                    title = "Account Settings",
+                )
+            },
+        ) { innerPadding ->
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp)
+                    .background(color = LightBlue),
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
 
-        Image(
-          modifier = Modifier
-            .size(64.dp)
-            .clip(CircleShape),
-          painter = painterResource(R.drawable.ic_launcher_background),
-          contentDescription = "avatar",
-          contentScale = ContentScale.Crop
-        )
-        Text(
-          modifier = Modifier.padding(top = 15.dp),
-          text = "Hasan Akçay",
-          style = TextStyle(color = MaterialTheme.colorScheme.onSurface)
-        )
+                Image(
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(CircleShape),
+                    painter = painterResource(R.drawable.ic_launcher_background),
+                    contentDescription = "avatar",
+                    contentScale = ContentScale.Crop,
+                )
+                Text(
+                    modifier = Modifier.padding(top = 15.dp),
+                    text = "Hasan Akçay",
+                    style = TextStyle(color = MaterialTheme.colorScheme.onSurface),
+                )
 
-        Spacer(modifier = Modifier.height(30.dp))
+                Spacer(modifier = Modifier.height(30.dp))
 
-        SettingsSwitchItem(
-          modifier = Modifier.padding(horizontal = 20.dp),
-          title = "Dark Theme",
-          desc = "Try new look on dark version",
-          checked = true,
-          onCheckedChange = {}
-        )
-      }
+                SettingsSwitchItem(
+                    modifier = Modifier.padding(horizontal = 20.dp),
+                    title = "Dark Theme",
+                    desc = "Try new look on dark version",
+                    checked = true,
+                    onCheckedChange = {},
+                )
+            }
+        }
     }
-  }
 }

@@ -1,6 +1,7 @@
 package com.akcay.justwatch.internal.ext
 
 import android.util.Patterns
+import androidx.compose.ui.text.AnnotatedString
 import java.util.regex.Pattern
 
 private const val MIN_PASS_LENGTH = 6
@@ -18,4 +19,10 @@ fun String.isValidPassword(): Boolean {
 
 fun String.passwordMatches(repeated: String): Boolean {
     return this == repeated
+}
+
+fun AnnotatedString.mutate(mutator: AnnotatedString.Builder.(AnnotatedString) -> Unit): AnnotatedString {
+    val builder = AnnotatedString.Builder(this)
+    builder.mutator(this)
+    return builder.toAnnotatedString()
 }

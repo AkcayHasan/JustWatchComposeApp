@@ -1,11 +1,10 @@
-package com.akcay.justwatch.data.remote.model.response.movie.moviemodel.listresponse
+package com.akcay.justwatch.screens.movies.data.response
 
-import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
-@Parcelize
-data class MovieResult(
+@Serializable
+data class MovieResponse(
     @SerializedName("adult")
     val adult: Boolean? = null,
     @SerializedName("backdrop_path")
@@ -34,4 +33,4 @@ data class MovieResult(
     val voteAverage: Double? = null,
     @SerializedName("vote_count")
     val voteCount: Int? = null
-): Parcelable
+)

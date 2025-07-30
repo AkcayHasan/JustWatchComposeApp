@@ -14,82 +14,81 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class DataStoreManager @Inject constructor(
-  @param: ApplicationContext private val context: Context
+    @param: ApplicationContext private val context: Context,
 ) {
+    companion object {
+        private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("storeData")
 
-  companion object {
-    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("storeData")
-
-    private val onBoardingVisibility = booleanPreferencesKey("onBoardingVisibility")
-    private val rememberedEmailKey = stringPreferencesKey("rememberedEmail")
-    private val rememberedPasswordKey = stringPreferencesKey("rememberedPassword")
-    private val rememberMeCheckboxKey = booleanPreferencesKey("rememberMeCheckbox")
-    private val darkThemeKey = booleanPreferencesKey("darkThemeKey")
-  }
-
-  suspend fun shouldOnBoardingVisible() = context.dataStore.data.map { preferences ->
-    preferences[onBoardingVisibility] ?: true
-  }.first()
-
-  suspend fun saveOnBoardingVisibility(isShown: Boolean) {
-    context.dataStore.edit { preferences ->
-      preferences[onBoardingVisibility] = isShown
+        private val onBoardingVisibility = booleanPreferencesKey("onBoardingVisibility")
+        private val rememberedEmailKey = stringPreferencesKey("rememberedEmail")
+        private val rememberedPasswordKey = stringPreferencesKey("rememberedPassword")
+        private val rememberMeCheckboxKey = booleanPreferencesKey("rememberMeCheckbox")
+        private val darkThemeKey = booleanPreferencesKey("darkThemeKey")
     }
-  }
 
-  suspend fun saveRememberedEmail(email: String) {
-    context.dataStore.edit { preferences ->
-      preferences[rememberedEmailKey] = email
+    fun shouldOnBoardingVisible() = context.dataStore.data.map { preferences ->
+        preferences[onBoardingVisibility] ?: true
     }
-  }
 
-  suspend fun getRememberedEmail(): String? {
-    return context.dataStore.data.map { preferences ->
-      preferences[rememberedEmailKey]
-    }.firstOrNull()
-  }
-
-  suspend fun clearRememberedEmail() {
-    context.dataStore.edit { preferences ->
-      preferences.remove(rememberedEmailKey)
+    suspend fun saveOnBoardingVisibility(isShown: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[onBoardingVisibility] = isShown
+        }
     }
-  }
 
-  suspend fun saveRememberMeCheckboxStatus(isChecked: Boolean) {
-    context.dataStore.edit { preferences ->
-      preferences[rememberMeCheckboxKey] = isChecked
+    suspend fun saveRememberedEmail(email: String) {
+        context.dataStore.edit { preferences ->
+            preferences[rememberedEmailKey] = email
+        }
     }
-  }
 
-  suspend fun getRememberMeCheckboxStatus() = context.dataStore.data.map { preferences ->
-    preferences[rememberMeCheckboxKey] ?: false
-  }.first()
-
-  suspend fun saveRememberedPassword(password: String) {
-    context.dataStore.edit { preferences ->
-      preferences[rememberedPasswordKey] = password
+    suspend fun getRememberedEmail(): String? {
+        return context.dataStore.data.map { preferences ->
+            preferences[rememberedEmailKey]
+        }.firstOrNull()
     }
-  }
 
-  suspend fun getRememberedPassword(): String? {
-    return context.dataStore.data.map { preferences ->
-      preferences[rememberedPasswordKey]
-    }.firstOrNull()
-  }
-
-  suspend fun clearRememberedPassword() {
-    context.dataStore.edit { preferences ->
-      preferences.remove(rememberedPasswordKey)
+    suspend fun clearRememberedEmail() {
+        context.dataStore.edit { preferences ->
+            preferences.remove(rememberedEmailKey)
+        }
     }
-  }
 
-  suspend fun setDarkThemeEnabled(isEnable: Boolean) {
-    context.dataStore.edit { preferences ->
-      preferences[darkThemeKey] = isEnable
+    suspend fun saveRememberMeCheckboxStatus(isChecked: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[rememberMeCheckboxKey] = isChecked
+        }
     }
-  }
 
-  fun getDarkThemeEnabled() = context.dataStore.data.map { preferences ->
-    preferences[darkThemeKey] ?: false
-  }
+    suspend fun getRememberMeCheckboxStatus() = context.dataStore.data.map { preferences ->
+        preferences[rememberMeCheckboxKey] ?: false
+    }.first()
+
+    suspend fun saveRememberedPassword(password: String) {
+        context.dataStore.edit { preferences ->
+            preferences[rememberedPasswordKey] = password
+        }
+    }
+
+    suspend fun getRememberedPassword(): String? {
+        return context.dataStore.data.map { preferences ->
+            preferences[rememberedPasswordKey]
+        }.firstOrNull()
+    }
+
+    suspend fun clearRememberedPassword() {
+        context.dataStore.edit { preferences ->
+            preferences.remove(rememberedPasswordKey)
+        }
+    }
+
+    suspend fun setDarkThemeEnabled(isEnable: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[darkThemeKey] = isEnable
+        }
+    }
+
+    fun getDarkThemeEnabled() = context.dataStore.data.map { preferences ->
+        preferences[darkThemeKey] ?: false
+    }
 }
