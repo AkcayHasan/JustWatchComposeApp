@@ -119,180 +119,176 @@ fun LoginScreenContent(
     val isImeVisible = WindowInsets.isImeVisible
 
     JWLoadingView(isLoading = uiState.loading) {
-        Box(
+
+        Column(
             modifier = Modifier
                 .fillMaxSize()
+                .then(
+                    if (isImeVisible) Modifier.verticalScroll(scrollState)
+                    else Modifier,
+                )
+                .padding(top = 100.dp)
                 .imePadding(),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Column(
+            Text(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .then(
-                        if (isImeVisible) Modifier.verticalScroll(scrollState)
-                        else Modifier,
-                    )
-                    .padding(top = 100.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                    .fillMaxWidth(),
+                fontFamily = FontFamily(
+                    Font(
+                        R.font.tt_medium,
+                    ),
+                ),
+                color = Black,
+                fontSize = 32.sp,
+                text = "Sign In",
+                textAlign = TextAlign.Center,
+            )
+            JWTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(all = 10.dp),
+                value = uiState.email,
+                label = "E-mail",
+                onNewValue = onEmailChange,
+            )
+            JWPasswordField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp, start = 10.dp, end = 10.dp),
+                value = uiState.password,
+                label = "Password",
+                onNewValue = onPasswordChange,
+            )
+            Row(
+                modifier = Modifier.padding(top = 10.dp, start = 20.dp, end = 20.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
+                JWSwitchButton(
+                    checked = uiState.isRememberCheckboxChecked,
+                    onCheckedChange = onRememberMeCheckboxClick,
+                    checkedColor = Black,
+                )
                 Text(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.padding(start = 5.dp),
+                    text = "Remember Me",
                     fontFamily = FontFamily(
                         Font(
                             R.font.tt_medium,
                         ),
                     ),
-                    color = Black,
-                    fontSize = 32.sp,
-                    text = "Sign In",
-                    textAlign = TextAlign.Center,
-                )
-                JWTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(all = 10.dp),
-                    value = uiState.email,
-                    label = "E-mail",
-                    onNewValue = onEmailChange,
-                )
-                JWPasswordField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 10.dp, start = 10.dp, end = 10.dp),
-                    value = uiState.password,
-                    label = "Password",
-                    onNewValue = onPasswordChange,
-                )
-                Row(
-                    modifier = Modifier.padding(top = 10.dp, start = 20.dp, end = 20.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    JWSwitchButton(
-                        checked = uiState.isRememberCheckboxChecked,
-                        onCheckedChange = onRememberMeCheckboxClick,
-                        checkedColor = Black,
-                    )
-                    Text(
-                        modifier = Modifier.padding(start = 5.dp),
-                        text = "Remember Me",
-                        fontFamily = FontFamily(
-                            Font(
-                                R.font.tt_medium,
-                            ),
-                        ),
-                    )
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        fontFamily = FontFamily(
-                            Font(
-                                R.font.tt_light,
-                            ),
-                        ),
-                        text = "Forgot password?",
-                        color = Gray,
-                        textAlign = TextAlign.End,
-                        fontSize = 15.sp,
-                    )
-                }
-                JWButton(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 20.dp, start = 10.dp, end = 10.dp)
-                        .height(52.dp),
-                    text = "Sign In",
-                    textColor = White,
-                    backgroundColor = Black,
-                    onClick = onLoginClick,
-                )
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 20.dp, end = 20.dp, top = 70.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    HorizontalDivider(
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(1.dp),
-                        color = Color.LightGray,
-                    )
-                    Text(
-                        text = "Or Continue with",
-                        color = Gray,
-                        fontSize = 14.sp,
-                        modifier = Modifier.padding(horizontal = 8.dp),
-                    )
-                    HorizontalDivider(
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(1.dp),
-                        color = Color.LightGray,
-                    )
-                }
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 70.dp),
-                    horizontalArrangement = Arrangement.Center,
-                ) {
-                    // Google Button
-                    IconButton(
-                        onClick = {},
-                        modifier = Modifier
-                            .size(64.dp)
-                            .clip(CircleShape)
-                            .border(1.dp, color = BorderGray, shape = CircleShape)
-                            .background(LightGray),
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_google),
-                            contentDescription = "Google Login",
-                            modifier = Modifier.size(20.dp),
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(5.dp))
-                    // Apple Button
-                    IconButton(
-                        onClick = {},
-                        modifier = Modifier
-                            .size(64.dp)
-                            .clip(CircleShape)
-                            .border(1.dp, color = BorderGray, shape = CircleShape)
-                            .background(LightGray),
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_apple),
-                            contentDescription = "Apple Login",
-                            modifier = Modifier.size(20.dp),
-                        )
-                    }
-                }
-
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
                 )
                 Text(
                     modifier = Modifier
-                        .padding(top = 10.dp, bottom = 50.dp)
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null,
-                        ) {
-                            onEntryAsGuestClick.invoke()
-                        },
+                        .fillMaxWidth(),
                     fontFamily = FontFamily(
                         Font(
-                            R.font.tt_bold,
+                            R.font.tt_light,
                         ),
                     ),
-                    text = "Entry As Guest",
+                    text = "Forgot password?",
+                    color = Gray,
+                    textAlign = TextAlign.End,
+                    fontSize = 15.sp,
                 )
             }
+            JWButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 20.dp, start = 10.dp, end = 10.dp)
+                    .height(52.dp),
+                text = "Sign In",
+                textColor = White,
+                backgroundColor = Black,
+                onClick = onLoginClick,
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 20.dp, end = 20.dp, top = 70.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                HorizontalDivider(
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(1.dp),
+                    color = Color.LightGray,
+                )
+                Text(
+                    text = "Or Continue with",
+                    color = Gray,
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                )
+                HorizontalDivider(
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(1.dp),
+                    color = Color.LightGray,
+                )
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 70.dp),
+                horizontalArrangement = Arrangement.Center,
+            ) {
+                // Google Button
+                IconButton(
+                    onClick = {},
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(CircleShape)
+                        .border(1.dp, color = BorderGray, shape = CircleShape)
+                        .background(LightGray),
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_google),
+                        contentDescription = "Google Login",
+                        modifier = Modifier.size(20.dp),
+                    )
+                }
+                Spacer(modifier = Modifier.width(5.dp))
+                // Apple Button
+                IconButton(
+                    onClick = {},
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(CircleShape)
+                        .border(1.dp, color = BorderGray, shape = CircleShape)
+                        .background(LightGray),
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_apple),
+                        contentDescription = "Apple Login",
+                        modifier = Modifier.size(20.dp),
+                    )
+                }
+            }
+
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+            )
+            Text(
+                modifier = Modifier
+                    .padding(top = 10.dp, bottom = 50.dp)
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                    ) {
+                        onEntryAsGuestClick.invoke()
+                    },
+                fontFamily = FontFamily(
+                    Font(
+                        R.font.tt_bold,
+                    ),
+                ),
+                text = "Entry As Guest",
+            )
         }
     }
 }
@@ -304,7 +300,7 @@ fun LoginScreenContent(
 fun LoginScreenPreview() {
     JustWatchTheme {
         LoginScreenContent(
-            uiState = LoginUiState()
+            uiState = LoginUiState(),
         )
     }
 }

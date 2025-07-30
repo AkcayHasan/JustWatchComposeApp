@@ -43,11 +43,13 @@ class MoviesViewModel @Inject constructor(
 
     private fun fetchUser() {
         viewModelScope.launch {
+            showLoading()
             accountRepository.currentAuthUser.collect { authUser ->
                 if (authUser != null) {
                     getUserInfo(authUser.id!!)
                 }
             }
+            hideLoading()
         }
     }
 

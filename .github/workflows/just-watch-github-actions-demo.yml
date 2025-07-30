@@ -29,13 +29,19 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
+      - name: Invalidate Gradle Cache
+        run: ./gradlew --refresh-dependencies
+
       - name: Run gradle tests
         run: ./gradlew test
+
+      - name: Run Unit Tests
+        run: ./gradlew testDebugUnitTest
 
       - name: Build gradle project
         run: ./gradlew build
 
-      - name: Create APK 
+      - name: Create APK
         run: ./gradlew assemble
 
       - name: Upload APK Release - ${{ env.repository_name }}

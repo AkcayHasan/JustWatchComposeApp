@@ -27,16 +27,15 @@ fun <T: Any> JustWatchApp(
     startDestination: T,
 ) {
     val isDarkTheme by LocalThemeManager.current.isDarkThemeEnabled.collectAsState()
+    val navController = rememberNavController()
 
     JustWatchTheme(darkTheme = isDarkTheme) {
-        val justWatchNavController = rememberJustWatchNavController()
-
         Box(
             modifier = Modifier
                 .fillMaxSize(),
         ) {
             NavHost(
-                navController = justWatchNavController.navController,
+                navController = navController,
                 startDestination = startDestination,
                 enterTransition = { EnterTransition.None },
                 exitTransition = { ExitTransition.None },
@@ -48,16 +47,9 @@ fun <T: Any> JustWatchApp(
                         }
                     )
                 }
-                loginGraph(navController = justWatchNavController)
-                mainGraph(navController = justWatchNavController)
+                loginGraph(navController = navController)
+                mainGraph(navController = navController)
             }
         }
     }
-}
-
-@Composable
-fun rememberJustWatchNavController(
-    navController: NavHostController = rememberNavController(),
-) = remember(navController) {
-    JustWatchNavController(navController = navController)
 }

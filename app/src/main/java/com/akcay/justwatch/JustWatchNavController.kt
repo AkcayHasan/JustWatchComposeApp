@@ -1,12 +1,14 @@
 package com.akcay.justwatch
 
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.navigation.NavHostController
 
 @Stable
 class JustWatchNavController(
     val navController: NavHostController
 ) {
+
 
     fun popUp() {
         navController.popBackStack()

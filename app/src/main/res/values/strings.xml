@@ -2,7 +2,7 @@
     <string name="app_name">JustWatch</string>
 
     <string name="movies_title">Movies</string>
-    <string name="search_title">Search</string>
+    <string name="settings_title">Settings</string>
     <string name="favourite_title">Favourite</string>
 
     <string name="email">Email</string>
