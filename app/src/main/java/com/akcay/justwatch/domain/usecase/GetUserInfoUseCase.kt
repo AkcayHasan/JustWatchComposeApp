@@ -6,9 +6,9 @@ import com.akcay.justwatch.internal.util.NetworkResult
 import javax.inject.Inject
 
 class GetUserInfoUseCase @Inject constructor(
-  private val accountRepository: AccountRepository
+    private val accountRepository: AccountRepository,
 ) {
-  suspend operator fun invoke(userId: String): NetworkResult<User> {
-    return accountRepository.getUserInfo(userId)
-  }
+    suspend operator fun invoke(userId: String): NetworkResult<User> {
+        return accountRepository.getUserInfo(userId)
+    }
 }

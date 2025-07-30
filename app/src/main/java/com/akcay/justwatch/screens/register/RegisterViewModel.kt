@@ -2,12 +2,10 @@ package com.akcay.justwatch.screens.register
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.akcay.justwatch.MainDestinations
 import com.akcay.justwatch.internal.ext.launchCatching
 import com.akcay.justwatch.domain.repository.LogRepository
 import com.akcay.justwatch.domain.usecase.RegisterUseCase
 import com.akcay.justwatch.domain.usecase.SaveUserInfoUseCase
-import com.akcay.justwatch.internal.navigation.AllScreens
 import com.akcay.justwatch.internal.util.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -47,7 +45,7 @@ class RegisterViewModel @Inject constructor(
                 is NetworkResult.Success -> {
 
                     saveUserInfoUseCase.invoke(result.data.id!!, "Hasan", "Akçay")
-                    openAndPopUp.invoke(MainDestinations.HOME_ROUTE, AllScreens.REGISTER.name)
+
                 }
                 is NetworkResult.Error -> {
 
