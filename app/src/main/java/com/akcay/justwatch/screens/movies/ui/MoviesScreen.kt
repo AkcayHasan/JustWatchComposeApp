@@ -33,6 +33,8 @@ import com.akcay.justwatch.ui.theme.JustWatchTheme
 fun MoviesScreen(
     viewModel: MoviesViewModel = hiltViewModel(),
     onCardClick: (Long) -> Unit,
+    isSelected: (MainDestination) -> Boolean,
+    navigateToTab: (MainDestination) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -40,7 +42,9 @@ fun MoviesScreen(
         uiState = uiState,
         onCardClick = onCardClick,
         loadMore = viewModel::loadMore,
-        onAddIconClick = viewModel::onAddIconClicked
+        onAddIconClick = viewModel::onAddIconClicked,
+        isSelected = isSelected,
+        navigateToTab = navigateToTab,
     )
 }
 
@@ -73,16 +77,16 @@ fun MoviesScreenContent(
         navigateToTab = navigateToTab,
         topBar = {
             JWTopAppBar(
-                title = "Movies"
+              title = "Movies",
             )
         },
         content = {
             JWLoadingView(isLoading = uiState.loading) {
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(top = it.calculateTopPadding() + 10.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                  modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = it.calculateTopPadding() + 10.dp),
+                  horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     JWTabRow(
                         items = listOf(TabRowItem.ACTIVE, TabRowItem.UPCOMING),
@@ -91,11 +95,11 @@ fun MoviesScreenContent(
                     LazyColumn(state = listState) {
                         items(items = uiState.movieList) { item ->
                             ListMovieItem(
-                                imageUrl = item.image,
-                                itemId = item.id,
-                                movieName = item.title,
-                                onCardClicked = onCardClick,
-                                onAddIconClicked = onAddIconClick
+                              imageUrl = item.image,
+                              itemId = item.id,
+                              movieName = item.title,
+                              onCardClicked = onCardClick,
+                              onAddIconClicked = onAddIconClick,
                             )
                         }
                     }
@@ -111,7 +115,7 @@ fun MoviesScreenContent(
 fun MoviesScreenPreview() {
     JustWatchTheme {
         MoviesScreenContent(
-            uiState = MoviesUiState()
+          uiState = MoviesUiState(),
         )
     }
 }

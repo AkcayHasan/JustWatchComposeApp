@@ -1,9 +1,9 @@
 package com.akcay.justwatch.internal.navigation
 
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.akcay.justwatch.JustWatchNavController
 import com.akcay.justwatch.screens.login.LoginScreen
 import com.akcay.justwatch.screens.register.RegisterScreen
 import kotlinx.serialization.Serializable
@@ -15,13 +15,17 @@ object Destinations {
 }
 
 fun NavGraphBuilder.loginGraph(
-    navController: JustWatchNavController,
+    navController: NavHostController,
 ) {
     navigation<AppDestination.Login>(startDestination = Destinations.Login) {
         composable<Destinations.Login> {
             LoginScreen(
                 navigateMovies = {
-                    navController.navigate(MainDestination.Movies)
+                    navController.navigate(MainDestination.Movies) {
+                        popUpTo(AppDestination.Login) {
+                            inclusive = true
+                        }
+                    }
                 },
                 navigateForgotPassword = {
 
@@ -34,7 +38,7 @@ fun NavGraphBuilder.loginGraph(
 
                 },
                 navigateBack = {
-                    navController.popUp()
+                    navController.popBackStack()
                 },
             )
         }

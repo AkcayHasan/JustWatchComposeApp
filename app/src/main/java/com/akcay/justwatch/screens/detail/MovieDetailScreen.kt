@@ -68,7 +68,6 @@ fun MovieDetailScreenContent(
             JWTopAppBar(
                 backNavigation = true,
                 onBackClick = navigateBack,
-                title = uiState.movieDetail?.title.orEmpty()
             )
         },
     ) {
@@ -87,9 +86,6 @@ fun MovieDetailScreenContent(
                     contentAlignment = Alignment.Center,
                 ) {
                     SubcomposeAsyncImage(
-                        modifier = Modifier
-                            .clip(CircleShape)
-                            .size(50.dp),
                         model = "${Constants.BASE_IMAGE_URL}${uiState.movieDetail?.posterPath}",
                         contentDescription = null,
                         loading = {
@@ -112,15 +108,19 @@ fun MovieDetailScreenContent(
                 }
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
                 ) {
                     uiState.movieDetail?.genres?.forEach { genre ->
                         Text(text = genre.name)
                     }
                 }
-                Spacer(modifier = Modifier.height(5.dp))
-                Text(text = uiState.movieDetail?.originalTitle ?: "", fontWeight = FontWeight.Bold)
-                Spacer(modifier = Modifier.height(5.dp))
+
+                Text(
+                    modifier = Modifier.padding(vertical = 5.dp),
+                    text = uiState.movieDetail?.originalTitle ?: "",
+                    fontWeight = FontWeight.Bold
+                )
+
                 Text(
                     modifier = Modifier.padding(horizontal = 5.dp),
                     text = uiState.movieDetail?.overview ?: "",

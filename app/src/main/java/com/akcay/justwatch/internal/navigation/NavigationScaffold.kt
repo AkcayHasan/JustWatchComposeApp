@@ -26,7 +26,7 @@ fun NavigationScaffold(
                 items = listOf(
                     BottomNavSections.MOVIES,
                     BottomNavSections.FAVOURITE,
-                    BottomNavSections.SEARCH
+                    BottomNavSections.SETTINGS
                 )
             )
         }
@@ -47,8 +47,8 @@ enum class BottomNavSections(
         notSelectedDrawableResId = R.drawable.ic_home,
         route = MainDestination.Movies,
     ),
-    SEARCH(
-        titleResId = R.string.search_title,
+    SETTINGS(
+        titleResId = R.string.settings_title,
         selectedDrawableResId = R.drawable.ic_search_solid,
         notSelectedDrawableResId = R.drawable.ic_search,
         route = MainDestination.Search,

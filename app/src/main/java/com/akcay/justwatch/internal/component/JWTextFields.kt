@@ -71,7 +71,7 @@ fun JWPasswordField(
           .fillMaxWidth()
           .padding(0.dp)
           .clip(RoundedCornerShape(10.dp))
-          .border(1.dp, color = BorderGray, shape = RoundedCornerShape(10.dp)),
+          .border(1.dp, color = Color.DarkGray, shape = RoundedCornerShape(10.dp)),
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
@@ -107,7 +107,7 @@ fun JWTextField(
           .fillMaxWidth()
           .padding(0.dp)
           .clip(RoundedCornerShape(10.dp))
-          .border(1.dp, color = BorderGray, shape = RoundedCornerShape(10.dp)),
+          .border(1.dp, color = Color.DarkGray, shape = RoundedCornerShape(10.dp)),
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,

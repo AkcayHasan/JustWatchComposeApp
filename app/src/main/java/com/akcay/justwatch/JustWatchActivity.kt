@@ -16,7 +16,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.content.ContextCompat
-import androidx.core.view.WindowCompat
 import com.akcay.justwatch.internal.component.JWDialogBox
 import com.akcay.justwatch.internal.component.JWDialogBoxModel
 import com.akcay.justwatch.internal.navigation.AppDestination
@@ -50,7 +49,9 @@ class JustWatchActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            CompositionLocalProvider(LocalThemeManager provides themeManager) {
+            CompositionLocalProvider(
+                LocalThemeManager provides themeManager
+            ) {
                 JustWatchContent(
                     splashViewModel = splashViewModel,
                     onAppReady = { destination ->
