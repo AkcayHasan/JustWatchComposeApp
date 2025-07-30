@@ -12,7 +12,7 @@ class JustWatchNavController(
         navController.popBackStack()
     }
 
-    fun navigate(route: String) {
+    fun <T: Any> navigate(route: T) {
         navController.navigate(route) {
             launchSingleTop = true
         }

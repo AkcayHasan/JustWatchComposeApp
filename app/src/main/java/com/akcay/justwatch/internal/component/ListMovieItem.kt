@@ -40,159 +40,158 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun ListMovieItem(
-  imageUrl: String?,
-  itemId: Long,
-  movieName: String?,
-  onCardClicked: (id: Long) -> Unit,
-  onAddIconClicked: (id: Long) -> Unit,
+    imageUrl: String,
+    itemId: Long,
+    movieName: String,
+    onCardClicked: (id: Long) -> Unit,
+    onAddIconClicked: (id: Long) -> Unit,
 ) {
-  Card(
-    modifier = Modifier
-      .fillMaxWidth()
-      .height(72.dp)
-      .padding(5.dp),
-    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-  ) {
-    Row(
-      modifier = Modifier
-        .fillMaxSize()
-        .padding(horizontal = 10.dp)
-        .clickable {
-          onCardClicked.invoke(itemId)
-        },
-      verticalAlignment = Alignment.CenterVertically
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(72.dp)
+            .padding(5.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
-      SubcomposeAsyncImage(
-        modifier = Modifier
-          .clip(CircleShape)
-          .size(50.dp),
-        model = if (imageUrl != null) "${Constants.BASE_IMAGE_URL}$imageUrl" else painterResource(
-          id = R.drawable.ic_launcher_background
-        ), contentDescription = null,
-        loading = {
-          Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-          ) {
-            CircularProgressIndicator(color = MaterialTheme.colorScheme.tertiary)
-          }
-        },
-        contentScale = ContentScale.FillWidth
-      )
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 10.dp)
+                .clickable {
+                    onCardClicked.invoke(itemId)
+                },
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            SubcomposeAsyncImage(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .size(50.dp),
+                model = "${Constants.BASE_IMAGE_URL}$imageUrl",
+                contentDescription = null,
+                loading = {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        CircularProgressIndicator(color = MaterialTheme.colorScheme.tertiary)
+                    }
+                },
+                contentScale = ContentScale.FillWidth,
+            )
 
-      Text(
-        modifier = Modifier
-          .padding(start = 10.dp)
-          .weight(1f),
-        text = movieName ?: "",
-        style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.SemiBold),
-        maxLines = 2,
-        overflow = TextOverflow.Ellipsis
-      )
+            Text(
+                modifier = Modifier
+                    .padding(start = 10.dp)
+                    .weight(1f),
+                text = movieName,
+                style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.SemiBold),
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+            )
 
-      Icon(
-        modifier = Modifier
-          .padding(start = 10.dp)
-          .clickable {
-            onAddIconClicked.invoke(itemId)
-          },
-        imageVector = Icons.Default.Add,
-        contentDescription = null
-      )
+            Icon(
+                modifier = Modifier
+                    .padding(start = 10.dp)
+                    .clickable {
+                        onAddIconClicked.invoke(itemId)
+                    },
+                imageVector = Icons.Default.Add,
+                contentDescription = null,
+            )
+        }
     }
-  }
 }
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun ListMovieItemPreviewLight() {
-  JustWatchTheme {
-    Card(
-      modifier = Modifier
-        .fillMaxWidth()
-        .height(72.dp)
-        .padding(5.dp),
-      colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-    ) {
-      Row(
-        modifier = Modifier
-          .fillMaxSize()
-          .padding(horizontal = 10.dp),
-        verticalAlignment = Alignment.CenterVertically
-      ) {
-        Image(
-          modifier = Modifier
-            .clip(CircleShape)
-            .size(50.dp),
-          painter = painterResource(id = R.drawable.ic_launcher_background),
-          contentDescription = null
-        )
+    JustWatchTheme {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(72.dp)
+                .padding(5.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Image(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .size(50.dp),
+                    painter = painterResource(id = R.drawable.ic_launcher_background),
+                    contentDescription = null,
+                )
 
-        Text(
-          modifier = Modifier
-            .padding(start = 10.dp)
-            .weight(1f),
-          text = "Venom: The Last Dance",
-          style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.SemiBold),
-          maxLines = 2,
-          overflow = TextOverflow.Ellipsis
-        )
+                Text(
+                    modifier = Modifier
+                        .padding(start = 10.dp)
+                        .weight(1f),
+                    text = "Venom: The Last Dance",
+                    style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.SemiBold),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
 
-        Icon(
-          modifier = Modifier
-            .padding(start = 10.dp)
-            .clickable {},
-          imageVector = Icons.Default.Add,
-          contentDescription = null
-        )
-      }
+                Icon(
+                    modifier = Modifier
+                        .padding(start = 10.dp)
+                        .clickable {},
+                    imageVector = Icons.Default.Add,
+                    contentDescription = null,
+                )
+            }
+        }
     }
-  }
 }
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun ListMovieItemPreviewDark() {
-  JustWatchTheme {
-    Card(
-      modifier = Modifier
-        .fillMaxWidth()
-        .height(72.dp)
-        .padding(5.dp),
-      colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-    ) {
-      Row(
-        modifier = Modifier
-          .fillMaxSize()
-          .padding(horizontal = 10.dp),
-        verticalAlignment = Alignment.CenterVertically
-      ) {
-        Image(
-          modifier = Modifier
-            .clip(CircleShape)
-            .size(50.dp),
-          painter = painterResource(id = R.drawable.ic_launcher_background),
-          contentDescription = null
-        )
+    JustWatchTheme {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(72.dp)
+                .padding(5.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Image(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .size(50.dp),
+                    painter = painterResource(id = R.drawable.ic_launcher_background),
+                    contentDescription = null,
+                )
 
-        Text(
-          modifier = Modifier
-            .padding(start = 10.dp)
-            .weight(1f),
-          text = "Venom: The Last Dance",
-          style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.SemiBold),
-          maxLines = 2,
-          overflow = TextOverflow.Ellipsis
-        )
+                Text(
+                    modifier = Modifier
+                        .padding(start = 10.dp)
+                        .weight(1f),
+                    text = "Venom: The Last Dance",
+                    style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.SemiBold),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
 
-        Icon(
-          modifier = Modifier
-            .padding(start = 10.dp)
-            .clickable {},
-          imageVector = Icons.Default.Add,
-          contentDescription = null
-        )
-      }
+                Icon(
+                    modifier = Modifier
+                        .padding(start = 10.dp)
+                        .clickable {},
+                    imageVector = Icons.Default.Add,
+                    contentDescription = null,
+                )
+            }
+        }
     }
-  }
 }

@@ -12,7 +12,7 @@ class OnBoardingViewModel @Inject constructor(
     private val dataStoreManager: DataStoreManager
 ) : ViewModel() {
 
-    fun changeVisibilityOfOnBoarding() {
+    fun saveOnBoardingVisibility() {
         viewModelScope.launch {
             dataStoreManager.saveOnBoardingVisibility(isShown = false)
         }

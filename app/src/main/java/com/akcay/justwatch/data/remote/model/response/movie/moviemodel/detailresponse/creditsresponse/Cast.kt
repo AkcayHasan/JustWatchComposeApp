@@ -1,7 +1,9 @@
 package com.akcay.justwatch.data.remote.model.response.movie.moviemodel.detailresponse.creditsresponse
 
 import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Cast(
     @SerializedName("adult") val adult: Boolean,
     @SerializedName("cast_id") val castId: Int,
