@@ -12,9 +12,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val logRepository: LogRepository,
-    private val registerUseCase: RegisterUseCase,
-    private val saveUserInfoUseCase: SaveUserInfoUseCase
 ) : ViewModel() {
 
     val uiState = mutableStateOf(RegisterUiState())
@@ -35,26 +32,5 @@ class RegisterViewModel @Inject constructor(
 
     fun onRepeatPasswordChange(newValue: String) {
         uiState.value = uiState.value.copy(repeatPassword = newValue)
-    }
-
-    fun onRegisterClick(openAndPopUp: (String, String) -> Unit) {
-
-        launchCatching(logRepository = logRepository) {
-
-            when(val result = registerUseCase(email, password)) {
-                is NetworkResult.Success -> {
-
-                    saveUserInfoUseCase.invoke(result.data.id!!, "Hasan", "Akçay")
-
-                }
-                is NetworkResult.Error -> {
-
-                }
-                is NetworkResult.Exception -> {
-
-
-                }
-            }
-        }
     }
 }
