@@ -1,4 +1,4 @@
-package com.akcay.justwatch.screens.favourite
+package com.akcay.justwatch.screens.account
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,14 +14,14 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class FavouriteMoviesViewModel @Inject constructor(
+class AccountViewModel @Inject constructor(
   private val dataStoreManager: DataStoreManager,
   private val logRepository: LogRepository,
   private val themeManager: ThemeManager
 ) : ViewModel() {
 
-  private val _uiState = MutableStateFlow(FavouriteMoviesUiState())
-  val uiState: StateFlow<FavouriteMoviesUiState> = _uiState
+  private val _uiState = MutableStateFlow(AccountScreenUiState())
+  val uiState: StateFlow<AccountScreenUiState> = _uiState
 
   init {
     getDarkThemeEnabled()
