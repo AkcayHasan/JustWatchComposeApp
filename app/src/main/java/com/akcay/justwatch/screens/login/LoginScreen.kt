@@ -81,7 +81,7 @@ fun LoginScreen(
     LoginScreenContent(
         uiState = uiState,
         onForgotPasswordClick = navigateForgotPassword,
-        onEntryAsGuestClick = { viewModel.sendEvent(LoginScreenViewEvent.OnGuestEntryClicked) },
+        onEntryAsGuestClick = { navigateMovies() },
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
         onRememberMeCheckboxClick = viewModel::setRememberMeChecked,

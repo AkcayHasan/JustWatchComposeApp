@@ -51,7 +51,7 @@ enum class BottomNavSections(
         titleResId = R.string.settings_title,
         selectedDrawableResId = R.drawable.ic_search_solid,
         notSelectedDrawableResId = R.drawable.ic_search,
-        route = MainDestination.Search,
+        route = MainDestination.Account,
     ),
     FAVOURITE(
         titleResId = R.string.favourite_title,
