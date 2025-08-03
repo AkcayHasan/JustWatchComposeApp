@@ -8,7 +8,7 @@ sealed interface MainDestination {
     data object Movies : MainDestination
 
     @Serializable
-    data object Search : MainDestination
+    data object Account : MainDestination
 
     @Serializable
     data object Favourite : MainDestination

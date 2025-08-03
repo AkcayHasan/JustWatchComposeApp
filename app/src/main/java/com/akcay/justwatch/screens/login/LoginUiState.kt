@@ -1,7 +1,6 @@
 package com.akcay.justwatch.screens.login
 
 sealed interface LoginScreenViewEvent {
-    data object OnGuestEntryClicked : LoginScreenViewEvent
     data object OnLoginClicked: LoginScreenViewEvent
     data object OnRegisterClicked: LoginScreenViewEvent
 }

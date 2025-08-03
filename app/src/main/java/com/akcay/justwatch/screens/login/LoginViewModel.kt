@@ -39,7 +39,6 @@ class LoginViewModel @Inject constructor(
 
     fun sendEvent(event: LoginScreenViewEvent) {
         when (event) {
-            LoginScreenViewEvent.OnGuestEntryClicked -> createAnonymousUser()
             LoginScreenViewEvent.OnLoginClicked -> onLoginClick()
             LoginScreenViewEvent.OnRegisterClicked -> {
 
@@ -121,12 +120,4 @@ class LoginViewModel @Inject constructor(
 
     private fun showLoading() = _uiState.update { it.copy(loading = true) }
     private fun hideLoading() = _uiState.update { it.copy(loading = false) }
-
-    fun createAnonymousUser() {
-        launchCatching(logRepository) {
-            showLoading()
-            createAnonymousUseCase.invoke()
-            _channel.send(LoginScreenViewModelEvent.NavigateMoviesScreen)
-        }
-    }
 }
