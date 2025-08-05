@@ -24,7 +24,6 @@ class LoginViewModel @Inject constructor(
     private val logRepository: LogRepository,
     private val dataStoreManager: DataStoreManager,
     private val signInUseCase: SignInUseCase,
-    private val createAnonymousUseCase: CreateAnonymousUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
@@ -89,7 +88,7 @@ class LoginViewModel @Inject constructor(
             showLoading()
             try {
                 with(uiState.value) {
-                    when (val result = signInUseCase(email, password)) {
+                    when (signInUseCase(email, password)) {
                         is NetworkResult.Success -> {
                             dataStoreManager.apply {
                                 if (isRememberCheckboxChecked) {
