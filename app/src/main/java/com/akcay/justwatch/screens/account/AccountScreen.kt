@@ -31,7 +31,6 @@ import com.akcay.justwatch.internal.component.SettingsSwitchItem
 import com.akcay.justwatch.internal.navigation.MainDestination
 import com.akcay.justwatch.internal.navigation.NavigationScaffold
 import com.akcay.justwatch.ui.theme.JustWatchTheme
-import com.akcay.justwatch.ui.theme.LightBlue
 
 @Composable
 fun AccountScreen(
@@ -72,7 +71,7 @@ fun AccountScreenContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(300.dp)
-                    .background(color = LightBlue),
+                    .background(color = JustWatchTheme.colors.background),
             )
             Column(
                 modifier = Modifier

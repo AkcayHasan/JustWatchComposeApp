@@ -9,10 +9,10 @@ import javax.inject.Singleton
 @Singleton
 class ThemeManager @Inject constructor() {
 
-  private val _isDarkThemeEnabled = MutableStateFlow(false)
-  val isDarkThemeEnabled: StateFlow<Boolean> = _isDarkThemeEnabled.asStateFlow()
+    private val _isDark = MutableStateFlow(false)
+    val isDark: StateFlow<Boolean> = _isDark.asStateFlow()
 
-  fun setDarkThemeEnabled(enabled: Boolean) {
-    _isDarkThemeEnabled.value = enabled
-  }
+    fun toggle(isChecked: Boolean) {
+        _isDark.value = isChecked
+    }
 }
