@@ -14,17 +14,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.akcay.justwatch.ui.theme.Green2
+import com.akcay.justwatch.ui.theme.JustWatchTheme
 
 @SuppressLint("UseOfNonLambdaOffsetOverload")
 @Composable
 fun JWSwitchButton(
-  checked: Boolean,
-  onCheckedChange: (Boolean) -> Unit,
-  modifier: Modifier = Modifier,
-  checkedColor: Color = Green2,
-  uncheckedColor: Color = Color(0xFFD1D1D6),
-  thumbColor: Color = Color.White
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+    checkedColor: Color = JustWatchTheme.colors.primaryContainer,
+    uncheckedColor: Color = Color(0xFFD1D1D6),
+    thumbColor: Color = Color.White
 ) {
   var isChecked by remember { mutableStateOf(checked) }
 

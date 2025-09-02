@@ -71,10 +71,10 @@ fun MovieDetailScreenContent(
             )
         },
     ) {
+        it
         JWLoadingView(isLoading = uiState.loadingState) {
             Column(
                 modifier = Modifier
-                    .padding(bottom = it.calculateBottomPadding())
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally,

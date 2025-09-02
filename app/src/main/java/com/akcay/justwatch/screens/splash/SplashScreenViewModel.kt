@@ -17,8 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashScreenViewModel @Inject constructor(
-    storeManager: DataStoreManager,
-    private val themeManager: ThemeManager,
+    private val storeManager: DataStoreManager,
+    private val themeManager: ThemeManager
 ) : ViewModel() {
     private val _isRooted = MutableStateFlow(false)
     val isRooted = _isRooted.asStateFlow()
@@ -27,7 +27,7 @@ class SplashScreenViewModel @Inject constructor(
         storeManager.shouldOnBoardingVisible(),
         storeManager.getDarkThemeEnabled()
     ) { onBoardingVisibility, darkThemEnabled ->
-        themeManager.setDarkThemeEnabled(darkThemEnabled)
+        themeManager.toggle(darkThemEnabled)
         when {
             onBoardingVisibility -> AppDestination.OnBoarding
             else -> AppDestination.Login
