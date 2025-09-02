@@ -2,6 +2,7 @@ package com.akcay.justwatch.ui.theme
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 
+//Light Theme Colors
 val primaryLight = Color(0xFF166684)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFC0E8FF)
@@ -24,6 +25,7 @@ val onBackgroundLight = Color(0xFF171C1F)
 val surfaceLight = Color(0xFFF6FAFE)
 val onSurfaceLight = Color(0xFF171C1F)
 
+//Dark Theme Colors
 val primaryDark = Color(0xFF8DCFF1)
 val onPrimaryDark = Color(0xFF003547)
 val primaryContainerDark = Color(0xFF004D66)

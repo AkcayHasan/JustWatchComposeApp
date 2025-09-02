@@ -112,9 +112,9 @@ fun JWTextField(
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,
             cursorColor = Color.Black,
-            focusedLabelColor = JustWatchTheme.colors.primary,
-            unfocusedLabelColor = JustWatchTheme.colors.primary,
-            unfocusedContainerColor = JustWatchTheme.colors.primary,
+            focusedLabelColor = JustWatchTheme.colors.primaryContainer,
+            unfocusedLabelColor = JustWatchTheme.colors.primaryContainer,
+            unfocusedContainerColor = JustWatchTheme.colors.primaryContainer,
         ),
     )
 }

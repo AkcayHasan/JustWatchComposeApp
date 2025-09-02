@@ -7,7 +7,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
@@ -91,7 +90,7 @@ fun LoginScreen(
         JWDialogBox(
             onDismissRequest = { showDialog = false },
             content = JWDialogBoxModel(
-                mainColor = Color.Gray,
+                mainColor = Gray,
                 title = "",
                 description = "",
                 positiveButtonText = "Ok",

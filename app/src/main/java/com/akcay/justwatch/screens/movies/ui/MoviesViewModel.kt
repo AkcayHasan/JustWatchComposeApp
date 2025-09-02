@@ -2,7 +2,6 @@ package com.akcay.justwatch.screens.movies.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.AuthUser
 import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.User
 import com.akcay.justwatch.domain.repository.AccountRepository
 import com.akcay.justwatch.domain.repository.LogRepository
@@ -17,8 +16,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -100,7 +97,9 @@ class MoviesViewModel @Inject constructor(
                         data[pager.currentPage] = result.data
                         _uiState.update {
                             it.copy(
-                                movieList = data.values.flatMap { list -> list.data },
+                                movieList = data.values
+                                    .flatMap { list -> list.data }
+                                    .distinctBy { movie -> movie.id },
                             )
                         }
                     }

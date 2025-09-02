@@ -1,3 +1,4 @@
+# Android/Gradle
 *.iml
 .gradle
 /local.properties
@@ -14,3 +15,23 @@
 .cxx
 local.properties
 /app/google-services.json
+
+# Keystore & secrets
+*.jks
+*.keystore
+*.pem
+*.p12
+*.json
+justwatch-key.keystore
+
+# Fastlane runtime output
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+
+# Ruby/Bundler
+.bundle/
+vendor/bundle/
+
+# macOS
+*.DS_Store
