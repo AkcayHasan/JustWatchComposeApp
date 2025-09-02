@@ -1,13 +1,11 @@
 package com.akcay.justwatch.screens.movies.ui
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -28,7 +26,6 @@ import com.akcay.justwatch.internal.navigation.MainDestination
 import com.akcay.justwatch.internal.navigation.NavigationScaffold
 import com.akcay.justwatch.ui.theme.JustWatchTheme
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MoviesScreen(
     viewModel: MoviesViewModel = hiltViewModel(),
@@ -48,7 +45,6 @@ fun MoviesScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MoviesScreenContent(
     uiState: MoviesUiState,
@@ -93,7 +89,7 @@ fun MoviesScreenContent(
                         onTabChange = onTabChange,
                     )
                     LazyColumn(state = listState) {
-                        items(items = uiState.movieList) { item ->
+                        items(items = uiState.movieList, key = { item -> item.id }) { item ->
                             ListMovieItem(
                               imageUrl = item.image,
                               itemId = item.id,
@@ -109,7 +105,6 @@ fun MoviesScreenContent(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun MoviesScreenPreview() {

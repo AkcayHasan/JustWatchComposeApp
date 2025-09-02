@@ -29,8 +29,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.akcay.justwatch.internal.ext.mutate
-import com.akcay.justwatch.ui.theme.BorderGray
-import com.akcay.justwatch.ui.theme.LightGray
+import com.akcay.justwatch.ui.theme.JustWatchTheme
 import com.akcay.justwatch.R.drawable as AppIcon
 
 @Composable
@@ -77,9 +76,9 @@ fun JWPasswordField(
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,
             cursorColor = Color.Black,
-            focusedLabelColor = LightGray,
-            unfocusedLabelColor = LightGray,
-            unfocusedContainerColor = LightGray,
+            focusedLabelColor = JustWatchTheme.colors.primary,
+            unfocusedLabelColor = JustWatchTheme.colors.primary,
+            unfocusedContainerColor = JustWatchTheme.colors.primary,
         ),
     )
 }
@@ -113,9 +112,9 @@ fun JWTextField(
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,
             cursorColor = Color.Black,
-            focusedLabelColor = LightGray,
-            unfocusedLabelColor = LightGray,
-            unfocusedContainerColor = LightGray,
+            focusedLabelColor = JustWatchTheme.colors.primaryContainer,
+            unfocusedLabelColor = JustWatchTheme.colors.primaryContainer,
+            unfocusedContainerColor = JustWatchTheme.colors.primaryContainer,
         ),
     )
 }

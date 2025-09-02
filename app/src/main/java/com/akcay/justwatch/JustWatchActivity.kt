@@ -11,18 +11,19 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.core.content.ContextCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.akcay.justwatch.internal.component.JWDialogBox
 import com.akcay.justwatch.internal.component.JWDialogBoxModel
 import com.akcay.justwatch.internal.navigation.AppDestination
-import com.akcay.justwatch.internal.util.LocalThemeManager
 import com.akcay.justwatch.internal.util.ThemeManager
 import com.akcay.justwatch.screens.splash.SplashScreenViewModel
-import com.akcay.justwatch.ui.theme.Red
+import com.akcay.justwatch.ui.theme.JustWatchTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -35,6 +36,10 @@ class JustWatchActivity : ComponentActivity() {
     lateinit var themeManager: ThemeManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
+        splashScreen.setKeepOnScreenCondition {
+            splashViewModel.navigationDestination.value == null
+        }
         setTheme(R.style.Theme_JustWatch)
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.light(
@@ -49,9 +54,9 @@ class JustWatchActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            CompositionLocalProvider(
-                LocalThemeManager provides themeManager
-            ) {
+            JustWatchTheme (
+                themeManager = themeManager
+            ){
                 JustWatchContent(
                     splashViewModel = splashViewModel,
                     onAppReady = { destination ->
@@ -95,7 +100,7 @@ fun JustWatchContent(
 
     if (isRooted) {
         ErrorDialog(
-            clickAction = onError
+            clickAction = onError,
         )
     }
 }
@@ -107,7 +112,7 @@ fun ErrorDialog(
     JWDialogBox(
         onDismissRequest = {},
         content = JWDialogBoxModel(
-            mainColor = Red,
+            mainColor = androidx.compose.ui.graphics.Color.Red,
             title = "Hata!",
             description = "Rootlu cihaz ile giriş yapıyorsunuz!",
             positiveButtonText = "Çık!",

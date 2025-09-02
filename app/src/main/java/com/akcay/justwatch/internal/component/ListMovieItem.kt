@@ -3,7 +3,6 @@ package com.akcay.justwatch.internal.component
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,16 +14,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -32,11 +31,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.SubcomposeAsyncImage
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.akcay.justwatch.R
 import com.akcay.justwatch.internal.util.Constants
 import com.akcay.justwatch.ui.theme.JustWatchTheme
-import kotlinx.coroutines.delay
 
 @Composable
 fun ListMovieItem(
@@ -46,6 +45,10 @@ fun ListMovieItem(
     onCardClicked: (id: Long) -> Unit,
     onAddIconClicked: (id: Long) -> Unit,
 ) {
+    val context = LocalContext.current
+    val fullImageUrl = remember(imageUrl) {
+        ImageRequest.Builder(context).data("${Constants.BASE_IMAGE_URL}$imageUrl").crossfade(false).build()
+    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -57,26 +60,17 @@ fun ListMovieItem(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 10.dp)
-                .clickable {
-                    onCardClicked.invoke(itemId)
-                },
+                .clickable { onCardClicked(itemId) },
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            SubcomposeAsyncImage(
+            AsyncImage(
                 modifier = Modifier
-                    .clip(CircleShape)
-                    .size(50.dp),
-                model = "${Constants.BASE_IMAGE_URL}$imageUrl",
+                    .size(50.dp)
+                    .clip(CircleShape),
+                model = fullImageUrl,
+                placeholder = null,
                 contentDescription = null,
-                loading = {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        CircularProgressIndicator(color = MaterialTheme.colorScheme.tertiary)
-                    }
-                },
-                contentScale = ContentScale.FillWidth,
+                contentScale = ContentScale.Crop,
             )
 
             Text(

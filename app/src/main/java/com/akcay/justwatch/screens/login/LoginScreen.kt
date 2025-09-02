@@ -7,7 +7,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
@@ -57,9 +56,7 @@ import com.akcay.justwatch.internal.component.JWLoadingView
 import com.akcay.justwatch.internal.component.JWPasswordField
 import com.akcay.justwatch.internal.component.JWSwitchButton
 import com.akcay.justwatch.internal.component.JWTextField
-import com.akcay.justwatch.ui.theme.BorderGray
 import com.akcay.justwatch.ui.theme.JustWatchTheme
-import com.akcay.justwatch.ui.theme.LightGray
 
 @Composable
 fun LoginScreen(
@@ -93,7 +90,7 @@ fun LoginScreen(
         JWDialogBox(
             onDismissRequest = { showDialog = false },
             content = JWDialogBoxModel(
-                mainColor = Color.Gray,
+                mainColor = Gray,
                 title = "",
                 description = "",
                 positiveButtonText = "Ok",
@@ -119,10 +116,10 @@ fun LoginScreenContent(
     val isImeVisible = WindowInsets.isImeVisible
 
     JWLoadingView(isLoading = uiState.loading) {
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(JustWatchTheme.colors.background)
                 .then(
                     if (isImeVisible) Modifier.verticalScroll(scrollState)
                     else Modifier,
@@ -181,11 +178,7 @@ fun LoginScreenContent(
                 Text(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    fontFamily = FontFamily(
-                        Font(
-                            R.font.tt_light,
-                        ),
-                    ),
+                    style = JustWatchTheme.typography.label,
                     text = "Forgot password?",
                     color = Gray,
                     textAlign = TextAlign.End,
@@ -241,8 +234,8 @@ fun LoginScreenContent(
                     modifier = Modifier
                         .size(64.dp)
                         .clip(CircleShape)
-                        .border(1.dp, color = BorderGray, shape = CircleShape)
-                        .background(LightGray),
+                        .border(1.dp, color = JustWatchTheme.colors.secondaryContainer, shape = CircleShape)
+                        .background(JustWatchTheme.colors.secondaryContainer),
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_google),
@@ -257,8 +250,8 @@ fun LoginScreenContent(
                     modifier = Modifier
                         .size(64.dp)
                         .clip(CircleShape)
-                        .border(1.dp, color = BorderGray, shape = CircleShape)
-                        .background(LightGray),
+                        .border(1.dp, color = JustWatchTheme.colors.secondaryContainer, shape = CircleShape)
+                        .background(JustWatchTheme.colors.secondaryContainer),
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_apple),
