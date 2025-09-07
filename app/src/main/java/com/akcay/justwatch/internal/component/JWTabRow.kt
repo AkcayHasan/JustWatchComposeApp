@@ -56,8 +56,8 @@ fun JWTabRow(
         modifier = modifier
             .height(40.dp)
             .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.tertiary)
-            .border(width = 1.dp, color = MaterialTheme.colorScheme.outline, shape = CircleShape)
+            .background(JustWatchTheme.colors.surface)
+            .border(width = 1.dp, color = JustWatchTheme.colors.onSurfaceVariant, shape = CircleShape)
             .padding(4.dp),
         contentAlignment = Alignment.CenterStart,
     ) {
@@ -67,7 +67,7 @@ fun JWTabRow(
                 .height(32.dp)
                 .width(116.dp)
                 .clip(CircleShape)
-                .background(Color.Gray),
+                .background(JustWatchTheme.colors.primaryContainer),
         )
 
         Row(
@@ -91,7 +91,7 @@ fun JWTabRow(
                         text = item.text,
                         style = TextStyle(),
                         textAlign = TextAlign.Center,
-                        color = if (selectedItem == item) Color.Green else Color.LightGray,
+                        color = if (selectedItem == item) JustWatchTheme.colors.onPrimaryContainer else JustWatchTheme.colors.onSurfaceVariant,
                     )
                 }
             }

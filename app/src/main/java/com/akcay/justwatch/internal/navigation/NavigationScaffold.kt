@@ -3,10 +3,12 @@ package com.akcay.justwatch.internal.navigation
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.akcay.justwatch.R
 import com.akcay.justwatch.internal.component.JWBottomNavBar
+import com.akcay.justwatch.ui.theme.JustWatchTheme
 
 @Composable
 fun NavigationScaffold(
@@ -18,6 +20,7 @@ fun NavigationScaffold(
 ) {
     Scaffold(
         modifier = modifier,
+        containerColor = JustWatchTheme.colors.background,
         topBar = topBar,
         bottomBar = {
             JWBottomNavBar(

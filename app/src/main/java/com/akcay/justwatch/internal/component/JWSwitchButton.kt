@@ -22,9 +22,9 @@ fun JWSwitchButton(
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
-    checkedColor: Color = JustWatchTheme.colors.primaryContainer,
-    uncheckedColor: Color = Color(0xFFD1D1D6),
-    thumbColor: Color = Color.White
+    checkedColor: Color = JustWatchTheme.colors.primary,
+    uncheckedColor: Color = JustWatchTheme.colors.onSurfaceVariant,
+    thumbColor: Color = JustWatchTheme.colors.surface
 ) {
   var isChecked by remember { mutableStateOf(checked) }
 

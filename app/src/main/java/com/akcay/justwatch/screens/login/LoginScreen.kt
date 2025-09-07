@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,9 +38,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Black
-import androidx.compose.ui.graphics.Color.Companion.Gray
-import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.graphics.Color.Companion.LightGray
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -90,7 +91,7 @@ fun LoginScreen(
         JWDialogBox(
             onDismissRequest = { showDialog = false },
             content = JWDialogBoxModel(
-                mainColor = Gray,
+                mainColor = JustWatchTheme.colors.onSurfaceVariant,
                 title = "",
                 description = "",
                 positiveButtonText = "Ok",
@@ -113,6 +114,7 @@ fun LoginScreenContent(
     onEntryAsGuestClick: () -> Unit = {},
 ) {
     val scrollState = rememberScrollState()
+    val focusManager = LocalFocusManager.current
     val isImeVisible = WindowInsets.isImeVisible
 
     JWLoadingView(isLoading = uiState.loading) {
@@ -125,7 +127,12 @@ fun LoginScreenContent(
                     else Modifier,
                 )
                 .padding(top = 100.dp)
-                .imePadding(),
+                .imePadding()
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onTap = { focusManager.clearFocus() },
+                    )
+                },
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
@@ -136,7 +143,7 @@ fun LoginScreenContent(
                         R.font.tt_medium,
                     ),
                 ),
-                color = Black,
+                color = JustWatchTheme.colors.onSurface,
                 fontSize = 32.sp,
                 text = "Sign In",
                 textAlign = TextAlign.Center,
@@ -164,7 +171,7 @@ fun LoginScreenContent(
                 JWSwitchButton(
                     checked = uiState.isRememberCheckboxChecked,
                     onCheckedChange = onRememberMeCheckboxClick,
-                    checkedColor = Black,
+                    checkedColor = JustWatchTheme.colors.primary,
                 )
                 Text(
                     modifier = Modifier.padding(start = 5.dp),
@@ -174,13 +181,17 @@ fun LoginScreenContent(
                             R.font.tt_medium,
                         ),
                     ),
+                    color = JustWatchTheme.colors.onSurface,
                 )
                 Text(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .clickable {
+                            onForgotPasswordClick()
+                        },
                     style = JustWatchTheme.typography.label,
                     text = "Forgot password?",
-                    color = Gray,
+                    color = JustWatchTheme.colors.onSurfaceVariant,
                     textAlign = TextAlign.End,
                     fontSize = 15.sp,
                 )
@@ -191,8 +202,8 @@ fun LoginScreenContent(
                     .padding(top = 20.dp, start = 10.dp, end = 10.dp)
                     .height(52.dp),
                 text = "Sign In",
-                textColor = White,
-                backgroundColor = Black,
+                textColor = JustWatchTheme.colors.onPrimaryContainer,
+                backgroundColor = JustWatchTheme.colors.primaryContainer,
                 onClick = onLoginClick,
             )
 
@@ -206,11 +217,11 @@ fun LoginScreenContent(
                     modifier = Modifier
                         .weight(1f)
                         .height(1.dp),
-                    color = Color.LightGray,
+                    color = JustWatchTheme.colors.onSurfaceVariant,
                 )
                 Text(
                     text = "Or Continue with",
-                    color = Gray,
+                    color = JustWatchTheme.colors.onSurfaceVariant,
                     fontSize = 14.sp,
                     modifier = Modifier.padding(horizontal = 8.dp),
                 )
@@ -218,7 +229,7 @@ fun LoginScreenContent(
                     modifier = Modifier
                         .weight(1f)
                         .height(1.dp),
-                    color = Color.LightGray,
+                    color = JustWatchTheme.colors.onSurfaceVariant,
                 )
             }
 
@@ -280,6 +291,7 @@ fun LoginScreenContent(
                         R.font.tt_bold,
                     ),
                 ),
+                color = JustWatchTheme.colors.primary,
                 text = "Entry As Guest",
             )
         }

@@ -4,6 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.akcay.justwatch.screens.forgotpassword.ForgotPasswordScreen
 import com.akcay.justwatch.screens.login.LoginScreen
 import com.akcay.justwatch.screens.register.RegisterScreen
 import kotlinx.serialization.Serializable
@@ -12,6 +13,9 @@ object Destinations {
 
     @Serializable
     object Login
+    
+    @Serializable
+    object ForgotPassword
 }
 
 fun NavGraphBuilder.loginGraph(
@@ -28,7 +32,7 @@ fun NavGraphBuilder.loginGraph(
                     }
                 },
                 navigateForgotPassword = {
-
+                    navController.navigate(Destinations.ForgotPassword)
                 },
             )
         }
@@ -42,8 +46,12 @@ fun NavGraphBuilder.loginGraph(
                 },
             )
         }
-        composable<AppDestination.ForgotPassword> {
-
+        composable<Destinations.ForgotPassword> {
+            ForgotPasswordScreen(
+                navigateBack = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }

@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import com.akcay.justwatch.R
+import com.akcay.justwatch.ui.theme.JustWatchTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -23,10 +24,12 @@ fun JWTopAppBar(
     onBackClick: () -> Unit = {},
     actions: @Composable (RowScope.() -> Unit) = {},
     title: String = "",
-    titleColor: Color = MaterialTheme.colorScheme.onSurface,
+    titleColor: Color = JustWatchTheme.colors.onSurface,
 ) {
     CenterAlignedTopAppBar(
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.Transparent),
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = Color.Transparent
+        ),
         title = {
             Text(
                 text = title,
@@ -40,6 +43,7 @@ fun JWTopAppBar(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = null,
+                        tint = JustWatchTheme.colors.onSurface
                     )
                 }
             }
