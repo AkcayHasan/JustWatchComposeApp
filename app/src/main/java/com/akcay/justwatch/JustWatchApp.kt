@@ -1,7 +1,5 @@
 package com.akcay.justwatch
 
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -29,8 +27,6 @@ fun <T : Any> JustWatchApp(
         NavHost(
             navController = navController,
             startDestination = startDestination,
-            enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None },
         ) {
             composable<AppDestination.OnBoarding> {
                 OnBoardingScreen(

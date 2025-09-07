@@ -54,12 +54,12 @@ fun JWPasswordField(
         label = {
             Text(
                 text = label,
-                color = Color.Gray,
+                color = JustWatchTheme.colors.onSurfaceVariant,
             )
         },
         trailingIcon = {
             IconButton(onClick = { isVisible = !isVisible } ) {
-                Icon(painter = icon, "Visibility", tint = Color.Gray)
+                Icon(painter = icon, "Visibility", tint = JustWatchTheme.colors.onSurfaceVariant)
             }
         },
         visualTransformation = visualTransform,
@@ -70,15 +70,15 @@ fun JWPasswordField(
           .fillMaxWidth()
           .padding(0.dp)
           .clip(RoundedCornerShape(10.dp))
-          .border(1.dp, color = Color.DarkGray, shape = RoundedCornerShape(10.dp)),
+          .border(1.dp, color = JustWatchTheme.colors.onSurfaceVariant, shape = RoundedCornerShape(10.dp)),
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,
-            cursorColor = Color.Black,
+            cursorColor = JustWatchTheme.colors.primary,
             focusedLabelColor = JustWatchTheme.colors.primary,
             unfocusedLabelColor = JustWatchTheme.colors.primary,
-            unfocusedContainerColor = JustWatchTheme.colors.primary,
+            unfocusedContainerColor = JustWatchTheme.colors.surface,
         ),
     )
 }
@@ -96,7 +96,7 @@ fun JWTextField(
         label = {
             Text(
                 text = label,
-                color = Color.Gray,
+                color = JustWatchTheme.colors.onSurfaceVariant,
             )
         },
         maxLines = 1,
@@ -106,15 +106,15 @@ fun JWTextField(
           .fillMaxWidth()
           .padding(0.dp)
           .clip(RoundedCornerShape(10.dp))
-          .border(1.dp, color = Color.DarkGray, shape = RoundedCornerShape(10.dp)),
+          .border(1.dp, color = JustWatchTheme.colors.onSurfaceVariant, shape = RoundedCornerShape(10.dp)),
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,
-            cursorColor = Color.Black,
-            focusedLabelColor = JustWatchTheme.colors.primaryContainer,
-            unfocusedLabelColor = JustWatchTheme.colors.primaryContainer,
-            unfocusedContainerColor = JustWatchTheme.colors.primaryContainer,
+            cursorColor = JustWatchTheme.colors.primary,
+            focusedLabelColor = JustWatchTheme.colors.primary,
+            unfocusedLabelColor = JustWatchTheme.colors.primary,
+            unfocusedContainerColor = JustWatchTheme.colors.surface,
         ),
     )
 }

@@ -24,6 +24,7 @@ val onBackgroundLight = Color(0xFF171C1F)
 
 val surfaceLight = Color(0xFFF6FAFE)
 val onSurfaceLight = Color(0xFF171C1F)
+val onSurfaceVariantLight = Color(0xFF4D616C)
 
 //Dark Theme Colors
 val primaryDark = Color(0xFF8DCFF1)
@@ -47,6 +48,7 @@ val onBackgroundDark = Color(0xFFDFE3E7)
 
 val surfaceDark = Color(0xFF0F1417)
 val onSurfaceDark = Color(0xFFDFE3E7)
+val onSurfaceVariantDark = Color(0xFFB5CAD6)
 
 @Immutable
 data class JWColors(
@@ -71,6 +73,7 @@ data class JWColors(
 
     val surface: Color,
     val onSurface: Color,
+    val onSurfaceVariant: Color,
 )
 
 val lightScheme = JWColors(
@@ -95,6 +98,7 @@ val lightScheme = JWColors(
 
     surface = surfaceLight,
     onSurface = onSurfaceLight,
+    onSurfaceVariant = onSurfaceVariantLight,
 )
 
 val darkScheme = JWColors(
@@ -119,4 +123,5 @@ val darkScheme = JWColors(
 
     surface = surfaceDark,
     onSurface = onSurfaceDark,
+    onSurfaceVariant = onSurfaceVariantDark,
 )

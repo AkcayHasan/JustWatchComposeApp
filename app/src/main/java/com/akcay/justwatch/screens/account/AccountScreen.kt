@@ -67,15 +67,10 @@ fun AccountScreenContent(
         navigateToTab = navigateToTab,
     ) { innerPadding ->
         JWLoadingView(isLoading = uiState.loading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(300.dp)
-                    .background(color = JustWatchTheme.colors.background),
-            )
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .background(JustWatchTheme.colors.background)
                     .padding(innerPadding),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -87,7 +82,11 @@ fun AccountScreenContent(
                     contentDescription = "avatar",
                     contentScale = ContentScale.Crop,
                 )
-                Text(modifier = Modifier.padding(top = 15.dp), text = "Hasan Akçay")
+                Text(
+                    modifier = Modifier.padding(top = 15.dp),
+                    text = "Hasan Akçay",
+                    color = JustWatchTheme.colors.onSurface
+                )
 
                 Spacer(modifier = Modifier.height(30.dp))
 
