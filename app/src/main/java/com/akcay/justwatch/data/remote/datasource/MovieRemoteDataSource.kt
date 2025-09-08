@@ -10,6 +10,9 @@ class MovieRemoteDataSource @Inject constructor(
     suspend fun getAllPopularMovies(pageNumber: Int) =
         movieService.getAllPopularMovies(pageNumber = pageNumber)
 
+    suspend fun getTopRatedMovies(pageNumber: Int) =
+        movieService.getTopRatedMovies(pageNumber = pageNumber)
+
     suspend fun getMovieById(id: Long) = movieService.getMovieById(id)
 
     suspend fun getMovieCredits(id: Long) = movieService.getMovieCredits(id)
