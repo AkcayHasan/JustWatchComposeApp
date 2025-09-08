@@ -9,6 +9,7 @@ import com.akcay.justwatch.domain.repository.MovieRepository
 import com.akcay.justwatch.internal.navigation.MainDestination
 import com.akcay.justwatch.internal.util.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -32,6 +33,14 @@ class MovieDetailViewModel @Inject constructor(
         getMovieCastById()
         getMovieVideoById()
     }.stateIn(scope = viewModelScope, started = SharingStarted.Eagerly, initialValue = MovieDetailUiState())
+
+    fun sendEvent(event: MovieDetailScreenViewEvent) {
+        when(event) {
+            MovieDetailScreenViewEvent.FavoriteIconClicked -> {
+
+            }
+        }
+    }
 
     fun getMovieDetailById() {
         viewModelScope.launch {

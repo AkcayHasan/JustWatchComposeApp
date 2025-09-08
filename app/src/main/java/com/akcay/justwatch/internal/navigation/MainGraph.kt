@@ -20,7 +20,7 @@ fun NavGraphBuilder.mainGraph(
 
     composable<MainDestination.Movies> {
         MoviesScreen(
-            onCardClick = { id ->
+            onCardClick = { id, title ->
                 navController.navigate(route = MainDestination.MovieDetail(id))
             },
             isSelected = isTabSelected,

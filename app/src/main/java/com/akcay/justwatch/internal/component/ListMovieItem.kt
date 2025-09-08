@@ -1,98 +1,122 @@
 package com.akcay.justwatch.internal.component
 
 import android.content.res.Configuration
-import androidx.compose.foundation.Image
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.akcay.justwatch.R
 import com.akcay.justwatch.internal.util.Constants
 import com.akcay.justwatch.ui.theme.JustWatchTheme
+import java.util.Locale
+
+data class ListMovieItemModel(
+    val imageUrl: String,
+    val itemId: Long,
+    val movieName: String,
+    val voteAverage: Double,
+)
 
 @Composable
 fun ListMovieItem(
-    imageUrl: String,
-    itemId: Long,
-    movieName: String,
-    onCardClicked: (id: Long) -> Unit,
-    onAddIconClicked: (id: Long) -> Unit,
+    model: ListMovieItemModel,
+    onCardClicked: (id: Long, text: String) -> Unit,
 ) {
     val context = LocalContext.current
-    val fullImageUrl = remember(imageUrl) {
-        ImageRequest.Builder(context).data("${Constants.BASE_IMAGE_URL}$imageUrl").crossfade(false).build()
+    val fullImageUrl = remember(model.imageUrl) {
+        ImageRequest.Builder(context).data("${Constants.BASE_IMAGE_URL}${model.imageUrl}").crossfade(false).build()
     }
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(72.dp)
-            .padding(5.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            .width(160.dp)
+            .clickable {
+                onCardClicked(model.itemId, model.movieName)
+            },
+        shape = RoundedCornerShape(16.dp),
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 10.dp)
-                .clickable { onCardClicked(itemId) },
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            AsyncImage(
-                modifier = Modifier
-                    .size(50.dp)
-                    .clip(CircleShape),
-                model = fullImageUrl,
-                placeholder = null,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-            )
+        Column {
+            Box {
+                AsyncImage(
+                    model = fullImageUrl,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(2f / 3f),
+                )
+                RatingChip(
+                    text = String.format(Locale.US, "%.1f", model.voteAverage),
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(8.dp),
+                )
+            }
 
             Text(
-                modifier = Modifier
-                    .padding(start = 10.dp)
-                    .weight(1f),
-                text = movieName,
-                style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.SemiBold),
-                maxLines = 2,
+                text = model.movieName,
+                maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-            )
-
-            Icon(
+                style = JustWatchTheme.typography.body,
                 modifier = Modifier
-                    .padding(start = 10.dp)
-                    .clickable {
-                        onAddIconClicked.invoke(itemId)
-                    },
-                imageVector = Icons.Default.Add,
-                contentDescription = null,
+                    .padding(start = 12.dp, top = 8.dp, end = 12.dp),
+            )
+            Text(
+                text = model.movieName,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = JustWatchTheme.typography.label,
+                modifier = Modifier.padding(start = 12.dp, bottom = 12.dp, end = 12.dp),
             )
         }
+    }
+}
+
+@Composable
+fun RatingChip(text: String, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+            .background(color = Color.Black.copy(alpha = 0.5f), shape = RoundedCornerShape(8.dp))
+            .padding(horizontal = 8.dp, vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(
+            modifier = Modifier
+                .padding(end = 4.dp)
+                .size(16.dp),
+            imageVector = Icons.Outlined.Star,
+            contentDescription = null,
+            tint = JustWatchTheme.colors.primaryContainer,
+        )
+        Text(text = text, color = JustWatchTheme.colors.primaryContainer, style = JustWatchTheme.typography.label)
     }
 }
 
@@ -100,46 +124,15 @@ fun ListMovieItem(
 @Composable
 fun ListMovieItemPreviewLight() {
     JustWatchTheme {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(72.dp)
-                .padding(5.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 10.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Image(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .size(50.dp),
-                    painter = painterResource(id = R.drawable.ic_launcher_background),
-                    contentDescription = null,
-                )
-
-                Text(
-                    modifier = Modifier
-                        .padding(start = 10.dp)
-                        .weight(1f),
-                    text = "Venom: The Last Dance",
-                    style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.SemiBold),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                )
-
-                Icon(
-                    modifier = Modifier
-                        .padding(start = 10.dp)
-                        .clickable {},
-                    imageVector = Icons.Default.Add,
-                    contentDescription = null,
-                )
-            }
-        }
+        ListMovieItem(
+            model = ListMovieItemModel(
+                imageUrl = "",
+                itemId = 0L,
+                movieName = "Venom: The Last Dance",
+                voteAverage = 4.3,
+            ),
+            onCardClicked = {_, _ -> },
+        )
     }
 }
 
@@ -147,45 +140,14 @@ fun ListMovieItemPreviewLight() {
 @Composable
 fun ListMovieItemPreviewDark() {
     JustWatchTheme {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(72.dp)
-                .padding(5.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 10.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Image(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .size(50.dp),
-                    painter = painterResource(id = R.drawable.ic_launcher_background),
-                    contentDescription = null,
-                )
-
-                Text(
-                    modifier = Modifier
-                        .padding(start = 10.dp)
-                        .weight(1f),
-                    text = "Venom: The Last Dance",
-                    style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.SemiBold),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                )
-
-                Icon(
-                    modifier = Modifier
-                        .padding(start = 10.dp)
-                        .clickable {},
-                    imageVector = Icons.Default.Add,
-                    contentDescription = null,
-                )
-            }
-        }
+        ListMovieItem(
+            model = ListMovieItemModel(
+                imageUrl = "",
+                itemId = 0L,
+                movieName = "Venom: The Last Dance",
+                voteAverage = 4.3,
+            ),
+            onCardClicked = {_, _ -> },
+        )
     }
 }
