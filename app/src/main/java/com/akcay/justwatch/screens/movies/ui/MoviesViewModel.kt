@@ -108,10 +108,6 @@ class MoviesViewModel @Inject constructor(
         }
     }
 
-    fun onAddIconClicked(id: Long) {
-
-    }
-
     private fun showLoading() {
         _uiState.update {
             it.copy(

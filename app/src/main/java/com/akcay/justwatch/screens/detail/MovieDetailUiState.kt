@@ -5,8 +5,12 @@ import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.detailres
 import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.detailresponse.videoresponse.MovieVideoResponse
 
 data class MovieDetailUiState(
-  val loadingState: Boolean = false,
-  val movieDetail: MovieDetailResponse? = null,
-  val movieCast: MovieDetailCreditsResponse? = null,
-  val movieTrailers: MovieVideoResponse? = null
-  )
+    val loadingState: Boolean = false,
+    val movieDetail: MovieDetailResponse? = null,
+    val movieCast: MovieDetailCreditsResponse? = null,
+    val movieTrailers: MovieVideoResponse? = null,
+)
+
+sealed interface MovieDetailScreenViewEvent {
+    data object FavoriteIconClicked: MovieDetailScreenViewEvent
+}
