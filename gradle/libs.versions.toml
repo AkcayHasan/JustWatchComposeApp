@@ -26,6 +26,7 @@ googleServicesVersion = "4.4.3"
 firebaseBomVersion = "33.10.0"
 firebaseCrashlytics = "3.0.5"
 paginationVersion = "3.3.6"
+roomVersion = "2.7.0"
 ktlint = "13.0.0"
 
 [libraries]
@@ -69,6 +70,9 @@ firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
 paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paginationVersion" }
 paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paginationVersion" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomVersion" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomVersion" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomVersion" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

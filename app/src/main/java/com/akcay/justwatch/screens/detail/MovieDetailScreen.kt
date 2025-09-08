@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PlayArrow
@@ -101,9 +102,9 @@ fun MovieDetailScreenContent(
                             .clickable {
                                 onFavoriteClicked()
                             },
-                        imageVector = Icons.Default.FavoriteBorder,
-                        contentDescription = null,
-                        tint = Color.Black,
+                        imageVector = if (uiState.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        contentDescription = if (uiState.isFavorite) "Remove from favorites" else "Add to favorites",
+                        tint = if (uiState.isFavorite) Color.Red else JustWatchTheme.colors.onSurface,
                     )
                 },
             )
