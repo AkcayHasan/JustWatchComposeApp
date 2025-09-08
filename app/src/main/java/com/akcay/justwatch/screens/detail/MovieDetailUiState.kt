@@ -9,6 +9,7 @@ data class MovieDetailUiState(
     val movieDetail: MovieDetailResponse? = null,
     val movieCast: MovieDetailCreditsResponse? = null,
     val movieTrailers: MovieVideoResponse? = null,
+    val isFavorite: Boolean = false,
 )
 
 sealed interface MovieDetailScreenViewEvent {

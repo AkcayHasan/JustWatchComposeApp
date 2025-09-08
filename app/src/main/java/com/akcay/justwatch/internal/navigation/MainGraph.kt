@@ -37,6 +37,9 @@ fun NavGraphBuilder.mainGraph(
         FavouriteScreen(
             isSelected = isTabSelected,
             navigateToTab = { navController.navigateToTab(it) },
+            onCardClick = { id, title ->
+                navController.navigate(route = MainDestination.MovieDetail(id))
+            },
         )
     }
     composable<MainDestination.MovieDetail> {
