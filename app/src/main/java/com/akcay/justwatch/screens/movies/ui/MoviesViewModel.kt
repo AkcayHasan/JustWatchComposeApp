@@ -7,6 +7,7 @@ import com.akcay.justwatch.domain.repository.AccountRepository
 import com.akcay.justwatch.domain.repository.LogRepository
 import com.akcay.justwatch.domain.repository.MovieRepository
 import com.akcay.justwatch.domain.usecase.GetUserInfoUseCase
+import com.akcay.justwatch.internal.component.TabRowItem
 import com.akcay.justwatch.internal.ext.launchCatching
 import com.akcay.justwatch.internal.paging.PageData
 import com.akcay.justwatch.internal.paging.Pager
@@ -29,8 +30,10 @@ class MoviesViewModel @Inject constructor(
     private val accountRepository: AccountRepository,
     private val movieRepository: MovieRepository,
 ) : ViewModel() {
-    private val pager = Pager()
-    private val data = mutableMapOf<Int, PageData<MovieUIModel>>()
+    private val popularPager = Pager()
+    private val topRatedPager = Pager()
+    private val popularData = mutableMapOf<Int, PageData<MovieUIModel>>()
+    private val topRatedData = mutableMapOf<Int, PageData<MovieUIModel>>()
     private val _uiState = MutableStateFlow(MoviesUiState())
 
     val uiState = _uiState.onStart {
@@ -75,12 +78,21 @@ class MoviesViewModel @Inject constructor(
         }
     }
 
-    private var loadJob: Job? = null
+    private var popularLoadJob: Job? = null
+    private var topRatedLoadJob: Job? = null
+    
     fun loadMore() {
-        if (loadJob != null && pager.hasNextPage.not()) return
+        when (_uiState.value.selectedTab) {
+            TabRowItem.ACTIVE -> loadPopularMovies()
+            TabRowItem.TOP_RATED -> loadTopRatedMovies()
+        }
+    }
+    
+    private fun loadPopularMovies() {
+        if (popularLoadJob != null && popularPager.hasNextPage.not()) return
 
-        loadJob = viewModelScope.launch {
-            val currentPage = pager.currentPage
+        popularLoadJob = viewModelScope.launch {
+            val currentPage = popularPager.currentPage
             movieRepository.getAllPopularMovies(pageNumber = currentPage).collect { result ->
                 when (result) {
                     is NetworkResult.Error -> {
@@ -92,12 +104,12 @@ class MoviesViewModel @Inject constructor(
                     }
 
                     is NetworkResult.Success -> {
-                        pager.currentPage += 1
-                        pager.hasNextPage = result.data.data.size == pager.pageSize
-                        data[pager.currentPage] = result.data
+                        popularPager.currentPage += 1
+                        popularPager.hasNextPage = result.data.data.size == popularPager.pageSize
+                        popularData[popularPager.currentPage] = result.data
                         _uiState.update {
                             it.copy(
-                                movieList = data.values
+                                movieList = popularData.values
                                     .flatMap { list -> list.data }
                                     .distinctBy { movie -> movie.id },
                             )
@@ -106,6 +118,43 @@ class MoviesViewModel @Inject constructor(
                 }
             }
         }
+    }
+    
+    private fun loadTopRatedMovies() {
+        if (topRatedLoadJob != null && topRatedPager.hasNextPage.not()) return
+
+        topRatedLoadJob = viewModelScope.launch {
+            val currentPage = topRatedPager.currentPage
+            movieRepository.getTopRatedMovies(pageNumber = currentPage).collect { result ->
+                when (result) {
+                    is NetworkResult.Error -> {
+
+                    }
+
+                    is NetworkResult.Exception -> {
+
+                    }
+
+                    is NetworkResult.Success -> {
+                        topRatedPager.currentPage += 1
+                        topRatedPager.hasNextPage = result.data.data.size == topRatedPager.pageSize
+                        topRatedData[topRatedPager.currentPage] = result.data
+                        _uiState.update {
+                            it.copy(
+                                topRatedMovieList = topRatedData.values
+                                    .flatMap { list -> list.data }
+                                    .distinctBy { movie -> movie.id },
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    fun onTabChanged(tab: TabRowItem) {
+        _uiState.update { it.copy(selectedTab = tab) }
+        loadMore()
     }
 
     private fun showLoading() {
