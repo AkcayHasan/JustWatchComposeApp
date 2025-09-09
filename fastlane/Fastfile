@@ -23,4 +23,28 @@ platform :android do
       }
     )
   end
+
+  desc "Signed Release AAB"
+  lane :aab_release do
+    gradle(
+      task: "bundleRelease",
+      properties: {
+        "android.injected.signing.store.file" => ENV["ANDROID_KEYSTORE_PATH"],
+        "android.injected.signing.store.password" => ENV["ANDROID_KEYSTORE_PASSWORD"],
+        "android.injected.signing.key.alias" => ENV["ANDROID_KEY_ALIAS"],
+        "android.injected.signing.key.password" => ENV["ANDROID_KEY_PASSWORD"]
+      }
+    )
+  end
+
+  desc "Build by target_env (test=APK, prod=AAB)"
+  lane :build_for do |options|
+    target_env = options[:target_env] || ENV["TARGET_ENV"] || "test"
+
+    if target_env == "prod"
+      aab_release
+    else
+      apk_release
+    end
+  end
 end

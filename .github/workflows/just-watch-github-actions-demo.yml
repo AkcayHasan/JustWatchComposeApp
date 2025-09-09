@@ -11,13 +11,24 @@ env:
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "dev" ]
   workflow_dispatch:
+    inputs:
+      target_env:
+        description: "Which environment to build?"
+        required: true
+        default: "test"
+        type: choice
+        options:
+          - test
+          - prod
 
 jobs:
   Just-Watch-Actions:
+    environment: ${{ github.event_name == 'workflow_dispatch' && inputs.target_env == 'prod' && 'production' || 'test' }}
     runs-on: ubuntu-latest
     env:
+      TARGET_ENV: ${{ github.event_name == 'workflow_dispatch' && inputs.target_env || 'test' }}
       # Keystore, Fastlane'ın injected signing properties için gerekli ENV'ler
       ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/release-upload.jks
       ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
@@ -73,11 +84,30 @@ jobs:
           name: Unit Test HTML Report
           path: ${{ env.main_project_module }}/build/reports/tests/testDebugUnitTest/
 
+      # ========================
+      # TEST: Create APK
+      # ========================
       - name: Build signed APK (Fastlane)
+        if: ${{ env.TARGET_ENV == 'test' }}
         run: bundle exec fastlane apk_release
 
       - name: Upload APK Release
+        if: ${{ env.TARGET_ENV == 'test' }}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.playstore_name }} - APK(s) release generated
+          name: ${{ env.playstore_name }} - APK release (test)
           path: ${{ env.main_project_module }}/build/outputs/apk/release/
+
+      # ========================
+      # PROD: Create AAB
+      # ========================
+      - name: Build signed AAB (Fastlane)
+        if: ${{ env.TARGET_ENV == 'prod' }}
+        run: bundle exec fastlane aab_release
+
+      - name: Upload AAB Release
+        if: ${{ env.TARGET_ENV == 'prod' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.playstore_name }} - AAB release (prod)
+          path: ${{ env.main_project_module }}/build/outputs/bundle/release/
