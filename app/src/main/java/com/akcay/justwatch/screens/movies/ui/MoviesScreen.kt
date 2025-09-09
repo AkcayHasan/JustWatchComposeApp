@@ -174,7 +174,7 @@ private fun MovieGrid(
                     imageUrl = item.image,
                     itemId = item.id,
                     movieName = item.title,
-                    voteAverage = 4.326,
+                    voteAverage = item.voteAverage,
                 ),
                 onCardClicked = onCardClick,
             )

@@ -5,4 +5,5 @@ data class MovieUIModel(
     val title: String = "",
     val description: String = "",
     val image: String = "",
+    val voteAverage: Double = 0.0,
 )

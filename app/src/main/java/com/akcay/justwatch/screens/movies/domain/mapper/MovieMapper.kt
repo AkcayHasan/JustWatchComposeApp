@@ -8,4 +8,5 @@ fun MovieResponse.toUIModel() = MovieUIModel(
     title = this.title.orEmpty(),
     description = this.overview.orEmpty(),
     image = this.posterPath.orEmpty(),
+    voteAverage = this.voteAverage ?: 0.0,
 )
