@@ -36,6 +36,20 @@ class MovieRepositoryImpl @Inject constructor(
         )
     }
 
+    override fun getTopRatedMovies(pageNumber: Int): Flow<NetworkResult<PageData<MovieUIModel>>> = flow {
+        emit(
+            safeApiCall(dispatcher) {
+                remoteDataSource.getTopRatedMovies(pageNumber)
+            }.map { pageData ->
+                PageData(
+                    data = pageData.data.map { it.toUIModel() },
+                    page = pageData.page,
+                    totalPages = pageData.totalPages,
+                )
+            },
+        )
+    }
+
     override suspend fun getMovieById(movieId: Long): NetworkResult<MovieDetailResponse> {
         return safeApiCall(defaultDispatcher = dispatcher) {
             remoteDataSource.getMovieById(movieId)

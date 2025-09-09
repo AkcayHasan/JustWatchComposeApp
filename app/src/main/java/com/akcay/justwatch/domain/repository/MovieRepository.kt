@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.Flow
 interface MovieRepository {
     fun getAllPopularMovies(pageNumber: Int): Flow<NetworkResult<PageData<MovieUIModel>>>
 
+    fun getTopRatedMovies(pageNumber: Int): Flow<NetworkResult<PageData<MovieUIModel>>>
+
     suspend fun getMovieById(movieId: Long): NetworkResult<MovieDetailResponse>
 
     suspend fun getMovieCastById(movieId: Long): NetworkResult<MovieDetailCreditsResponse>

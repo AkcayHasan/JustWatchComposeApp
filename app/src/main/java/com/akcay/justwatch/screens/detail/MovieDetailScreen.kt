@@ -48,6 +48,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
@@ -55,6 +56,7 @@ import com.akcay.justwatch.R
 import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.detailresponse.MovieDetailResponse
 import com.akcay.justwatch.internal.component.CastItemView
 import com.akcay.justwatch.internal.component.JWButton
+import com.akcay.justwatch.internal.component.JWExpandableText
 import com.akcay.justwatch.internal.component.JWLoadingView
 import com.akcay.justwatch.internal.component.JWTopAppBar
 import com.akcay.justwatch.internal.component.RatingChip
@@ -232,9 +234,9 @@ private fun ColumnScope.StorySection(
             text = "Story Line",
             style = JustWatchTheme.typography.h2,
         )
-        Text(
-            text = state.movieDetail?.overview ?: "",
-            style = JustWatchTheme.typography.body,
+        JWExpandableText(
+            initialText = state.movieDetail?.overview ?: "",
+            maxLine = 2
         )
 
         Text(

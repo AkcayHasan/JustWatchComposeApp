@@ -40,7 +40,7 @@ fun CastItemView(
         Column {
             Text(
                 text = castName,
-                style = JustWatchTheme.typography.body.copy(color = Color.Black)
+                style = JustWatchTheme.typography.body.copy(color = JustWatchTheme.colors.onBackground)
             )
 
             Text(

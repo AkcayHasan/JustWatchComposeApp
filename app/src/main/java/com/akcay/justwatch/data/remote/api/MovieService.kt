@@ -17,6 +17,11 @@ interface MovieService {
         @Query("page") pageNumber: Int
     ): Response<PageData<MovieResponse>>
 
+    @GET("movie/top_rated")
+    suspend fun getTopRatedMovies(
+        @Query("page") pageNumber: Int
+    ): Response<PageData<MovieResponse>>
+
     @GET("movie/{movie_id}")
     suspend fun getMovieById(
         @Path("movie_id") movieId: Long
