@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.kapt)
-    alias(libs.plugins.hilt)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.kotlin.parcelize)
@@ -106,10 +105,9 @@ dependencies {
     // Coroutine Lifecycle Scopes
     implementation(libs.coroutines.lifecycle.viewmodel)
 
-    // Hilt
-    implementation(libs.hilt)
-    kapt(libs.hilt.compiler)
-    implementation(libs.hilt.navigation)
+    // Koin
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
 
     // Retrofit
     implementation(libs.retrofit)

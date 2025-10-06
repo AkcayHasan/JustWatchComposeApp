@@ -5,7 +5,7 @@ import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.detailres
 import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.detailresponse.creditsresponse.MovieDetailCreditsResponse
 import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.detailresponse.videoresponse.MovieVideoResponse
 import com.akcay.justwatch.domain.repository.MovieRepository
-import com.akcay.justwatch.internal.di.IoDispatcher
+import com.akcay.justwatch.di.modules.ioDispatcher
 import com.akcay.justwatch.internal.paging.PageData
 import com.akcay.justwatch.internal.util.NetworkResult
 import com.akcay.justwatch.internal.util.map
@@ -15,10 +15,8 @@ import com.akcay.justwatch.screens.movies.domain.model.MovieUIModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
-
-class MovieRepositoryImpl @Inject constructor(
-    @param: IoDispatcher private val dispatcher: CoroutineDispatcher,
+class MovieRepositoryImpl(
+    private val dispatcher: CoroutineDispatcher,
     private val remoteDataSource: MovieRemoteDataSource,
 ) : MovieRepository {
 

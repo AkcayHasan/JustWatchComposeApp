@@ -2,9 +2,7 @@ package com.akcay.justwatch.domain.usecase
 
 import com.akcay.justwatch.domain.repository.AccountRepository
 import com.akcay.justwatch.internal.util.NetworkResult
-import javax.inject.Inject
-
-class SignOutUseCase @Inject constructor(
+class SignOutUseCase(
     private val accountRepository: AccountRepository
 ) {
 

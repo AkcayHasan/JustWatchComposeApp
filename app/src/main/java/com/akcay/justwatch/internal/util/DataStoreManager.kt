@@ -7,14 +7,12 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
-class DataStoreManager @Inject constructor(
-    @param: ApplicationContext private val context: Context,
+class DataStoreManager(
+    private val context: Context,
 ) {
     companion object {
         private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("storeData")

@@ -6,7 +6,6 @@ import com.akcay.justwatch.data.local.entity.FavoriteMovie
 import com.akcay.justwatch.domain.repository.AccountRepository
 import com.akcay.justwatch.domain.usecase.GetAllFavoritesUseCase
 import com.akcay.justwatch.domain.usecase.ToggleFavoriteUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,8 +13,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-
 sealed interface FavouriteScreenViewEvent {
     data object DismissAuthDialog : FavouriteScreenViewEvent
     data object NavigateToLogin : FavouriteScreenViewEvent
@@ -27,11 +24,10 @@ sealed interface FavouriteScreenViewModelEvent {
     data object NavigateToRegister : FavouriteScreenViewModelEvent
 }
 
-@HiltViewModel
-class FavouriteViewModel @Inject constructor(
+class FavouriteViewModel(
     private val accountRepository: AccountRepository,
     private val getAllFavoritesUseCase: GetAllFavoritesUseCase,
-    private val toggleFavoriteUseCase: ToggleFavoriteUseCase
+    private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
 ) : ViewModel() {
     
     private val _uiState = MutableStateFlow(FavouriteUiState())

@@ -4,9 +4,7 @@ import com.akcay.justwatch.data.local.dao.FavoriteMovieDao
 import com.akcay.justwatch.data.local.entity.FavoriteMovie
 import com.akcay.justwatch.domain.repository.FavoriteRepository
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
-
-class FavoriteRepositoryImpl @Inject constructor(
+class FavoriteRepositoryImpl(
     private val favoriteMovieDao: FavoriteMovieDao
 ) : FavoriteRepository {
     

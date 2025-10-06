@@ -10,7 +10,6 @@ import com.akcay.justwatch.internal.paging.PageData
 import com.akcay.justwatch.internal.paging.Pager
 import com.akcay.justwatch.internal.util.NetworkResult
 import com.akcay.justwatch.screens.movies.domain.model.MovieUIModel
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,10 +17,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-
-@HiltViewModel
-class MoviesViewModel @Inject constructor(
+class MoviesViewModel(
     private val logRepository: LogRepository,
     private val movieRepository: MovieRepository,
 ) : ViewModel() {

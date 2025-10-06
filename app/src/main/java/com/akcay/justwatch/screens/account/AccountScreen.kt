@@ -24,7 +24,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.androidx.compose.koinViewModel
 import com.akcay.justwatch.R
 import com.akcay.justwatch.internal.component.JWButton
 import com.akcay.justwatch.internal.component.JWLoadingView
@@ -36,7 +36,7 @@ import com.akcay.justwatch.ui.theme.JustWatchTheme
 
 @Composable
 fun AccountScreen(
-    viewModel: AccountViewModel = hiltViewModel(),
+    viewModel: AccountViewModel = koinViewModel(),
     isSelected: (MainDestination) -> Boolean,
     navigateToTab: (MainDestination) -> Unit,
     navigateToLogin: () -> Unit,

@@ -45,7 +45,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.androidx.compose.koinViewModel
 import com.akcay.justwatch.R
 import com.akcay.justwatch.internal.component.JWButton
 import com.akcay.justwatch.internal.component.JWDialogBox
@@ -63,7 +63,7 @@ fun LoginScreen(
     navigateForgotPassword: () -> Unit,
     navigateRegister: () -> Unit,
     navigateMovies: () -> Unit,
-    viewModel: LoginViewModel = hiltViewModel(),
+    viewModel: LoginViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
 

@@ -10,7 +10,6 @@ import com.akcay.justwatch.internal.util.ValidationUtil
 import com.akcay.justwatch.internal.util.FieldValidationState
 import com.akcay.justwatch.internal.util.FormValidationState
 import com.akcay.justwatch.internal.util.FieldKey
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -19,10 +18,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-
-@HiltViewModel
-class RegisterViewModel @Inject constructor(
+class RegisterViewModel(
     private val accountRepository: AccountRepository,
     private val dataStoreManager: DataStoreManager,
     private val registerUseCase: RegisterUseCase,

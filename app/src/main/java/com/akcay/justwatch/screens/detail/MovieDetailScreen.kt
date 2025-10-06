@@ -50,7 +50,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
 import androidx.compose.ui.zIndex
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.androidx.compose.koinViewModel
 import coil.compose.AsyncImage
 import com.akcay.justwatch.R
 import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.detailresponse.MovieDetailResponse
@@ -67,7 +67,7 @@ import java.util.Locale
 @Composable
 fun MovieDetailScreen(
     navigateBack: () -> Unit,
-    viewModel: MovieDetailViewModel = hiltViewModel(),
+    viewModel: MovieDetailViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
 

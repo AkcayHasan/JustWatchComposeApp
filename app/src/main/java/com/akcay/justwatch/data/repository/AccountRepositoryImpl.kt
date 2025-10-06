@@ -12,9 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
-
-class AccountRepositoryImpl @Inject constructor(
+class AccountRepositoryImpl(
     private val auth: FirebaseAuth,
     private val firestore: FirebaseFirestore,
 ) : AccountRepository {
