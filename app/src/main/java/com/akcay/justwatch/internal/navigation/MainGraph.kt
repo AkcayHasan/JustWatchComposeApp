@@ -31,6 +31,11 @@ fun NavGraphBuilder.mainGraph(
         AccountScreen(
             isSelected = isTabSelected,
             navigateToTab = { navController.navigateToTab(it) },
+            navigateToLogin = {
+                navController.navigate(AppDestination.Login) {
+                    popUpTo(0) { inclusive = true }
+                }
+            },
         )
     }
     composable<MainDestination.Favourite> {
@@ -40,6 +45,16 @@ fun NavGraphBuilder.mainGraph(
             onCardClick = { id, title ->
                 navController.navigate(route = MainDestination.MovieDetail(id))
             },
+            navigateToLogin = {
+                navController.navigate(AppDestination.Login) {
+                    popUpTo(0) { inclusive = true }
+                }
+            },
+            navigateToRegister = {
+                navController.navigate(Destinations.Register) {
+                    popUpTo(0) { inclusive = true }
+                }
+            }
         )
     }
     composable<MainDestination.MovieDetail> {

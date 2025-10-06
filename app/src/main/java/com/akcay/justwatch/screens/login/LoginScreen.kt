@@ -7,7 +7,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
@@ -20,9 +19,9 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
@@ -37,8 +36,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -57,16 +54,20 @@ import com.akcay.justwatch.internal.component.JWLoadingView
 import com.akcay.justwatch.internal.component.JWPasswordField
 import com.akcay.justwatch.internal.component.JWSwitchButton
 import com.akcay.justwatch.internal.component.JWTextField
+import com.akcay.justwatch.internal.util.FieldKey
+import com.akcay.justwatch.internal.util.SetSystemBarsForScreen
 import com.akcay.justwatch.ui.theme.JustWatchTheme
 
 @Composable
 fun LoginScreen(
     navigateForgotPassword: () -> Unit,
+    navigateRegister: () -> Unit,
     navigateMovies: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    var showDialog by remember { mutableStateOf(false) }
+
+    SetSystemBarsForScreen() // Uses CompositionLocal automatically
 
     LaunchedEffect(Unit) {
         viewModel.channel.collect { event ->
@@ -76,27 +77,34 @@ fun LoginScreen(
         }
     }
 
+    // Clear validation errors when user starts typing
+    LaunchedEffect(uiState.email, uiState.password) {
+        if (uiState.validationState.fields.isNotEmpty()) {
+            viewModel.clearValidationErrors()
+        }
+    }
+
     LoginScreenContent(
         uiState = uiState,
         onForgotPasswordClick = navigateForgotPassword,
+        onRegisterClick = navigateRegister,
         onEntryAsGuestClick = { navigateMovies() },
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
         onRememberMeCheckboxClick = viewModel::setRememberMeChecked,
         onLoginClick = { viewModel.sendEvent(LoginScreenViewEvent.OnLoginClicked) },
-        onSignUpClick = { viewModel.sendEvent(LoginScreenViewEvent.OnRegisterClicked) },
     )
 
-    if (showDialog) {
+    if (uiState.validationState.showDialog) {
         JWDialogBox(
-            onDismissRequest = { showDialog = false },
+            onDismissRequest = { viewModel.dismissDialog() },
             content = JWDialogBoxModel(
                 mainColor = JustWatchTheme.colors.onSurfaceVariant,
-                title = "",
-                description = "",
+                title = "Validation Error",
+                description = uiState.validationState.dialogMessage ?: "Please check your input",
                 positiveButtonText = "Ok",
             ),
-            positiveButtonClickAction = { showDialog = false },
+            positiveButtonClickAction = { viewModel.dismissDialog() },
         )
     }
 }
@@ -109,7 +117,7 @@ fun LoginScreenContent(
     onPasswordChange: (String) -> Unit = {},
     onRememberMeCheckboxClick: (Boolean) -> Unit = {},
     onLoginClick: () -> Unit = {},
-    onSignUpClick: () -> Unit = {},
+    onRegisterClick: () -> Unit = {},
     onForgotPasswordClick: () -> Unit = {},
     onEntryAsGuestClick: () -> Unit = {},
 ) {
@@ -155,6 +163,8 @@ fun LoginScreenContent(
                 value = uiState.email,
                 label = "E-mail",
                 onNewValue = onEmailChange,
+                hasError = uiState.validationState.fields[FieldKey.EMAIL]?.hasError ?: false,
+                errorMessage = uiState.validationState.fields[FieldKey.EMAIL]?.errorMessage,
             )
             JWPasswordField(
                 modifier = Modifier
@@ -163,6 +173,8 @@ fun LoginScreenContent(
                 value = uiState.password,
                 label = "Password",
                 onNewValue = onPasswordChange,
+                hasError = uiState.validationState.fields[FieldKey.PASSWORD]?.hasError ?: false,
+                errorMessage = uiState.validationState.fields[FieldKey.PASSWORD]?.errorMessage,
             )
             Row(
                 modifier = Modifier.padding(top = 10.dp, start = 20.dp, end = 20.dp),
@@ -207,6 +219,22 @@ fun LoginScreenContent(
                 onClick = onLoginClick,
             )
 
+            JWButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 20.dp, start = 10.dp, end = 10.dp)
+                    .height(52.dp)
+                    .border(
+                        width = 1.dp,
+                        color = JustWatchTheme.colors.onPrimaryContainer,
+                        shape = RoundedCornerShape(50.dp)
+                    ),
+                text = "Register",
+                textColor = JustWatchTheme.colors.onPrimaryContainer,
+                backgroundColor = JustWatchTheme.colors.onPrimary,
+                onClick = onRegisterClick,
+            )
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -233,43 +261,21 @@ fun LoginScreenContent(
                 )
             }
 
-            Row(
+            // Google Button
+            IconButton(
+                onClick = {},
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 70.dp),
-                horizontalArrangement = Arrangement.Center,
+                    .padding(20.dp)
+                    .size(64.dp)
+                    .clip(CircleShape)
+                    .border(1.dp, color = JustWatchTheme.colors.secondaryContainer, shape = CircleShape)
+                    .background(JustWatchTheme.colors.secondaryContainer),
             ) {
-                // Google Button
-                IconButton(
-                    onClick = {},
-                    modifier = Modifier
-                        .size(64.dp)
-                        .clip(CircleShape)
-                        .border(1.dp, color = JustWatchTheme.colors.secondaryContainer, shape = CircleShape)
-                        .background(JustWatchTheme.colors.secondaryContainer),
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_google),
-                        contentDescription = "Google Login",
-                        modifier = Modifier.size(20.dp),
-                    )
-                }
-                Spacer(modifier = Modifier.width(5.dp))
-                // Apple Button
-                IconButton(
-                    onClick = {},
-                    modifier = Modifier
-                        .size(64.dp)
-                        .clip(CircleShape)
-                        .border(1.dp, color = JustWatchTheme.colors.secondaryContainer, shape = CircleShape)
-                        .background(JustWatchTheme.colors.secondaryContainer),
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_apple),
-                        contentDescription = "Apple Login",
-                        modifier = Modifier.size(20.dp),
-                    )
-                }
+                Image(
+                    painter = painterResource(id = R.drawable.ic_google),
+                    contentDescription = "Google Login",
+                    modifier = Modifier.size(20.dp),
+                )
             }
 
             Spacer(

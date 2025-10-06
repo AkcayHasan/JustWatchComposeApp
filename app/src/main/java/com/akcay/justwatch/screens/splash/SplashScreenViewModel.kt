@@ -2,7 +2,9 @@ package com.akcay.justwatch.screens.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.akcay.justwatch.domain.repository.AccountRepository
 import com.akcay.justwatch.internal.navigation.AppDestination
+import com.akcay.justwatch.internal.navigation.MainDestination
 import com.akcay.justwatch.internal.util.DataStoreManager
 import com.akcay.justwatch.internal.util.JWSecurityUtil
 import com.akcay.justwatch.internal.util.ThemeManager
@@ -18,18 +20,21 @@ import javax.inject.Inject
 @HiltViewModel
 class SplashScreenViewModel @Inject constructor(
     private val storeManager: DataStoreManager,
-    private val themeManager: ThemeManager
+    private val themeManager: ThemeManager,
+    private val accountRepository: AccountRepository
 ) : ViewModel() {
     private val _isRooted = MutableStateFlow(false)
     val isRooted = _isRooted.asStateFlow()
 
     val navigationDestination = combine(
         storeManager.shouldOnBoardingVisible(),
-        storeManager.getDarkThemeEnabled()
-    ) { onBoardingVisibility, darkThemEnabled ->
+        storeManager.getDarkThemeEnabled(),
+        accountRepository.currentAuthUser
+    ) { onBoardingVisibility, darkThemEnabled, authUser ->
         themeManager.toggle(darkThemEnabled)
         when {
             onBoardingVisibility -> AppDestination.OnBoarding
+            authUser != null && (authUser.isAnonymous == false) && !authUser.email.isNullOrEmpty() -> AppDestination.Main
             else -> AppDestination.Login
         }
     }.onStart {

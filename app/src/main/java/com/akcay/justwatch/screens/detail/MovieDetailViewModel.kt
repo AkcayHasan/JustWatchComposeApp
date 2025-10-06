@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.akcay.justwatch.domain.repository.AccountRepository
 import com.akcay.justwatch.domain.repository.MovieRepository
 import com.akcay.justwatch.domain.usecase.IsFavoriteUseCase
 import com.akcay.justwatch.domain.usecase.ToggleFavoriteUseCase
@@ -27,6 +28,7 @@ import javax.inject.Inject
 class MovieDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repo: MovieRepository,
+    private val accountRepository: AccountRepository,
     private val isFavoriteUseCase: IsFavoriteUseCase,
     private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
 ) : ViewModel() {
@@ -50,17 +52,22 @@ class MovieDetailViewModel @Inject constructor(
     
     private fun checkFavoriteStatus() {
         viewModelScope.launch {
-            val isFavorite = isFavoriteUseCase(id)
-            _uiState.update { it.copy(isFavorite = isFavorite) }
+            val userId = accountRepository.currentUserId
+            if (userId.isNotEmpty()) {
+                val isFavorite = isFavoriteUseCase(id, userId)
+                _uiState.update { it.copy(isFavorite = isFavorite) }
+            }
         }
     }
     
     private fun toggleFavorite() {
         viewModelScope.launch {
             val movieDetail = _uiState.value.movieDetail
-            if (movieDetail != null) {
+            val userId = accountRepository.currentUserId
+            if (movieDetail != null && userId.isNotEmpty()) {
                 val favoriteMovie = FavoriteMovie(
                     id = movieDetail.id.toLong(),
+                    userId = userId,
                     title = movieDetail.title,
                     originalTitle = movieDetail.originalTitle,
                     overview = movieDetail.overview,
@@ -75,7 +82,7 @@ class MovieDetailViewModel @Inject constructor(
                     video = movieDetail.video
                 )
                 
-                val isFavorite = toggleFavoriteUseCase(favoriteMovie)
+                val isFavorite = toggleFavoriteUseCase(favoriteMovie, userId)
                 _uiState.update { it.copy(isFavorite = isFavorite) }
             }
         }

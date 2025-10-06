@@ -1,7 +1,5 @@
 package com.akcay.justwatch.ui.theme
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
@@ -16,49 +14,9 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import com.akcay.justwatch.internal.util.ThemeManager
+import com.akcay.justwatch.internal.util.LocalSystemBarsConfig
+import com.akcay.justwatch.internal.util.createSystemBarsConfigWithTheme
 
-@Composable
-private fun JWColors.animateColors(): JWColors {
-    val animationSpec = tween<Color>(durationMillis = 300)
-    
-    val animatedPrimary by animateColorAsState(primary, animationSpec, label = "primary")
-    val animatedOnPrimary by animateColorAsState(onPrimary, animationSpec, label = "onPrimary")
-    val animatedPrimaryContainer by animateColorAsState(primaryContainer, animationSpec, label = "primaryContainer")
-    val animatedOnPrimaryContainer by animateColorAsState(onPrimaryContainer, animationSpec, label = "onPrimaryContainer")
-    val animatedSecondary by animateColorAsState(secondary, animationSpec, label = "secondary")
-    val animatedOnSecondary by animateColorAsState(onSecondary, animationSpec, label = "onSecondary")
-    val animatedSecondaryContainer by animateColorAsState(secondaryContainer, animationSpec, label = "secondaryContainer")
-    val animatedOnSecondaryContainer by animateColorAsState(onSecondaryContainer, animationSpec, label = "onSecondaryContainer")
-    val animatedTertiary by animateColorAsState(tertiary, animationSpec, label = "tertiary")
-    val animatedOnTertiary by animateColorAsState(onTertiary, animationSpec, label = "onTertiary")
-    val animatedError by animateColorAsState(error, animationSpec, label = "error")
-    val animatedOnError by animateColorAsState(onError, animationSpec, label = "onError")
-    val animatedBackground by animateColorAsState(background, animationSpec, label = "background")
-    val animatedOnBackground by animateColorAsState(onBackground, animationSpec, label = "onBackground")
-    val animatedSurface by animateColorAsState(surface, animationSpec, label = "surface")
-    val animatedOnSurface by animateColorAsState(onSurface, animationSpec, label = "onSurface")
-    val animatedOnSurfaceVariant by animateColorAsState(onSurfaceVariant, animationSpec, label = "onSurfaceVariant")
-
-    return copy(
-        primary = animatedPrimary,
-        onPrimary = animatedOnPrimary,
-        primaryContainer = animatedPrimaryContainer,
-        onPrimaryContainer = animatedOnPrimaryContainer,
-        secondary = animatedSecondary,
-        onSecondary = animatedOnSecondary,
-        secondaryContainer = animatedSecondaryContainer,
-        onSecondaryContainer = animatedOnSecondaryContainer,
-        tertiary = animatedTertiary,
-        onTertiary = animatedOnTertiary,
-        error = animatedError,
-        onError = animatedOnError,
-        background = animatedBackground,
-        onBackground = animatedOnBackground,
-        surface = animatedSurface,
-        onSurface = animatedOnSurface,
-        onSurfaceVariant = animatedOnSurfaceVariant
-    )
-}
 
 private val LocalJWColors = staticCompositionLocalOf { lightScheme }
 private val LocalJWTypography = staticCompositionLocalOf { JWDefaultTypography }
@@ -136,12 +94,12 @@ fun JustWatchTheme(
     val themeState = themeManager?.isDark?.collectAsState(initial = false)?.value ?: false
 
     val target = if (themeState) colorsDark else colorsLight
-    val animatedTarget = target.animateColors()
+    val systemBarsConfig = createSystemBarsConfigWithTheme(themeState)
 
     val colorScheme = if (themeState) {
-        animatedTarget.toDarkColorScheme()
+        target.toDarkColorScheme()
     } else {
-        animatedTarget.toLightColorScheme()
+        target.toLightColorScheme()
     }
 
     MaterialTheme(
@@ -150,10 +108,11 @@ fun JustWatchTheme(
         shapes = shapes
     ) {
         CompositionLocalProvider(
-            LocalJWColors provides animatedTarget,
+            LocalJWColors provides target,
             LocalJWTypography provides typography,
             LocalJWShapes provides shapes,
-            LocalMyThemeController provides themeManager
+            LocalMyThemeController provides themeManager,
+            LocalSystemBarsConfig provides systemBarsConfig
         ) { content() }
     }
 }

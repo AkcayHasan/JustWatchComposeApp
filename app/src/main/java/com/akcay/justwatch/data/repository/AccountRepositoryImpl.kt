@@ -1,7 +1,7 @@
 package com.akcay.justwatch.data.repository
 
 import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.AuthUser
-import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.User
+import com.akcay.justwatch.data.remote.model.User
 import com.akcay.justwatch.domain.repository.AccountRepository
 import com.akcay.justwatch.internal.util.NetworkResult
 import com.google.firebase.auth.FirebaseAuth
@@ -66,13 +66,25 @@ class AccountRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun register(email: String, password: String): NetworkResult<AuthUser> {
+    override suspend fun register(email: String, password: String, name: String, surname: String): NetworkResult<AuthUser> {
         return withContext(Dispatchers.IO) {
             try {
                 val result = auth.createUserWithEmailAndPassword(email, password).await()
+                val userId = result.user?.uid ?: ""
+                
+                // Save user profile to Firestore
+                val user = hashMapOf(
+                    "email" to email,
+                    "name" to name,
+                    "surname" to surname,
+                    "createdAt" to System.currentTimeMillis(),
+                    "updatedAt" to System.currentTimeMillis()
+                )
+                firestore.collection("users").document(userId).set(user).await()
+                
                 NetworkResult.Success(
                     AuthUser(
-                        name = result.user?.displayName,
+                        name = name,
                         email = result.user?.email,
                         id = result.user?.uid,
                         isAnonymous = result.user?.isAnonymous,
@@ -113,6 +125,34 @@ class AccountRepositoryImpl @Inject constructor(
                     NetworkResult.Success(User(firstName, lastName))
                 } else {
                     NetworkResult.Error(1, "")
+                }
+            } catch (exception: Exception) {
+                NetworkResult.Exception(exception)
+            }
+        }
+    }
+
+    override suspend fun getUserProfile(): NetworkResult<User> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val currentUser = auth.currentUser
+                if (currentUser != null) {
+                    val document = firestore.collection("users").document(currentUser.uid).get().await()
+                    if (document.exists()) {
+                        val user = User(
+                            id = currentUser.uid,
+                            email = document.getString("email") ?: "",
+                            name = document.getString("name") ?: "",
+                            surname = document.getString("surname") ?: "",
+                            createdAt = document.getLong("createdAt") ?: 0L,
+                            updatedAt = document.getLong("updatedAt") ?: 0L
+                        )
+                        NetworkResult.Success(user)
+                    } else {
+                        NetworkResult.Error(1, "User profile not found")
+                    }
+                } else {
+                    NetworkResult.Error(2, "User not authenticated")
                 }
             } catch (exception: Exception) {
                 NetworkResult.Exception(exception)

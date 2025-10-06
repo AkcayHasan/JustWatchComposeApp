@@ -2,6 +2,7 @@ package com.akcay.justwatch.internal.component
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -38,6 +39,8 @@ fun JWPasswordField(
     label: String,
     onNewValue: (String) -> Unit,
     modifier: Modifier = Modifier,
+    hasError: Boolean = false,
+    errorMessage: String? = null,
 ) {
     var isVisible by remember { mutableStateOf(false) }
 
@@ -48,39 +51,54 @@ fun JWPasswordField(
     val visualTransform =
         if (isVisible) VisualTransformation.None else PasswordVisualTransformation()
 
-    TextField(
-        value = value,
-        onValueChange = onNewValue,
-        label = {
+    Column(modifier = modifier) {
+        TextField(
+            value = value,
+            onValueChange = onNewValue,
+            label = {
+                Text(
+                    text = label,
+                    color = if (hasError) JustWatchTheme.colors.error else JustWatchTheme.colors.onSurfaceVariant,
+                )
+            },
+            trailingIcon = {
+                IconButton(onClick = { isVisible = !isVisible } ) {
+                    Icon(painter = icon, "Visibility", tint = JustWatchTheme.colors.onSurfaceVariant)
+                }
+            },
+            visualTransformation = visualTransform,
+            maxLines = 1,
+            singleLine = true,
+            textStyle = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier
+              .fillMaxWidth()
+              .padding(0.dp)
+              .clip(RoundedCornerShape(10.dp))
+              .border(
+                  1.dp, 
+                  color = if (hasError) JustWatchTheme.colors.error else JustWatchTheme.colors.onSurfaceVariant, 
+                  shape = RoundedCornerShape(10.dp)
+              ),
+            colors = TextFieldDefaults.colors(
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
+                cursorColor = JustWatchTheme.colors.primary,
+                focusedLabelColor = if (hasError) JustWatchTheme.colors.error else JustWatchTheme.colors.primary,
+                unfocusedLabelColor = if (hasError) JustWatchTheme.colors.error else JustWatchTheme.colors.primary,
+                unfocusedContainerColor = JustWatchTheme.colors.surface,
+            ),
+        )
+        
+        if (hasError && !errorMessage.isNullOrBlank()) {
             Text(
-                text = label,
-                color = JustWatchTheme.colors.onSurfaceVariant,
+                text = errorMessage,
+                color = JustWatchTheme.colors.error,
+                style = JustWatchTheme.typography.label,
+                modifier = Modifier.padding(top = 4.dp, start = 12.dp)
             )
-        },
-        trailingIcon = {
-            IconButton(onClick = { isVisible = !isVisible } ) {
-                Icon(painter = icon, "Visibility", tint = JustWatchTheme.colors.onSurfaceVariant)
-            }
-        },
-        visualTransformation = visualTransform,
-        maxLines = 1,
-        singleLine = true,
-        textStyle = MaterialTheme.typography.bodyMedium,
-        modifier = modifier
-          .fillMaxWidth()
-          .padding(0.dp)
-          .clip(RoundedCornerShape(10.dp))
-          .border(1.dp, color = JustWatchTheme.colors.onSurfaceVariant, shape = RoundedCornerShape(10.dp)),
-        colors = TextFieldDefaults.colors(
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent,
-            cursorColor = JustWatchTheme.colors.primary,
-            focusedLabelColor = JustWatchTheme.colors.primary,
-            unfocusedLabelColor = JustWatchTheme.colors.primary,
-            unfocusedContainerColor = JustWatchTheme.colors.surface,
-        ),
-    )
+        }
+    }
 }
 
 @Composable
@@ -89,34 +107,51 @@ fun JWTextField(
     value: String,
     label: String,
     onNewValue: (String) -> Unit,
+    hasError: Boolean = false,
+    errorMessage: String? = null,
 ) {
-    TextField(
-        value = value,
-        onValueChange = onNewValue,
-        label = {
+    Column(modifier = modifier) {
+        TextField(
+            value = value,
+            onValueChange = onNewValue,
+            label = {
+                Text(
+                    text = label,
+                    color = if (hasError) JustWatchTheme.colors.error else JustWatchTheme.colors.onSurfaceVariant,
+                )
+            },
+            maxLines = 1,
+            singleLine = true,
+            textStyle = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier
+              .fillMaxWidth()
+              .padding(0.dp)
+              .clip(RoundedCornerShape(10.dp))
+              .border(
+                  1.dp, 
+                  color = if (hasError) JustWatchTheme.colors.error else JustWatchTheme.colors.onSurfaceVariant, 
+                  shape = RoundedCornerShape(10.dp)
+              ),
+            colors = TextFieldDefaults.colors(
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
+                cursorColor = JustWatchTheme.colors.primary,
+                focusedLabelColor = if (hasError) JustWatchTheme.colors.error else JustWatchTheme.colors.primary,
+                unfocusedLabelColor = if (hasError) JustWatchTheme.colors.error else JustWatchTheme.colors.primary,
+                unfocusedContainerColor = JustWatchTheme.colors.surface,
+            ),
+        )
+        
+        if (hasError && !errorMessage.isNullOrBlank()) {
             Text(
-                text = label,
-                color = JustWatchTheme.colors.onSurfaceVariant,
+                text = errorMessage,
+                color = JustWatchTheme.colors.error,
+                style = JustWatchTheme.typography.label,
+                modifier = Modifier.padding(top = 4.dp, start = 12.dp)
             )
-        },
-        maxLines = 1,
-        singleLine = true,
-        textStyle = MaterialTheme.typography.bodyMedium,
-        modifier = modifier
-          .fillMaxWidth()
-          .padding(0.dp)
-          .clip(RoundedCornerShape(10.dp))
-          .border(1.dp, color = JustWatchTheme.colors.onSurfaceVariant, shape = RoundedCornerShape(10.dp)),
-        colors = TextFieldDefaults.colors(
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent,
-            cursorColor = JustWatchTheme.colors.primary,
-            focusedLabelColor = JustWatchTheme.colors.primary,
-            unfocusedLabelColor = JustWatchTheme.colors.primary,
-            unfocusedContainerColor = JustWatchTheme.colors.surface,
-        ),
-    )
+        }
+    }
 }
 
 @Composable

@@ -6,7 +6,7 @@ import com.akcay.justwatch.internal.util.NetworkResult
 import javax.inject.Inject
 
 class SignInUseCase @Inject constructor(
-    private val accountRepository: AccountRepository
+    private val accountRepository: AccountRepository,
 ) {
 
     suspend operator fun invoke(email: String, password: String): NetworkResult<AuthUser> {

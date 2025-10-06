@@ -2,11 +2,8 @@ package com.akcay.justwatch.screens.movies.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.User
-import com.akcay.justwatch.domain.repository.AccountRepository
 import com.akcay.justwatch.domain.repository.LogRepository
 import com.akcay.justwatch.domain.repository.MovieRepository
-import com.akcay.justwatch.domain.usecase.GetUserInfoUseCase
 import com.akcay.justwatch.internal.component.TabRowItem
 import com.akcay.justwatch.internal.ext.launchCatching
 import com.akcay.justwatch.internal.paging.PageData
@@ -26,8 +23,6 @@ import javax.inject.Inject
 @HiltViewModel
 class MoviesViewModel @Inject constructor(
     private val logRepository: LogRepository,
-    private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val accountRepository: AccountRepository,
     private val movieRepository: MovieRepository,
 ) : ViewModel() {
     private val popularPager = Pager()
@@ -37,46 +32,9 @@ class MoviesViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(MoviesUiState())
 
     val uiState = _uiState.onStart {
-        fetchUser()
         loadMore()
     }.stateIn(viewModelScope, SharingStarted.Eagerly, MoviesUiState())
 
-    private fun fetchUser() {
-        viewModelScope.launch {
-            showLoading()
-            accountRepository.currentAuthUser.collect { authUser ->
-                if (authUser != null) {
-                    getUserInfo(authUser.id!!)
-                }
-            }
-            hideLoading()
-        }
-    }
-
-    private fun getUserInfo(uid: String) {
-        launchCatching(logRepository = logRepository) {
-            showLoading()
-            when (val result = getUserInfoUseCase(uid)) {
-                is NetworkResult.Success -> {
-                    _uiState.update {
-                        it.copy(
-                            user = User(
-                                firstName = result.data.firstName,
-                                lastName = result.data.lastName,
-                            ),
-                        )
-                    }
-                }
-
-                is NetworkResult.Error -> {
-                }
-
-                is NetworkResult.Exception -> {
-                }
-            }
-            hideLoading()
-        }
-    }
 
     private var popularLoadJob: Job? = null
     private var topRatedLoadJob: Job? = null

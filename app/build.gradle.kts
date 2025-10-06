@@ -18,7 +18,6 @@ android {
 
     defaultConfig {
         applicationId = "com.akcay.justwatch"
-        testApplicationId = "com.akcay.justwatch.test"
         minSdk = 24
         targetSdk = 35
         versionCode = 1

@@ -15,6 +15,9 @@ object Destinations {
     object Login
     
     @Serializable
+    object Register
+    
+    @Serializable
     object ForgotPassword
 }
 
@@ -31,19 +34,26 @@ fun NavGraphBuilder.loginGraph(
                         }
                     }
                 },
+                navigateRegister = {
+                    navController.navigate(Destinations.Register)
+                },
                 navigateForgotPassword = {
                     navController.navigate(Destinations.ForgotPassword)
                 },
             )
         }
-        composable<AppDestination.Register> {
+        composable<Destinations.Register> {
             RegisterScreen(
-                navigateHome = {
-
-                },
                 navigateBack = {
                     navController.popBackStack()
                 },
+                navigateMovies = {
+                    navController.navigate(MainDestination.Movies) {
+                        popUpTo(AppDestination.Login) {
+                            inclusive = true
+                        }
+                    }
+                }
             )
         }
         composable<Destinations.ForgotPassword> {
