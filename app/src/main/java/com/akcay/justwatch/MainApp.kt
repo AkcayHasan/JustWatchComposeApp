@@ -1,7 +1,11 @@
 package com.akcay.justwatch
 
 import android.app.Application
-import dagger.hilt.android.HiltAndroidApp
+import com.akcay.justwatch.di.initKoin
 
-@HiltAndroidApp
-class MainApp: Application()
+class MainApp : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        initKoin(this)
+    }
+}

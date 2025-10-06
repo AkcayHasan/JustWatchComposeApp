@@ -1,9 +1,7 @@
 package com.akcay.justwatch.data.remote.datasource
 
 import com.akcay.justwatch.data.remote.api.MovieService
-import javax.inject.Inject
-
-class MovieRemoteDataSource @Inject constructor(
+class MovieRemoteDataSource(
     private val movieService: MovieService,
 ) {
 

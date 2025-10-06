@@ -12,7 +12,6 @@ import com.akcay.justwatch.domain.usecase.ToggleFavoriteUseCase
 import com.akcay.justwatch.data.local.entity.FavoriteMovie
 import com.akcay.justwatch.internal.navigation.MainDestination
 import com.akcay.justwatch.internal.util.NetworkResult
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,10 +21,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-
-@HiltViewModel
-class MovieDetailViewModel @Inject constructor(
+class MovieDetailViewModel(
     savedStateHandle: SavedStateHandle,
     private val repo: MovieRepository,
     private val accountRepository: AccountRepository,

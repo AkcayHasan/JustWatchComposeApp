@@ -25,16 +25,14 @@ import com.akcay.justwatch.internal.navigation.AppDestination
 import com.akcay.justwatch.internal.util.ThemeManager
 import com.akcay.justwatch.screens.splash.SplashScreenViewModel
 import com.akcay.justwatch.ui.theme.JustWatchTheme
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-@AndroidEntryPoint
-class JustWatchActivity : ComponentActivity() {
+class JustWatchActivity : ComponentActivity(), KoinComponent {
 
-    private val splashViewModel: SplashScreenViewModel by viewModels()
-
-    @Inject
-    lateinit var themeManager: ThemeManager
+    private val splashViewModel: SplashScreenViewModel by viewModel()
+    private val themeManager: ThemeManager by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()

@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -14,10 +13,11 @@ import com.akcay.justwatch.internal.navigation.MainDestination
 import com.akcay.justwatch.internal.navigation.loginGraph
 import com.akcay.justwatch.internal.navigation.mainGraph
 import com.akcay.justwatch.screens.onboarding.OnBoardingScreen
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun JustWatchApp(
-    viewModel: JustWatchViewModel = hiltViewModel(),
+    viewModel: JustWatchViewModel = koinViewModel(),
     startDestination: AppDestination,
 ) {
     val navController = rememberNavController()

@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.androidx.compose.koinViewModel
 import com.akcay.justwatch.data.local.entity.FavoriteMovie
 import com.akcay.justwatch.internal.component.JWAuthRequiredDialog
 import com.akcay.justwatch.internal.component.JWLoadingView
@@ -40,7 +40,7 @@ fun FavouriteScreen(
     onCardClick: (Long, String) -> Unit,
     navigateToLogin: () -> Unit,
     navigateToRegister: () -> Unit,
-    viewModel: FavouriteViewModel = hiltViewModel(),
+    viewModel: FavouriteViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
 

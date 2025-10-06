@@ -7,7 +7,6 @@ import com.akcay.justwatch.domain.usecase.GetUserProfileUseCase
 import com.akcay.justwatch.internal.util.DataStoreManager
 import com.akcay.justwatch.internal.util.NetworkResult
 import com.akcay.justwatch.internal.util.ThemeManager
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,10 +14,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
-
-@HiltViewModel
-class AccountViewModel @Inject constructor(
+class AccountViewModel(
     private val dataStoreManager: DataStoreManager,
     private val themeManager: ThemeManager,
     private val accountRepository: AccountRepository,

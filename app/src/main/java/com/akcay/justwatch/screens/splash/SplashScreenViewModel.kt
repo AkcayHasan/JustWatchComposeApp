@@ -8,17 +8,13 @@ import com.akcay.justwatch.internal.navigation.MainDestination
 import com.akcay.justwatch.internal.util.DataStoreManager
 import com.akcay.justwatch.internal.util.JWSecurityUtil
 import com.akcay.justwatch.internal.util.ThemeManager
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
-import javax.inject.Inject
-
-@HiltViewModel
-class SplashScreenViewModel @Inject constructor(
+class SplashScreenViewModel(
     private val storeManager: DataStoreManager,
     private val themeManager: ThemeManager,
     private val accountRepository: AccountRepository
