@@ -2,7 +2,10 @@ package com.akcay.justwatch.screens.account
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.akcay.justwatch.domain.repository.AccountRepository
+import com.akcay.justwatch.domain.usecase.GetUserProfileUseCase
 import com.akcay.justwatch.internal.util.DataStoreManager
+import com.akcay.justwatch.internal.util.NetworkResult
 import com.akcay.justwatch.internal.util.ThemeManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,6 +21,8 @@ import javax.inject.Inject
 class AccountViewModel @Inject constructor(
     private val dataStoreManager: DataStoreManager,
     private val themeManager: ThemeManager,
+    private val accountRepository: AccountRepository,
+    private val getUserProfileUseCase: GetUserProfileUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AccountScreenUiState(
@@ -29,6 +34,7 @@ class AccountViewModel @Inject constructor(
 
     init {
         getDarkThemeStatus()
+        loadUserProfile()
     }
 
     fun darkThemeCheckedChange(isChecked: Boolean) {
@@ -46,5 +52,113 @@ class AccountViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun loadUserProfile() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(loading = true, error = null) }
+            
+            // Check if user is authenticated first
+            if (!accountRepository.hasUser) {
+                _uiState.update { 
+                    it.copy(
+                        loading = false,
+                        error = "Please sign in to view your profile"
+                    )
+                }
+                return@launch
+            }
+            
+            try {
+                when (val result = getUserProfileUseCase()) {
+                    is NetworkResult.Success -> {
+                        _uiState.update { 
+                            it.copy(
+                                loading = false,
+                                user = result.data,
+                                error = null
+                            )
+                        }
+                    }
+                    is NetworkResult.Error -> {
+                        _uiState.update { 
+                            it.copy(
+                                loading = false,
+                                error = result.message ?: "Failed to load user profile"
+                            )
+                        }
+                    }
+                    is NetworkResult.Exception -> {
+                        _uiState.update { 
+                            it.copy(
+                                loading = false,
+                                error = result.e.message ?: "An error occurred"
+                            )
+                        }
+                    }
+                }
+            } catch (e: SecurityException) {
+                // Firebase SecurityException - Google Play Services issue
+                _uiState.update { 
+                    it.copy(
+                        loading = false,
+                        error = "Authentication service unavailable. Please check your Google Play Services."
+                    )
+                }
+            } catch (e: Exception) {
+                _uiState.update { 
+                    it.copy(
+                        loading = false,
+                        error = e.message ?: "Unknown error occurred"
+                    )
+                }
+            }
+        }
+    }
+
+    fun refreshUserProfile() {
+        loadUserProfile()
+    }
+    
+    fun logout() {
+        viewModelScope.launch {
+            try {
+                when (val result = accountRepository.signOut()) {
+                    is NetworkResult.Success -> {
+                        _uiState.update { 
+                            it.copy(
+                                user = null,
+                                error = null,
+                                shouldNavigateToLogin = true
+                            )
+                        }
+                    }
+                    is NetworkResult.Error -> {
+                        _uiState.update { 
+                            it.copy(
+                                error = result.message ?: "Failed to sign out"
+                            )
+                        }
+                    }
+                    is NetworkResult.Exception -> {
+                        _uiState.update { 
+                            it.copy(
+                                error = result.e.message ?: "An error occurred during sign out"
+                            )
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                _uiState.update { 
+                    it.copy(
+                        error = e.message ?: "Unknown error occurred during sign out"
+                    )
+                }
+            }
+        }
+    }
+    
+    fun onNavigateToLoginHandled() {
+        _uiState.update { it.copy(shouldNavigateToLogin = false) }
     }
 }

@@ -9,7 +9,7 @@ class RegisterUseCase @Inject constructor(
   private val accountRepository: AccountRepository
 ) {
 
-  suspend operator fun invoke(email: String, password: String): NetworkResult<AuthUser> {
-    return accountRepository.register(email, password)
+  suspend operator fun invoke(email: String, password: String, name: String, surname: String): NetworkResult<AuthUser> {
+    return accountRepository.register(email, password, name, surname)
   }
 }

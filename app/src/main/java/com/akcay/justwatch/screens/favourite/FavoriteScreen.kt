@@ -8,13 +8,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -23,8 +21,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.akcay.justwatch.data.local.entity.FavoriteMovie
-import com.akcay.justwatch.internal.component.JWAuthRequiredDialog
 import com.akcay.justwatch.internal.component.JWLoadingView
 import com.akcay.justwatch.internal.component.JWTopAppBar
 import com.akcay.justwatch.internal.component.ListMovieItem
@@ -34,55 +30,38 @@ import com.akcay.justwatch.internal.navigation.NavigationScaffold
 import com.akcay.justwatch.ui.theme.JustWatchTheme
 
 @Composable
-fun FavouriteScreen(
+fun FavoriteScreen(
     isSelected: (MainDestination) -> Boolean,
     navigateToTab: (MainDestination) -> Unit,
     onCardClick: (Long, String) -> Unit,
-    navigateToLogin: () -> Unit,
-    navigateToRegister: () -> Unit,
     viewModel: FavouriteViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(Unit) {
-        viewModel.events.collect { event ->
-            when (event) {
-                is FavouriteScreenViewModelEvent.NavigateToLogin -> navigateToLogin()
-                is FavouriteScreenViewModelEvent.NavigateToRegister -> navigateToRegister()
-            }
-        }
-    }
-
-    FavouriteScreenContent(
+    FavoriteScreenContent(
         uiState = uiState,
         isSelected = isSelected,
         navigateToTab = navigateToTab,
         onCardClick = onCardClick,
-        onRemoveFavorite = viewModel::removeFromFavorites,
-        onDismissAuthDialog = { viewModel.sendEvent(FavouriteScreenViewEvent.DismissAuthDialog) },
-        onLoginClick = { viewModel.sendEvent(FavouriteScreenViewEvent.NavigateToLogin) },
-        onRegisterClick = { viewModel.sendEvent(FavouriteScreenViewEvent.NavigateToRegister) }
+        onRemoveFavorite = viewModel::removeFromFavorites
     )
 }
 
 @Composable
-fun FavouriteScreenContent(
+fun FavoriteScreenContent(
     uiState: FavouriteUiState,
     modifier: Modifier = Modifier,
     isSelected: (MainDestination) -> Boolean = { false },
     navigateToTab: (MainDestination) -> Unit = {},
     onCardClick: (Long, String) -> Unit = { _, _ -> },
     onRemoveFavorite: (Long) -> Unit = {},
-    onDismissAuthDialog: () -> Unit = {},
-    onLoginClick: () -> Unit = {},
-    onRegisterClick: () -> Unit = {},
 ) {
     NavigationScaffold(
         isSelected = isSelected,
         navigateToTab = navigateToTab,
         topBar = {
             JWTopAppBar(
-                title = "Favourite Movies",
+                title = "Favorite Movies",
             )
         },
         content = { paddingValues ->
@@ -96,7 +75,7 @@ fun FavouriteScreenContent(
                     if (uiState.favoriteMovies.isEmpty() && !uiState.loading) {
                         // Empty state
                         Column(
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier.fillMaxSize().padding(bottom = 52.dp),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
                         ) {
@@ -148,21 +127,13 @@ fun FavouriteScreenContent(
             }
         }
     )
-    
-    if (uiState.showAuthRequiredDialog) {
-        JWAuthRequiredDialog(
-            onDismiss = onDismissAuthDialog,
-            onLoginClick = onLoginClick,
-            onRegisterClick = onRegisterClick
-        )
-    }
 }
 
 @Preview
 @Composable
-fun FavouriteScreenContentPreview() {
+fun FavouriteScreenPreview() {
     JustWatchTheme {
-        FavouriteScreenContent(
+        FavoriteScreenContent(
             uiState = FavouriteUiState()
         )
     }

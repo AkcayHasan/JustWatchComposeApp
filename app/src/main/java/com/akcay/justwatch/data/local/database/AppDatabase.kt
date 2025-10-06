@@ -9,24 +9,25 @@ import com.akcay.justwatch.data.local.entity.FavoriteMovie
 
 @Database(
     entities = [FavoriteMovie::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
-    
+
     abstract fun favoriteMovieDao(): FavoriteMovieDao
-    
+
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null
-        
+
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "justwatch_database"
-                ).build()
+                    "justwatch_database_new"
+                )
+                .build()
                 INSTANCE = instance
                 instance
             }

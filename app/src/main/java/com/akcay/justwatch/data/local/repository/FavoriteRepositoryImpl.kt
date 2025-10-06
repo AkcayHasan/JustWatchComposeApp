@@ -10,23 +10,23 @@ class FavoriteRepositoryImpl @Inject constructor(
     private val favoriteMovieDao: FavoriteMovieDao
 ) : FavoriteRepository {
     
-    override fun getAllFavorites(): Flow<List<FavoriteMovie>> {
-        return favoriteMovieDao.getAllFavorites()
+    override fun getAllFavorites(userId: String): Flow<List<FavoriteMovie>> {
+        return favoriteMovieDao.getAllFavorites(userId)
     }
     
-    override suspend fun getFavoriteById(movieId: Long): FavoriteMovie? {
-        return favoriteMovieDao.getFavoriteById(movieId)
+    override suspend fun getFavoriteById(movieId: Long, userId: String): FavoriteMovie? {
+        return favoriteMovieDao.getFavoriteById(movieId, userId)
     }
     
-    override suspend fun isFavorite(movieId: Long): Boolean {
-        return favoriteMovieDao.isFavorite(movieId)
+    override suspend fun isFavorite(movieId: Long, userId: String): Boolean {
+        return favoriteMovieDao.isFavorite(movieId, userId)
     }
     
     override suspend fun addToFavorites(favoriteMovie: FavoriteMovie) {
         favoriteMovieDao.insertFavorite(favoriteMovie)
     }
     
-    override suspend fun removeFromFavorites(movieId: Long) {
-        favoriteMovieDao.deleteFavoriteById(movieId)
+    override suspend fun removeFromFavorites(movieId: Long, userId: String) {
+        favoriteMovieDao.deleteFavoriteById(movieId, userId)
     }
 }
