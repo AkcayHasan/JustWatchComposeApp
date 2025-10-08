@@ -1,19 +1,19 @@
 package com.akcay.justwatch.data.remote.model.response.movie.moviemodel.detailresponse.creditsresponse
 
-import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
 
 @Serializable
 data class Crew(
-    @SerializedName("adult") val adult: Boolean,
-    @SerializedName("credit_id") val creditId: String,
-    @SerializedName("department") val department: String,
-    @SerializedName("gender") val gender: Int,
-    @SerializedName("id") val id: Int,
-    @SerializedName("job") val job: String,
-    @SerializedName("known_for_department") val knownForDepartment: String,
-    @SerializedName("name") val name: String,
-    @SerializedName("original_name") val originalName: String,
-    @SerializedName("popularity") val popularity: Double,
-    @SerializedName("profile_path") val profilePath: String
+    @SerialName("adult") val adult: Boolean,
+    @SerialName("credit_id") val creditId: String,
+    @SerialName("department") val department: String,
+    @SerialName("gender") val gender: Int,
+    @SerialName("id") val id: Int,
+    @SerialName("job") val job: String,
+    @SerialName("known_for_department") val knownForDepartment: String,
+    @SerialName("name") val name: String,
+    @SerialName("original_name") val originalName: String,
+    @SerialName("popularity") val popularity: Double,
+    @SerialName("profile_path") val profilePath: String
 )

@@ -16,7 +16,7 @@ navigationVersion = "2.9.3"
 coroutinesVersion = "1.10.2"
 coroutinesLifecycleVersion = "2.9.2"
 koinVersion = "3.5.6"
-retrofitVersion = "3.0.0"
+ktorVersion = "3.0.0"
 coilVersion = "2.7.0"
 lottieVersion = "6.6.7"
 dataStoreVersion = "1.1.7"
@@ -24,7 +24,6 @@ chuckerVersion = "4.2.0"
 googleServicesVersion = "4.4.3"
 firebaseBomVersion = "33.10.0"
 firebaseCrashlytics = "3.0.5"
-paginationVersion = "3.3.6"
 roomVersion = "2.7.0"
 ktlint = "13.0.0"
 
@@ -54,8 +53,13 @@ coroutines-play = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-serv
 coroutines-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "coroutinesLifecycleVersion" }
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koinVersion" }
 koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koinVersion" }
-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofitVersion" }
-retrofit-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofitVersion" }
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktorVersion" }
+ktor-client-android = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktorVersion" }
+ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktorVersion" }
+ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktorVersion" }
+ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktorVersion" }
+ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktorVersion" }
+ktor-client-auth = { group = "io.ktor", name = "ktor-client-auth", version.ref = "ktorVersion" }
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coilVersion" }
 lottie = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottieVersion" }
 dataStore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStoreVersion" }
@@ -66,8 +70,6 @@ firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
-paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paginationVersion" }
-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paginationVersion" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomVersion" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomVersion" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomVersion" }
