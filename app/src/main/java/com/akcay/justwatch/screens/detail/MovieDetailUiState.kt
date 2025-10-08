@@ -1,14 +1,14 @@
 package com.akcay.justwatch.screens.detail
 
-import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.detailresponse.MovieDetailResponse
-import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.detailresponse.creditsresponse.MovieDetailCreditsResponse
-import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.detailresponse.videoresponse.MovieVideoResponse
+import com.akcay.justwatch.domain.model.MovieCredits
+import com.akcay.justwatch.domain.model.MovieDetail
+import com.akcay.justwatch.domain.model.MovieVideos
 
 data class MovieDetailUiState(
     val loadingState: Boolean = false,
-    val movieDetail: MovieDetailResponse? = null,
-    val movieCast: MovieDetailCreditsResponse? = null,
-    val movieTrailers: MovieVideoResponse? = null,
+    val movieDetail: MovieDetail? = null,
+    val movieCast: MovieCredits? = null,
+    val movieTrailers: MovieVideos? = null,
     val isFavorite: Boolean = false,
 )
 

@@ -1,5 +1,6 @@
 package com.akcay.justwatch.di
 
+import android.content.Context
 import com.akcay.justwatch.di.modules.coroutinesModule
 import com.akcay.justwatch.di.modules.firebaseModule
 import com.akcay.justwatch.di.modules.networkModule
@@ -25,7 +26,7 @@ val appModule = module {
     )
 }
 
-fun initKoin(androidContext: android.content.Context) {
+fun initKoin(androidContext: Context) {
     startKoin {
         androidContext(androidContext)
         modules(appModule)

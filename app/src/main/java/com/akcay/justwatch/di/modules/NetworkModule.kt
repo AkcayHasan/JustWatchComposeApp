@@ -1,43 +1,53 @@
 package com.akcay.justwatch.di.modules
 
-import android.content.Context
 import com.akcay.justwatch.BuildConfig
+import com.akcay.justwatch.data.remote.api.ApiConfig
 import com.akcay.justwatch.data.remote.api.MovieService
-import com.chuckerteam.chucker.api.ChuckerInterceptor
-import okhttp3.OkHttpClient
-import org.koin.android.ext.koin.androidContext
+import com.akcay.justwatch.data.remote.api.MovieServiceImpl
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.header
+import io.ktor.http.HttpHeaders
+import io.ktor.http.takeFrom
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 import org.koin.dsl.module
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 
 val networkModule = module {
-    single<OkHttpClient> {
-        OkHttpClient.Builder()
-            .connectTimeout(30L, TimeUnit.SECONDS)
-            .readTimeout(30L, TimeUnit.SECONDS)
-            .writeTimeout(30L, TimeUnit.SECONDS)
-            .addInterceptor(ChuckerInterceptor(context = androidContext()))
-            .addInterceptor { chain ->
-                val request = chain.request()
-                val newRequest = request.newBuilder()
-                    .addHeader("accept", "application/json")
-                    .addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjZDI4Y2VkYWEwZjFkNWI2MmIxNWM1ZWQwZTgwNTg3OCIsInN1YiI6IjYxODIzYTkwMTEzODZjMDAyYTljZDkyMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.DRVTFDZL_APN2Sj3_RXwNaMrhjyC2g_4W9zQADYC2c8")
-                    .build()
-                chain.proceed(newRequest)
+    single {
+        HttpClient(OkHttp) {
+            expectSuccess = false
+            defaultRequest {
+                url {
+                    if (this.host.isBlank()) {
+                        takeFrom(BuildConfig.BASE_URL)
+                    }
+                }
+                header(HttpHeaders.Authorization, "Bearer ${ApiConfig.BEARER_TOKEN}")
             }
-            .build()
+            install(ContentNegotiation) {
+                json(Json {
+                    ignoreUnknownKeys = true
+                    isLenient = true
+                })
+            }
+
+            install(HttpTimeout) {
+                connectTimeoutMillis = 30000
+                requestTimeoutMillis = 30000
+                socketTimeoutMillis = 30000
+            }
+
+            install(Logging) {
+                level = LogLevel.INFO
+            }
+        }
     }
 
-    single<Retrofit> {
-        Retrofit.Builder()
-            .baseUrl(BuildConfig.BASE_URL)
-            .client(get<OkHttpClient>())
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
-
-    single<MovieService> {
-        get<Retrofit>().create(MovieService::class.java)
-    }
+    single<MovieService> { MovieServiceImpl(get()) }
 }

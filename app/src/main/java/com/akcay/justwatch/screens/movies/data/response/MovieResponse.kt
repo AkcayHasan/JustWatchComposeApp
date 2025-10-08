@@ -1,36 +1,36 @@
 package com.akcay.justwatch.screens.movies.data.response
 
-import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
 
 @Serializable
 data class MovieResponse(
-    @SerializedName("adult")
+    @SerialName("adult")
     val adult: Boolean? = null,
-    @SerializedName("backdrop_path")
+    @SerialName("backdrop_path")
     val backdropPath: String? = null,
-    @SerializedName("genre_ids")
+    @SerialName("genre_ids")
     val genreIds: List<Int>? = null,
-    @SerializedName("id")
+    @SerialName("id")
     val id: Long? = null,
-    @SerializedName("original_language")
+    @SerialName("original_language")
     val originalLanguage: String? = null,
-    @SerializedName("original_title")
+    @SerialName("original_title")
     val originalTitle: String? = null,
-    @SerializedName("overview")
+    @SerialName("overview")
     val overview: String? = null,
-    @SerializedName("popularity")
+    @SerialName("popularity")
     val popularity: Double? = null,
-    @SerializedName("poster_path")
+    @SerialName("poster_path")
     val posterPath: String? = null,
-    @SerializedName("release_date")
+    @SerialName("release_date")
     val releaseDate: String? = null,
-    @SerializedName("title")
+    @SerialName("title")
     val title: String? = null,
-    @SerializedName("video")
+    @SerialName("video")
     val video: Boolean? = null,
-    @SerializedName("vote_average")
+    @SerialName("vote_average")
     val voteAverage: Double? = null,
-    @SerializedName("vote_count")
+    @SerialName("vote_count")
     val voteCount: Int? = null
 )

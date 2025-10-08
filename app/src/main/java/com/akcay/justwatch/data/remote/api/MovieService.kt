@@ -5,35 +5,27 @@ import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.detailres
 import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.detailresponse.videoresponse.MovieVideoResponse
 import com.akcay.justwatch.screens.movies.data.response.MovieResponse
 import com.akcay.justwatch.internal.paging.PageData
-import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import com.akcay.justwatch.internal.util.NetworkResult
 
 interface MovieService {
 
-    @GET("movie/popular")
     suspend fun getAllPopularMovies(
-        @Query("page") pageNumber: Int
-    ): Response<PageData<MovieResponse>>
+        pageNumber: Int
+    ): NetworkResult<PageData<MovieResponse>>
 
-    @GET("movie/top_rated")
     suspend fun getTopRatedMovies(
-        @Query("page") pageNumber: Int
-    ): Response<PageData<MovieResponse>>
+        pageNumber: Int
+    ): NetworkResult<PageData<MovieResponse>>
 
-    @GET("movie/{movie_id}")
     suspend fun getMovieById(
-        @Path("movie_id") movieId: Long
-    ): Response<MovieDetailResponse>
+        movieId: Long
+    ): NetworkResult<MovieDetailResponse>
 
-    @GET("movie/{movie_id}/credits")
     suspend fun getMovieCredits(
-        @Path("movie_id") movieId: Long
-    ): Response<MovieDetailCreditsResponse>
+        movieId: Long
+    ): NetworkResult<MovieDetailCreditsResponse>
 
-    @GET("movie/{movie_id}/videos")
     suspend fun getMovieVideo(
-        @Path("movie_id") movieId: Long
-    ): Response<MovieVideoResponse>
+        movieId: Long
+    ): NetworkResult<MovieVideoResponse>
 }

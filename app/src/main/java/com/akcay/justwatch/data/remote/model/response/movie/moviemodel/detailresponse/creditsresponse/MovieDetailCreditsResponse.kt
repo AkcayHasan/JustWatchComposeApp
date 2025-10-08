@@ -1,11 +1,11 @@
 package com.akcay.justwatch.data.remote.model.response.movie.moviemodel.detailresponse.creditsresponse
 
-import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
 
 @Serializable
 data class MovieDetailCreditsResponse(
-    @SerializedName("cast") val cast: List<Cast>,
-    @SerializedName("crew") val crew: List<Crew>,
-    @SerializedName("id") val id: Int
+    @SerialName("cast") val cast: List<Cast>,
+    @SerialName("crew") val crew: List<Crew>,
+    @SerialName("id") val id: Int
 )

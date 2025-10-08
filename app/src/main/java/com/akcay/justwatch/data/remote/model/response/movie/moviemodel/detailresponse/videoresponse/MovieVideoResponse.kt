@@ -1,10 +1,10 @@
 package com.akcay.justwatch.data.remote.model.response.movie.moviemodel.detailresponse.videoresponse
 
-import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
 
 @Serializable
 data class MovieVideoResponse(
-    @SerializedName("id") val id: Int,
-    @SerializedName("results") val results: List<Result>
+    @SerialName("id") val id: Int,
+    @SerialName("results") val results: List<Result>
 )

@@ -1,29 +1,29 @@
 package com.akcay.justwatch.data.remote.model.response.movie.moviemodel.detailresponse
 
-import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
 
 @Serializable
 data class MovieDetailResponse(
-    @SerializedName("adult") val adult: Boolean,
-    @SerializedName("backdrop_path") val backdropPath: String,
-    @SerializedName("budget") val budget: Int,
-    @SerializedName("genres") val genres: List<Genre>,
-    @SerializedName("homepage") val homepage: String,
-    @SerializedName("id") val id: Int,
-    @SerializedName("imdb_id") val imdbId: String,
-    @SerializedName("original_language") val originalLanguage: String,
-    @SerializedName("original_title") val originalTitle: String,
-    @SerializedName("overview") val overview: String,
-    @SerializedName("popularity") val popularity: Double,
-    @SerializedName("poster_path") val posterPath: String,
-    @SerializedName("release_date") val releaseDate: String,
-    @SerializedName("revenue") val revenue: Int,
-    @SerializedName("runtime") val runtime: Int,
-    @SerializedName("status") val status: String,
-    @SerializedName("tagline") val tagline: String,
-    @SerializedName("title") val title: String,
-    @SerializedName("video") val video: Boolean,
-    @SerializedName("vote_average") val voteAverage: Double,
-    @SerializedName("vote_count") val voteCount: Int
+    @SerialName("adult") val adult: Boolean,
+    @SerialName("backdrop_path") val backdropPath: String,
+    @SerialName("budget") val budget: Int,
+    @SerialName("genres") val genres: List<Genre>,
+    @SerialName("homepage") val homepage: String,
+    @SerialName("id") val id: Int,
+    @SerialName("imdb_id") val imdbId: String,
+    @SerialName("original_language") val originalLanguage: String,
+    @SerialName("original_title") val originalTitle: String,
+    @SerialName("overview") val overview: String,
+    @SerialName("popularity") val popularity: Double,
+    @SerialName("poster_path") val posterPath: String,
+    @SerialName("release_date") val releaseDate: String,
+    @SerialName("revenue") val revenue: Int,
+    @SerialName("runtime") val runtime: Int,
+    @SerialName("status") val status: String,
+    @SerialName("tagline") val tagline: String,
+    @SerialName("title") val title: String,
+    @SerialName("video") val video: Boolean,
+    @SerialName("vote_average") val voteAverage: Double,
+    @SerialName("vote_count") val voteCount: Int
 )

@@ -1,0 +1,5 @@
+package com.akcay.justwatch.data.remote.api
+
+object ApiConfig {
+    const val BEARER_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjZDI4Y2VkYWEwZjFkNWI2MmIxNWM1ZWQwZTgwNTg3OCIsInN1YiI6IjYxODIzYTkwMTEzODZjMDAyYTljZDkyMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.DRVTFDZL_APN2Sj3_RXwNaMrhjyC2g_4W9zQADYC2c8"
+}

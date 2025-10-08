@@ -90,10 +90,6 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.firestore)
 
-    // Pagination
-    implementation(libs.paging.runtime)
-    implementation(libs.paging.compose)
-
     // Navigation
     implementation(libs.navigation)
 
@@ -109,11 +105,14 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
 
-    // Retrofit
-    implementation(libs.retrofit)
-
-    // GSON converter
-    implementation(libs.retrofit.gson)
+    // Ktor
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.client.logging)
+    implementation(libs.ktor.client.auth)
 
     // Coil
     implementation(libs.coil)
@@ -139,4 +138,7 @@ dependencies {
     // Chucker
     debugImplementation(libs.chucker)
     releaseImplementation(libs.chucker.release)
+    
+    // OkHttp
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 }

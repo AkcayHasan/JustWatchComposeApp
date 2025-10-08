@@ -53,7 +53,7 @@ import androidx.compose.ui.zIndex
 import org.koin.androidx.compose.koinViewModel
 import coil.compose.AsyncImage
 import com.akcay.justwatch.R
-import com.akcay.justwatch.data.remote.model.response.movie.moviemodel.detailresponse.MovieDetailResponse
+import com.akcay.justwatch.domain.model.MovieDetail
 import com.akcay.justwatch.internal.component.CastItemView
 import com.akcay.justwatch.internal.component.JWButton
 import com.akcay.justwatch.internal.component.JWExpandableText
@@ -172,7 +172,7 @@ fun MovieDetailScreenContent(
 @Composable
 private fun InfoSection(
     modifier: Modifier = Modifier,
-    model: MovieDetailResponse?,
+    model: MovieDetail?,
 ) {
     Row(
         modifier = modifier.padding(20.dp),
@@ -215,7 +215,7 @@ private fun InfoSection(
             contentDescription = null,
         )
         Text(
-            text = model?.genres?.firstOrNull()?.name ?: "",
+            text = model?.genres?.firstOrNull() ?: "",
             color = JustWatchTheme.colors.secondary,
         )
     }
